@@ -1,639 +1,561 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Portal de Boletos</title>
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
-  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
-  .card { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; padding: 1.5rem; margin-bottom: 1rem; }
-  h1 { font-size: 20px; font-weight: 600; }
-  label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
-  input, select { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; }
-  input:focus, select:focus { border-color: #333; }
-  button { padding: 8px 20px; border-radius: 8px; border: 1px solid #ddd; background: #fff; font-size: 14px; cursor: pointer; }
-  .btn-primary { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-  .btn-danger { color: #c0392b; border-color: #f5c6cb; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; color: #666; font-weight: 500; font-size: 12px; }
-  td { padding: 10px 10px; border-bottom: 1px solid #f0f0f0; }
-  tr:hover td { background: #fafafa; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 500; }
-  .badge-pendente { background: #fff3cd; color: #856404; }
-  .badge-pago { background: #d1e7dd; color: #0a6640; }
-  .badge-vencido { background: #f8d7da; color: #842029; }
-  .msg-erro { background: #f8d7da; color: #842029; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; }
-  .msg-ok { background: #d1e7dd; color: #0a6640; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; }
-  .tabs { display: flex; gap: 4px; margin-bottom: 1rem; }
-  .tab { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: none; background: transparent; cursor: pointer; color: #666; }
-  .tab.active { background: #f0f0f0; color: #1a1a1a; font-weight: 500; }
-  .hidden { display: none; }
-  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-  .loading { text-align: center; padding: 2rem; color: #666; font-size: 14px; }
+
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+margin:0;
+padding:0;
+color:#333;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#fff;
+border-radius:10px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+input,select{
+width:100%;
+padding:10px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-top:5px;
+}
+
+button{
+padding:10px 16px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#222;
+color:#fff;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
+}
+
+.hidden{
+display:none;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #eee;
+text-align:left;
+font-size:14px;
+}
+
+.badge{
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+}
+
+.pendente{
+background:#fff3cd;
+}
+
+.pago{
+background:#d1e7dd;
+}
+
+.vencido{
+background:#f8d7da;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
 </style>
+
 </head>
+
 <body>
+
 <div class="container">
 
-<!-- TELA DE LOGIN -->
 <div id="tela-login">
-  <div style="max-width: 380px; margin: 3rem auto;">
-    <div style="text-align:center; margin-bottom:2rem;">
-      <div style="font-size: 32px; margin-bottom: 8px;">📄</div>
-      <h1>Portal de Boletos</h1>
-      <p style="font-size:13px; color:#666; margin-top:4px;">Acesse com seu login e senha</p>
-    </div>
-    <div class="card">
-      <div id="msg-login"></div>
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div>
-          <label>Login</label>
-          <input id="inp-login" type="text" placeholder="Seu usuário" />
-        </div>
-        <div>
-          <label>Senha</label>
-          <input id="inp-senha" type="password" placeholder="Sua senha" />
-        </div>
-        <button class="btn-primary" onclick="fazerLogin()" style="width:100%; margin-top:4px;">Entrar</button>
-      </div>
-    </div>
-  </div>
+
+<div style="max-width:400px;margin:60px auto;">
+
+<div class="card">
+
+<h2 style="margin-bottom:20px;">
+Portal de Boletos
+</h2>
+
+<div id="msg-login"></div>
+
+<div style="margin-bottom:12px;">
+<label>Login</label>
+<input id="inp-login" type="text">
 </div>
 
-<!-- TELA ADMIN -->
+<div style="margin-bottom:16px;">
+<label>Senha</label>
+<input id="inp-senha" type="password">
+</div>
+
+<button onclick="fazerLogin()" style="width:100%;">
+Entrar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 <div id="tela-admin" class="hidden">
-  <div class="header">
-    <div>
-      <h1>Portal de Boletos</h1>
-      <p style="font-size:12px; color:#666;" id="lbl-admin-nome"></p>
-    </div>
-    <button onclick="sair()">Sair</button>
-  </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="mostrarTab('tab-boletos', this)">📄 Boletos</button>
-    <button class="tab" onclick="mostrarTab('tab-usuarios', this)">👥 Usuários</button>
-    <button class="tab" onclick="mostrarTab('tab-novo-boleto', this)">+ Novo boleto</button>
-    <button class="tab" onclick="mostrarTab('tab-novo-usuario', this)">+ Novo usuário</button>
-  </div>
+<div class="header">
 
-  <div id="msg-admin"></div>
-
-  <!-- Aba Boletos -->
-  <div id="tab-boletos">
-    <div class="card">
-      <div class="grid-3" style="margin-bottom:10px;">
-        <div><label>Nº Nota Fiscal</label><input id="fa-nf" type="text" placeholder="0177184"/></div>
-        <div><label>Parcela</label><input id="fa-parcela" type="text" placeholder="01"/></div>
-        <div><label>Status</label>
-          <select id="fa-status">
-            <option value="">Todos</option>
-            <option value="pendente">Pendente</option>
-            <option value="pago">Pago</option>
-            <option value="vencido">Vencido</option>
-          </select>
-        </div>
-      </div>
-      <button onclick="buscarBoletos('admin')">🔍 Filtrar</button>
-    </div>
-    <div class="card" id="result-boletos-admin"><div class="loading">Carregando...</div></div>
-  </div>
-
-  <!-- Aba Usuários -->
-  <div id="tab-usuarios" class="hidden">
-    <div class="card" id="result-usuarios"><div class="loading">Carregando...</div></div>
-  </div>
-
-  <!-- Aba Novo Boleto -->
-  <div id="tab-novo-boleto" class="hidden">
-    <div class="card" style="max-width:520px;">
-      <p style="font-size:13px; font-weight:500; color:#666; margin-bottom:14px; text-transform:uppercase; letter-spacing:.05em;" id="lbl-form-boleto">Cadastrar novo boleto</p>
-      <input type="hidden" id="nb-id" />
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div class="grid-2">
-          <div><label>Nº Nota Fiscal *</label><input id="nb-nf" type="text" placeholder="0177184"/></div>
-          <div><label>Parcela *</label><input id="nb-parcela" type="text" placeholder="01"/></div>
-        </div>
-        <div class="grid-2">
-          <div><label>CNPJ do fornecedor *</label><input id="nb-cnpj" type="text" placeholder="00.000.000/0000-00" oninput="this.value=formatCNPJ(this.value)"/></div>
-          <div><label>Vencimento *</label><input id="nb-venc" type="date"/></div>
-        </div>
-        <div class="grid-2">
-          <div><label>Valor (R$) *</label><input id="nb-valor" type="number" step="0.01" placeholder="0,00"/></div>
-          <div><label>Status</label>
-            <select id="nb-status">
-              <option value="pendente">Pendente</option>
-              <option value="pago">Pago</option>
-              <option value="vencido">Vencido</option>
-            </select>
-          </div>
-        </div>
-        <div><label>Descrição</label><input id="nb-desc" type="text" placeholder="Descrição do boleto"/></div>
-        <p style="font-size:12px;color:#888;background:#f9f9f9;padding:10px;border-radius:8px;">
-          📁 O PDF é encontrado automaticamente no Drive pelo número da NF e parcela.<br>
-          Basta ter o arquivo (ex: <code>cb-101-2-0177184-01.pdf</code>) na pasta <strong>Boletos Portal</strong>.
-        </p>
-        <div style="display:flex; gap:8px; margin-top:4px;">
-          <button class="btn-primary" onclick="salvarBoleto()">Salvar boleto</button>
-          <button onclick="cancelarFormBoleto()">Cancelar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Aba Novo Usuário -->
-  <div id="tab-novo-usuario" class="hidden">
-    <div class="card" style="max-width:420px;">
-      <p style="font-size:13px; font-weight:500; color:#666; margin-bottom:14px; text-transform:uppercase; letter-spacing:.05em;" id="lbl-form-usuario">Cadastrar fornecedor</p>
-      <input type="hidden" id="nu-id" />
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div><label>Nome *</label><input id="nu-nome" type="text" placeholder="Nome do fornecedor"/></div>
-        <div><label>CNPJ *</label><input id="nu-cnpj" type="text" placeholder="00.000.000/0000-00" oninput="this.value=formatCNPJ(this.value)"/></div>
-        <div><label>Login *</label><input id="nu-login" type="text" placeholder="usuario"/></div>
-        <div><label>Senha *</label><input id="nu-senha" type="password" placeholder="Deixe em branco para manter (edição)"/></div>
-        <div style="display:flex; gap:8px; margin-top:4px;">
-          <button class="btn-primary" onclick="salvarUsuario()">Salvar usuário</button>
-          <button onclick="cancelarFormUsuario()">Cancelar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<div>
+<h2>Painel Administrativo</h2>
+<p id="lbl-admin"></p>
 </div>
 
-<!-- TELA FORNECEDOR -->
-<div id="tela-fornecedor" class="hidden">
-  <div class="header">
-    <div>
-      <h1>Meus Boletos</h1>
-      <p style="font-size:12px; color:#666;" id="lbl-forn-nome"></p>
-    </div>
-    <button onclick="sair()">Sair</button>
-  </div>
+<button onclick="sair()">
+Sair
+</button>
 
-  <div class="card">
-    <div class="grid-3" style="margin-bottom:10px;">
-      <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text" placeholder="0177184"/></div>
-      <div><label>Parcela</label><input id="ff-parcela" type="text" placeholder="01"/></div>
-      <div><label>Status</label>
-        <select id="ff-status">
-          <option value="">Todos</option>
-          <option value="pendente">Pendente</option>
-          <option value="pago">Pago</option>
-          <option value="vencido">Vencido</option>
-        </select>
-      </div>
-    </div>
-    <button onclick="buscarBoletos('fornecedor')">🔍 Buscar</button>
-  </div>
-  <div class="card" id="result-boletos-forn"><div class="loading">Carregando...</div></div>
+</div>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label>NF</label>
+<input id="fa-nf">
+</div>
+
+<div>
+<label>Parcela</label>
+<input id="fa-parcela">
+</div>
+
+<div>
+<label>Status</label>
+
+<select id="fa-status">
+<option value="">Todos</option>
+<option value="pendente">Pendente</option>
+<option value="pago">Pago</option>
+<option value="vencido">Vencido</option>
+</select>
+
+</div>
+
+</div>
+
+<div style="margin-top:14px;">
+<button onclick="buscarBoletos('admin')">
+Buscar
+</button>
+</div>
+
+</div>
+
+<div class="card">
+
+<div id="result-admin">
+Carregando...
+</div>
+
+</div>
+
+</div>
+
+<div id="tela-fornecedor" class="hidden">
+
+<div class="header">
+
+<div>
+<h2>Meus Boletos</h2>
+<p id="lbl-forn"></p>
+</div>
+
+<button onclick="sair()">
+Sair
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label>NF</label>
+<input id="ff-nf">
+</div>
+
+<div>
+<label>Parcela</label>
+<input id="ff-parcela">
+</div>
+
+<div>
+<label>Status</label>
+
+<select id="ff-status">
+<option value="">Todos</option>
+<option value="pendente">Pendente</option>
+<option value="pago">Pago</option>
+<option value="vencido">Vencido</option>
+</select>
+
+</div>
+
+</div>
+
+<div style="margin-top:14px;">
+<button onclick="buscarBoletos('fornecedor')">
+Buscar
+</button>
+</div>
+
+</div>
+
+<div class="card">
+
+<div id="result-fornecedor">
+Carregando...
+</div>
+
+</div>
+
 </div>
 
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbxvt-2fOXpA1aEBW5vUZ18be08nBL5cPDBuMEC2vmjE_4G96j4IalMTjrcZmiDB5dtC/exec';
+
+const API_URL =
+'SUA_URL_DO_APPS_SCRIPT_AQUI';
 
 let usuarioAtual = null;
 
-async function api(params) {
-  const url = API_URL + '?' + new URLSearchParams(params);
-  const r = await fetch(url);
-  return r.json();
+async function api(params){
+
+const url =
+API_URL +
+'?' +
+new URLSearchParams(params);
+
+const r =
+await fetch(url);
+
+return r.json();
 }
 
-async function apiPost(data) {
-  const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify(data) });
-  return r.json();
-}
+async function fazerLogin(){
 
-function formatCNPJ(v) {
-  v = v.replace(/\D/g,'').slice(0,14);
-  if (v.length > 12) v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/,'$1.$2.$3/$4-$5');
-  else if (v.length > 8) v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{0,4})/,'$1.$2.$3/$4');
-  else if (v.length > 5) v = v.replace(/(\d{2})(\d{3})(\d{0,3})/,'$1.$2.$3');
-  else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,3})/,'$1.$2');
-  return v;
-}
+const login =
+document
+.getElementById('inp-login')
+.value
+.trim();
 
-function formatMoney(v) { return 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2}); }
+const senha =
+document
+.getElementById('inp-senha')
+.value
+.trim();
 
-function badge(s) {
-  return `<span class="badge badge-${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
-}
+document
+.getElementById('msg-login')
+.innerHTML =
+'Entrando...';
 
-async function fazerLogin() {
-  const login = document.getElementById('inp-login').value.trim();
-  const senha = document.getElementById('inp-senha').value.trim();
-  document.getElementById('msg-login').innerHTML = '<p style="color:#666;font-size:13px;">Entrando...</p>';
-  
-  try {
-    const res = await api({ action: 'login', login, senha });
-    if (!res.ok) {
-      document.getElementById('msg-login').innerHTML = `<div class="msg-erro">${res.erro}</div>`;
-      return;
-    }
-    usuarioAtual = res.usuario;
-    document.getElementById('tela-login').classList.add('hidden');
-    if (usuarioAtual.role === 'admin') {
-      document.getElementById('tela-admin').classList.remove('hidden');
-      document.getElementById('lbl-admin-nome').textContent = 'Painel administrativo — ' + usuarioAtual.nome;
-      buscarBoletos('admin');
-    } else {
-      document.getElementById('tela-fornecedor').classList.remove('hidden');
-      document.getElementById('lbl-forn-nome').textContent = usuarioAtual.nome + ' — ' + usuarioAtual.cnpj;
-      buscarBoletos('fornecedor');
-    }
-  } catch(e) {
-    document.getElementById('msg-login').innerHTML = `<div class="msg-erro">Erro ao conectar com o servidor. Verifique se o Apps Script foi publicado corretamente.</div>`;
-  }
-}
-
-function sair() {
-  usuarioAtual = null;
-  document.getElementById('tela-admin').classList.add('hidden');
-  document.getElementById('tela-fornecedor').classList.add('hidden');
-  document.getElementById('tela-login').classList.remove('hidden');
-  document.getElementById('inp-login').value = '';
-  document.getElementById('inp-senha').value = '';
-  document.getElementById('msg-login').innerHTML = '';
-}
-
-async function buscarBoletos(tipo) {
-
-const params = { action: 'boletos' };
-
-if (tipo === 'admin') {
-
-params.nf =
-  document.getElementById('fa-nf').value;
-
-params.parcela =
-  document.getElementById('fa-parcela').value;
-
-params.status =
-  document.getElementById('fa-status').value;
-
-} else {
-
-params.cnpj =
-  usuarioAtual.cnpj;
-
-params.nf =
-  document.getElementById('ff-nf').value;
-
-params.parcela =
-  document.getElementById('ff-parcela').value;
-
-params.status =
-  document.getElementById('ff-status').value;
-
-}
-
-const targetId =
-tipo === 'admin'
-? 'result-boletos-admin'
-: 'result-boletos-forn';
-
-document.getElementById(targetId).innerHTML =
-'Buscando...';
-
-try {
+try{
 
 const res =
-  await api(params);
+await api({
+action:'login',
+login:login,
+senha:senha
+});
+
+if(!res.ok){
+
+document
+.getElementById('msg-login')
+.innerHTML =
+res.erro;
+
+return;
+}
+
+usuarioAtual =
+res.usuario;
+
+document
+.getElementById('tela-login')
+.classList
+.add('hidden');
+
+if(
+usuarioAtual.role ==
+'admin'
+){
+
+document
+.getElementById('tela-admin')
+.classList
+.remove('hidden');
+
+document
+.getElementById('lbl-admin')
+.innerHTML =
+usuarioAtual.nome;
+
+buscarBoletos('admin');
+
+}else{
+
+document
+.getElementById('tela-fornecedor')
+.classList
+.remove('hidden');
+
+document
+.getElementById('lbl-forn')
+.innerHTML =
+usuarioAtual.nome;
+
+buscarBoletos('fornecedor');
+}
+
+}catch(e){
+
+document
+.getElementById('msg-login')
+.innerHTML =
+'Erro ao conectar.';
+}
+}
+
+function sair(){
+
+usuarioAtual = null;
+
+document
+.getElementById('tela-login')
+.classList
+.remove('hidden');
+
+document
+.getElementById('tela-admin')
+.classList
+.add('hidden');
+
+document
+.getElementById('tela-fornecedor')
+.classList
+.add('hidden');
+}
+
+async function buscarBoletos(tipo){
+
+const params = {
+action:'boletos'
+};
+
+if(tipo=='admin'){
+
+params.nf =
+document
+.getElementById('fa-nf')
+.value;
+
+params.parcela =
+document
+.getElementById('fa-parcela')
+.value;
+
+params.status =
+document
+.getElementById('fa-status')
+.value;
+
+}else{
+
+params.cnpj =
+usuarioAtual.cnpj;
+
+params.nf =
+document
+.getElementById('ff-nf')
+.value;
+
+params.parcela =
+document
+.getElementById('ff-parcela')
+.value;
+
+params.status =
+document
+.getElementById('ff-status')
+.value;
+}
+
+const res =
+await api(params);
 
 const boletos =
-  res.boletos || [];
+res.boletos || [];
 
-const isAdmin =
-  tipo === 'admin';
+const target =
+tipo=='admin'
+?'result-admin'
+:'result-fornecedor';
 
-if (!boletos.length) {
+if(!boletos.length){
 
-  document.getElementById(targetId).innerHTML =
-    '<p style="text-align:center;padding:2rem;color:#888;font-size:14px;">Nenhum boleto encontrado</p>';
+document
+.getElementById(target)
+.innerHTML =
+'Nenhum boleto encontrado';
 
-  return;
+return;
 }
 
 let html =
-  '<div style="overflow-x:auto"><table>' +
-  '<thead><tr>' +
-  '<th>Nota Fiscal</th>' +
-  '<th>Parcela</th>' +
-  '<th>CNPJ</th>' +
-  '<th>Descrição</th>' +
-  '<th>Valor</th>' +
-  '<th>Vencimento</th>' +
-  '<th>Status</th>' +
-  '<th>Ações</th>' +
-  '</tr></thead><tbody>';
+'<table>';
+
+html +=
+'<thead><tr>' +
+'<th>NF</th>' +
+'<th>Parcela</th>' +
+'<th>Valor</th>' +
+'<th>Vencimento</th>' +
+'<th>Status</th>' +
+'<th>PDF</th>' +
+'</tr></thead>';
+
+html += '<tbody>';
 
 boletos.forEach(function(b){
 
-  let venc = '';
+let venc =
+String(b.vencimento || '');
 
-  try {
+if(
+/^\d{4}-\d{2}-\d{2}$/
+.test(venc)
+){
 
-    const s =
-      String(b.vencimento || '').trim();
+const p =
+venc.split('-');
 
-    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+venc =
+p[2]+'/'+p[1]+'/'+p[0];
+}
 
-      const partes =
-        s.split('-');
+html +=
+'<tr>' +
 
-      venc =
-        partes[2] + '/' +
-        partes[1] + '/' +
-        partes[0];
+'<td>'+b.nf+'</td>' +
 
-    } else {
+'<td>'+b.parcela+'</td>' +
 
-      const dt =
-        new Date(s);
+'<td>R$ '+
+Number(b.valor)
+.toLocaleString(
+'pt-BR',
+{
+minimumFractionDigits:2
+}
+)+
+'</td>' +
 
-      if (!isNaN(dt)) {
+'<td>'+venc+'</td>' +
 
-        venc =
-          dt.toLocaleDateString('pt-BR');
+'<td>' +
+'<span class="badge '+b.status+'">' +
+b.status +
+'</span>' +
+'</td>' +
 
-      } else {
+'<td>' +
 
-        venc = s;
-      }
-    }
+(
+b.downloadUrl
+? '<a href="'+
+b.downloadUrl+
+'" target="_blank">' +
+'<button>PDF</button>' +
+'</a>'
+: 'Sem PDF'
+)
 
-  } catch(e) {
++
 
-    venc =
-      String(b.vencimento || '');
-  }
+'</td>' +
 
-  html +=
-    '<tr>' +
-
-    '<td><strong>' +
-    b.nf +
-    '</strong></td>' +
-
-    '<td style="color:#666;">' +
-    b.parcela +
-    '</td>' +
-
-    '<td style="font-size:12px;color:#666;">' +
-    b.cnpj +
-    '</td>' +
-
-    '<td style="font-size:12px;color:#666;">' +
-    (b.descricao || '—') +
-    '</td>' +
-
-    '<td style="font-weight:500;">' +
-    formatMoney(b.valor) +
-    '</td>' +
-
-    '<td>' +
-    venc +
-    '</td>' +
-
-    '<td>' +
-    badge(b.status) +
-    '</td>' +
-
-    '<td style="white-space:nowrap;">' +
-
-    (
-      b.downloadUrl
-      ? '<a href="' +
-        b.downloadUrl +
-        '" target="_blank">' +
-        '<button style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>' +
-        '</a>'
-      : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'
-    ) +
-
-    (
-      isAdmin
-      ? '<button onclick="editarBoleto(' +
-        JSON.stringify(b).replace(/"/g,'&quot;') +
-        ')" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>' +
-
-        '<button class="btn-danger" onclick="excluirBoleto(\'' +
-        b.id +
-        '\')" style="font-size:12px;padding:3px 8px;">🗑️</button>'
-      : ''
-    ) +
-
-    '</td>' +
-
-    '</tr>';
+'</tr>';
 });
 
 html +=
-  '</tbody></table></div>';
+'</tbody></table>';
 
-document.getElementById(targetId).innerHTML =
-  html;
-
-} catch(e) {
-
-document.getElementById(targetId).innerHTML =
-  '<div class="msg-erro">Erro ao buscar boletos.</div>';
-
-console.error(e);
-
-}
+document
+.getElementById(target)
+.innerHTML =
+html;
 }
 
-  const targetId = tipo === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
-  document.getElementById(targetId).innerHTML = '<div class="loading">Buscando...</div>';
+document
+.getElementById('inp-senha')
+.addEventListener(
+'keypress',
+function(e){
 
-  const res = await api(params);
-  const boletos = res.boletos || [];
-  const isAdmin = tipo === 'admin';
-
-  if (!boletos.length) {
-    document.getElementById(targetId).innerHTML = '<p style="text-align:center;padding:2rem;color:#888;font-size:14px;">Nenhum boleto encontrado</p>';
-    return;
-  }
-
-  let html = `<div style="overflow-x:auto"><table>
-    <thead><tr>
-      <th>Nota Fiscal</th><th>Parcela</th><th>CNPJ</th><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ações</th>
-    </tr></thead><tbody>`;
-
-  boletos.forEach(b => {
-    const venc = new Date(b.vencimento + 'T00:00:00').toLocaleDateString('pt-BR');
-   const venc = (() => {
-  try {
-    const s = String(b.vencimento).trim();
-    // formato YYYY-MM-DD
-    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-      const [y, m, d] = s.split('-');
-      return `${d}/${m}/${y}`;
-    }
-    // formato DD/MM/YYYY (caso venha assim da planilha)
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
-    // fallback
-    const dt = new Date(s);
-    if (!isNaN(dt)) return dt.toLocaleDateString('pt-BR');
-    return s;
-  } catch(e) { return String(b.vencimento); }
-})();
-    html += `<tr>
-      <td><strong>${b.nf}</strong></td>
-      <td style="color:#666;">${b.parcela}</td>
-      <td style="font-size:12px;color:#666;">${b.cnpj}</td>
-      <td style="font-size:12px;color:#666;">${b.descricao||'—'}</td>
-      <td style="font-weight:500;">${formatMoney(b.valor)}</td>
-      <td>${venc}</td>
-      <td>${badge(b.status)}</td>
-      <td style="white-space:nowrap;">
-        ${b.downloadUrl ? `<a href="${b.downloadUrl}" target="_blank"><button style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button></a>` : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
-        ${isAdmin ? `<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>
-        <button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>` : ''}
-      </td>
-    </tr>`;
-  });
-
-  html += '</tbody></table></div>';
-  document.getElementById(targetId).innerHTML = html;
+if(e.key=='Enter'){
+fazerLogin();
 }
+});
 
-async function carregarUsuarios() {
-  document.getElementById('result-usuarios').innerHTML = '<div class="loading">Carregando...</div>';
-  const res = await api({ action: 'usuarios' });
-  const usuarios = res.usuarios || [];
-  if (!usuarios.length) {
-    document.getElementById('result-usuarios').innerHTML = '<p style="text-align:center;padding:2rem;color:#888;font-size:14px;">Nenhum fornecedor cadastrado</p>';
-    return;
-  }
-  let html = `<table><thead><tr><th>Nome</th><th>Login</th><th>CNPJ</th><th>Ações</th></tr></thead><tbody>`;
-  usuarios.forEach(u => {
-    html += `<tr>
-      <td>${u.nome}</td>
-      <td><code style="font-size:12px;">${u.login}</code></td>
-      <td style="font-size:12px;color:#666;">${u.cnpj||'—'}</td>
-      <td>
-        <button onclick="editarUsuario(${JSON.stringify(u).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️ Editar</button>
-        <button class="btn-danger" onclick="excluirUsuario('${u.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>
-      </td>
-    </tr>`;
-  });
-  html += '</tbody></table>';
-  document.getElementById('result-usuarios').innerHTML = html;
-}
-
-function mostrarTab(tabId, btn) {
-  ['tab-boletos','tab-usuarios','tab-novo-boleto','tab-novo-usuario'].forEach(t => {
-    document.getElementById(t).classList.add('hidden');
-  });
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.getElementById(tabId).classList.remove('hidden');
-  btn.classList.add('active');
-  document.getElementById('msg-admin').innerHTML = '';
-  if (tabId === 'tab-usuarios') carregarUsuarios();
-}
-
-async function salvarBoleto() {
-  const id = document.getElementById('nb-id').value;
-  const data = {
-    action: 'salvar_boleto',
-    id: id || null,
-    nf: document.getElementById('nb-nf').value.trim(),
-    parcela: document.getElementById('nb-parcela').value.trim(),
-    cnpj: document.getElementById('nb-cnpj').value.trim(),
-    valor: document.getElementById('nb-valor').value,
-    vencimento: document.getElementById('nb-venc').value,
-    descricao: document.getElementById('nb-desc').value.trim(),
-    status: document.getElementById('nb-status').value
-  };
-  if (!data.nf || !data.parcela || !data.cnpj || !data.valor || !data.vencimento) { alert('Preencha os campos obrigatórios.'); return; }
-  const res = await apiPost(data);
-  if (res.ok) {
-    document.getElementById('msg-admin').innerHTML = `<div class="msg-ok">${id ? 'Boleto atualizado!' : 'Boleto cadastrado!'}</div>`;
-    cancelarFormBoleto();
-    mostrarTab('tab-boletos', document.querySelectorAll('.tab')[0]);
-    buscarBoletos('admin');
-  } else {
-    alert('Erro: ' + res.erro);
-  }
-}
-
-function editarBoleto(b) {
-  document.getElementById('nb-id').value = b.id;
-  document.getElementById('nb-nf').value = b.nf;
-  document.getElementById('nb-parcela').value = b.parcela;
-  document.getElementById('nb-cnpj').value = b.cnpj;
-  document.getElementById('nb-valor').value = b.valor;
-  document.getElementById('nb-venc').value = b.vencimento;
-  document.getElementById('nb-desc').value = b.descricao;
-  document.getElementById('nb-status').value = b.status;
-  document.getElementById('lbl-form-boleto').textContent = 'Editar boleto';
-  mostrarTab('tab-novo-boleto', document.querySelectorAll('.tab')[2]);
-}
-
-async function excluirBoleto(id) {
-  if (!confirm('Excluir este boleto?')) return;
-  const res = await apiPost({ action: 'excluir_boleto', id });
-  if (res.ok) { buscarBoletos('admin'); }
-}
-
-function cancelarFormBoleto() {
-  ['nb-id','nb-nf','nb-parcela','nb-cnpj','nb-valor','nb-venc','nb-desc'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('nb-status').value = 'pendente';
-  document.getElementById('lbl-form-boleto').textContent = 'Cadastrar novo boleto';
-}
-
-async function salvarUsuario() {
-  const id = document.getElementById('nu-id').value;
-  const data = {
-    action: 'salvar_usuario',
-    id: id || null,
-    nome: document.getElementById('nu-nome').value.trim(),
-    cnpj: document.getElementById('nu-cnpj').value.trim(),
-    login: document.getElementById('nu-login').value.trim(),
-    senha: document.getElementById('nu-senha').value.trim()
-  };
-  if (!data.nome || !data.cnpj || !data.login) { alert('Preencha os campos obrigatórios.'); return; }
-  if (!id && !data.senha) { alert('Informe uma senha.'); return; }
-  const res = await apiPost(data);
-  if (res.ok) {
-    document.getElementById('msg-admin').innerHTML = `<div class="msg-ok">${id ? 'Usuário atualizado!' : 'Usuário cadastrado!'}</div>`;
-    cancelarFormUsuario();
-    mostrarTab('tab-usuarios', document.querySelectorAll('.tab')[1]);
-  } else {
-    alert('Erro: ' + res.erro);
-  }
-}
-
-function editarUsuario(u) {
-  document.getElementById('nu-id').value = u.id;
-  document.getElementById('nu-nome').value = u.nome;
-  document.getElementById('nu-cnpj').value = u.cnpj;
-  document.getElementById('nu-login').value = u.login;
-  document.getElementById('nu-senha').value = '';
-  document.getElementById('lbl-form-usuario').textContent = 'Editar fornecedor';
-  mostrarTab('tab-novo-usuario', document.querySelectorAll('.tab')[3]);
-}
-
-async function excluirUsuario(id) {
-  if (!confirm('Excluir este usuário?')) return;
-  const res = await apiPost({ action: 'excluir_usuario', id });
-  if (res.ok) { carregarUsuarios(); }
-}
-
-function cancelarFormUsuario() {
-  ['nu-id','nu-nome','nu-cnpj','nu-login','nu-senha'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('lbl-form-usuario').textContent = 'Cadastrar fornecedor';
-}
-
-document.getElementById('inp-senha').addEventListener('keypress', e => { if (e.key === 'Enter') fazerLogin(); });
 </script>
+
 </body>
+
 </html>
