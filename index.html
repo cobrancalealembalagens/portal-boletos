@@ -263,17 +263,192 @@ function sair() {
 }
 
 async function buscarBoletos(tipo) {
-  const params = { action: 'boletos' };
-  if (tipo === 'admin') {
-    params.nf = document.getElementById('fa-nf').value;
-    params.parcela = document.getElementById('fa-parcela').value;
-    params.status = document.getElementById('fa-status').value;
-  } else {
-    params.cnpj = usuarioAtual.cnpj;
-    params.nf = document.getElementById('ff-nf').value;
-    params.parcela = document.getElementById('ff-parcela').value;
-    params.status = document.getElementById('ff-status').value;
+
+const params = { action: 'boletos' };
+
+if (tipo === 'admin') {
+
+params.nf =
+  document.getElementById('fa-nf').value;
+
+params.parcela =
+  document.getElementById('fa-parcela').value;
+
+params.status =
+  document.getElementById('fa-status').value;
+
+} else {
+
+params.cnpj =
+  usuarioAtual.cnpj;
+
+params.nf =
+  document.getElementById('ff-nf').value;
+
+params.parcela =
+  document.getElementById('ff-parcela').value;
+
+params.status =
+  document.getElementById('ff-status').value;
+
+}
+
+const targetId =
+tipo === 'admin'
+? 'result-boletos-admin'
+: 'result-boletos-forn';
+
+document.getElementById(targetId).innerHTML =
+'Buscando...';
+
+try {
+
+const res =
+  await api(params);
+
+const boletos =
+  res.boletos || [];
+
+const isAdmin =
+  tipo === 'admin';
+
+if (!boletos.length) {
+
+  document.getElementById(targetId).innerHTML =
+    '<p style="text-align:center;padding:2rem;color:#888;font-size:14px;">Nenhum boleto encontrado</p>';
+
+  return;
+}
+
+let html =
+  '<div style="overflow-x:auto"><table>' +
+  '<thead><tr>' +
+  '<th>Nota Fiscal</th>' +
+  '<th>Parcela</th>' +
+  '<th>CNPJ</th>' +
+  '<th>Descrição</th>' +
+  '<th>Valor</th>' +
+  '<th>Vencimento</th>' +
+  '<th>Status</th>' +
+  '<th>Ações</th>' +
+  '</tr></thead><tbody>';
+
+boletos.forEach(function(b){
+
+  let venc = '';
+
+  try {
+
+    const s =
+      String(b.vencimento || '').trim();
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+
+      const partes =
+        s.split('-');
+
+      venc =
+        partes[2] + '/' +
+        partes[1] + '/' +
+        partes[0];
+
+    } else {
+
+      const dt =
+        new Date(s);
+
+      if (!isNaN(dt)) {
+
+        venc =
+          dt.toLocaleDateString('pt-BR');
+
+      } else {
+
+        venc = s;
+      }
+    }
+
+  } catch(e) {
+
+    venc =
+      String(b.vencimento || '');
   }
+
+  html +=
+    '<tr>' +
+
+    '<td><strong>' +
+    b.nf +
+    '</strong></td>' +
+
+    '<td style="color:#666;">' +
+    b.parcela +
+    '</td>' +
+
+    '<td style="font-size:12px;color:#666;">' +
+    b.cnpj +
+    '</td>' +
+
+    '<td style="font-size:12px;color:#666;">' +
+    (b.descricao || '—') +
+    '</td>' +
+
+    '<td style="font-weight:500;">' +
+    formatMoney(b.valor) +
+    '</td>' +
+
+    '<td>' +
+    venc +
+    '</td>' +
+
+    '<td>' +
+    badge(b.status) +
+    '</td>' +
+
+    '<td style="white-space:nowrap;">' +
+
+    (
+      b.downloadUrl
+      ? '<a href="' +
+        b.downloadUrl +
+        '" target="_blank">' +
+        '<button style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>' +
+        '</a>'
+      : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'
+    ) +
+
+    (
+      isAdmin
+      ? '<button onclick="editarBoleto(' +
+        JSON.stringify(b).replace(/"/g,'&quot;') +
+        ')" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>' +
+
+        '<button class="btn-danger" onclick="excluirBoleto(\'' +
+        b.id +
+        '\')" style="font-size:12px;padding:3px 8px;">🗑️</button>'
+      : ''
+    ) +
+
+    '</td>' +
+
+    '</tr>';
+});
+
+html +=
+  '</tbody></table></div>';
+
+document.getElementById(targetId).innerHTML =
+  html;
+
+} catch(e) {
+
+document.getElementById(targetId).innerHTML =
+  '<div class="msg-erro">Erro ao buscar boletos.</div>';
+
+console.error(e);
+
+}
+}
 
   const targetId = tipo === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
   document.getElementById(targetId).innerHTML = '<div class="loading">Buscando...</div>';
