@@ -234,6 +234,7 @@
         </div>
       </div>
       <button onclick="buscarBoletos('admin')">🔍 Filtrar</button>
+      <button onclick="limparFiltros('admin')" style="margin-left:8px;">✕ Limpar</button>
     </div>
     <div class="card" id="result-boletos-admin"><div class="loading">Carregando...</div></div>
   </div>
@@ -325,6 +326,7 @@
       </div>
     </div>
     <button onclick="buscarBoletos('fornecedor')">🔍 Buscar</button>
+    <button onclick="limparFiltros('fornecedor')" style="margin-left:8px;">✕ Limpar</button>
   </div>
   <div class="card" id="result-boletos-forn"><div class="loading">Carregando...</div></div>
 </div>
@@ -455,6 +457,21 @@ function sair() {
   document.getElementById('inp-login').value = '';
   document.getElementById('inp-senha').value = '';
   document.getElementById('msg-login').innerHTML = '';
+}
+
+/* ── LIMPAR FILTROS ── */
+function limparFiltros(tipo) {
+  if (tipo === 'admin') {
+    document.getElementById('fa-nf').value = '';
+    document.getElementById('fa-parcela').value = '';
+    document.getElementById('fa-cnpj').value = '';
+    document.getElementById('fa-representante').selectedIndex = 0;
+  } else {
+    document.getElementById('ff-nf').value = '';
+    document.getElementById('ff-parcela').value = '';
+    document.getElementById('ff-representante').selectedIndex = 0;
+  }
+  buscarBoletos(tipo);
 }
 
 /* ── BUSCAR BOLETOS ── */
