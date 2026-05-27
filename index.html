@@ -142,7 +142,7 @@
      POP-UP PRIMEIRO ACESSO
      Edite os textos abaixo conforme necessário
      ═══════════════════════════════════════════════ -->
-<div class="popup-overlay" id="popup-boas-vindas">
+<div class="popup-overlay" id="popup-boas-vindas" style="display:none;">
   <div class="popup-box">
     <!--
       LOGO NO POPUP:
@@ -338,19 +338,13 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbx3o88jj0RBjXul1-nt6kaF
 
 let usuarioAtual = null;
 
-/* ── POP-UP PRIMEIRO ACESSO ── */
-const POPUP_KEY = 'leal_portal_visited_v1';
+/* ── POP-UP A CADA LOGIN ── */
 const popupEl = document.getElementById('popup-boas-vindas');
-
-if (localStorage.getItem(POPUP_KEY)) {
-  popupEl.style.display = 'none';
-}
 
 function fecharPopup() {
   popupEl.style.opacity = '0';
   popupEl.style.transition = 'opacity .28s';
   setTimeout(() => popupEl.style.display = 'none', 280);
-  localStorage.setItem(POPUP_KEY, '1');
 }
 
 /* ── HELPERS API ── */
@@ -434,15 +428,18 @@ async function fazerLogin() {
     }
     usuarioAtual = res.usuario;
     document.getElementById('tela-login').classList.add('hidden');
-    await carregarRepresentantes(); // carrega lista do backend
+    await carregarRepresentantes();
+    // Mostra pop-up a cada login
+    popupEl.style.display = 'flex';
+    popupEl.style.opacity = '1';
     if (usuarioAtual.role === 'admin') {
       document.getElementById('tela-admin').classList.remove('hidden');
       document.getElementById('lbl-admin-nome').textContent = 'Painel administrativo — ' + usuarioAtual.nome;
-      buscarBoletos('admin');
+      mostrarTabelaVazia('result-boletos-admin');
     } else {
       document.getElementById('tela-fornecedor').classList.remove('hidden');
       document.getElementById('lbl-forn-nome').textContent = usuarioAtual.nome + ' — ' + usuarioAtual.cnpj;
-      buscarBoletos('fornecedor');
+      mostrarTabelaVazia('result-boletos-forn');
     }
   } catch(e) {
     document.getElementById('msg-login').innerHTML = '<div class="msg-erro">Erro ao conectar com o servidor.</div>';
@@ -459,6 +456,12 @@ function sair() {
   document.getElementById('msg-login').innerHTML = '';
 }
 
+/* ── TABELA VAZIA (estado inicial) ── */
+function mostrarTabelaVazia(targetId) {
+  document.getElementById(targetId).innerHTML =
+    '<p style="text-align:center;padding:2rem;color:#aaa;font-size:14px;">🔍 Use os filtros acima para buscar boletos.</p>';
+}
+
 /* ── LIMPAR FILTROS ── */
 function limparFiltros(tipo) {
   if (tipo === 'admin') {
@@ -466,12 +469,13 @@ function limparFiltros(tipo) {
     document.getElementById('fa-parcela').value = '';
     document.getElementById('fa-cnpj').value = '';
     document.getElementById('fa-representante').selectedIndex = 0;
+    mostrarTabelaVazia('result-boletos-admin');
   } else {
     document.getElementById('ff-nf').value = '';
     document.getElementById('ff-parcela').value = '';
     document.getElementById('ff-representante').selectedIndex = 0;
+    mostrarTabelaVazia('result-boletos-forn');
   }
-  buscarBoletos(tipo);
 }
 
 /* ── BUSCAR BOLETOS ── */
