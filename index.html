@@ -70,6 +70,7 @@ tr:hover td{background:var(--row-hover);}
 .btn-hdr:hover{background:rgba(255,255,255,.28);}
 .btn-sair{background:var(--sair-bg);color:var(--sair-color);border:1px solid var(--sair-bg);font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.15);}
 .btn-sair:hover{opacity:.88;}
+.header-toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
 /* LOADING */
 .loading{text-align:center;padding:2rem;color:var(--text-2);font-size:14px;}
 /* LOGIN */
@@ -194,11 +195,11 @@ tbody tr:hover td{background:var(--row-hover);}
       <h1>Portal de Boletos</h1>
       <p id="lbl-admin-nome"></p>
     </div>
-    <div class="header-actions">
-      <button class="btn-hdr" onclick="abrirModalSenha()" title="Trocar senha">🔑 Trocar senha</button>
-      <button class="btn-hdr" onclick="toggleDark()" id="btn-dark" title="Alternar modo escuro">🌙</button>
-      <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
-    </div>
+    <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
+  </div>
+  <div class="header-toolbar">
+    <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
+    <button class="btn-hdr" onclick="toggleDark()" id="btn-dark">🌙</button>
   </div>
 
   <div class="tabs">
@@ -302,11 +303,11 @@ tbody tr:hover td{background:var(--row-hover);}
       <h1>Meus Boletos</h1>
       <p id="lbl-forn-nome" style="color:rgba(255,255,255,.8);"></p>
     </div>
-    <div class="header-actions">
-      <button class="btn-hdr" onclick="abrirModalSenha()" title="Trocar senha">🔑 Trocar senha</button>
-      <button class="btn-hdr" onclick="toggleDark()" id="btn-dark-forn" title="Alternar modo escuro">🌙</button>
-      <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
-    </div>
+    <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
+  </div>
+  <div class="header-toolbar">
+    <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
+    <button class="btn-hdr" onclick="toggleDark()" id="btn-dark-forn">🌙</button>
   </div>
 
   <div class="card">
@@ -330,7 +331,7 @@ tbody tr:hover td{background:var(--row-hover);}
 
 <!-- ═══ PAINEL PRÉVIA PDF ═══ -->
 <div id="preview-backdrop" onclick="fecharPrevia()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8888;transition:opacity .3s;"></div>
-<div id="preview-panel" style="display:none;position:fixed;top:0;left:0;width:min(520px,95vw);height:100vh;background:var(--card-bg);box-shadow:4px 0 32px rgba(0,0,0,.25);z-index:8889;flex-direction:column;transition:transform .32s cubic-bezier(.4,0,.2,1);">
+<div id="preview-panel" style="display:none;position:fixed;top:0;right:0;width:min(520px,95vw);height:100vh;background:var(--card-bg);box-shadow:-4px 0 32px rgba(0,0,0,.25);z-index:8889;flex-direction:column;transition:transform .32s cubic-bezier(.4,0,.2,1);">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:10px;flex-shrink:0;">
     <div>
       <p style="font-size:13px;font-weight:700;color:var(--text-1);margin:0;" id="preview-title">Prévia do boleto</p>
@@ -598,14 +599,14 @@ function abrirPrevia(downloadUrl, nf, parcela){
   panel.style.transform = 'translateX(0)';
   backdrop.style.opacity = '1';
   // Inicialmente fora da tela
-  panel.style.transform = 'translateX(-100%)';
+  panel.style.transform = 'translateX(100%)';
   setTimeout(()=>{ panel.style.transform = 'translateX(0)'; }, 10);
 }
 
 function fecharPrevia(){
   const panel = document.getElementById('preview-panel');
   const backdrop = document.getElementById('preview-backdrop');
-  panel.style.transform = 'translateX(-100%)';
+  panel.style.transform = 'translateX(100%)';
   backdrop.style.opacity = '0';
   setTimeout(()=>{
     panel.style.display = 'none';
