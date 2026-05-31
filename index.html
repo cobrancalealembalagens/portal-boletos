@@ -7,7 +7,7 @@
 <title>Portal de Boletos — Leal</title>
 <style>
 html{scroll-behavior:smooth;}
-:root {  --bg-gradient: linear-gradient(135deg,#002f6c 0%,#0057b8 45%,#0096c7 80%,#48cae4 100%);
+:root {  --bg-gradient: linear-gradient(135deg,#132743 0%,#1b3f6e 40%,#1e5490 70%,#1a6b8a 100%);
   --card-bg:#fff; --card-bg2:#f8f9fb; --text-1:#1a1a1a; --text-2:#666;
   --text-hdr:#fff; --border:#e5e5e5; --input-bd:#ddd; --focus:#0057b8;
   --btn-bg:#0057b8; --btn-color:#fff; --sair-bg:#fff; --sair-color:#0057b8;
@@ -54,7 +54,7 @@ tr:hover td{background:var(--row-hover);}
 .badge-none{background:var(--bn-bg);color:var(--bn-c);}
 .msg-erro{background:#f8d7da;color:#842029;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
 .msg-ok{background:#d1e7dd;color:#0a6640;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
-.tabs{display:flex;gap:4px;margin-bottom:1rem;}
+.tabs{display:flex;gap:4px;margin-bottom:1rem;flex-wrap:wrap;}
 .tab{font-size:13px;padding:6px 14px;border-radius:8px;border:none;background:transparent;cursor:pointer;color:var(--text-2);}
 .tab.active{background:#e8f1ff;color:#0057b8;font-weight:500;}
 .tab:hover:not(.active){background:var(--card-bg2);}
@@ -195,18 +195,20 @@ tbody tr:hover td{background:var(--row-hover);}
       <h1>Portal de Boletos</h1>
       <p id="lbl-admin-nome"></p>
     </div>
-    <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
-  </div>
-  <div class="header-toolbar">
-    <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
-    <button class="btn-hdr" onclick="toggleDark()" id="btn-dark">🌙</button>
   </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="mostrarTab('tab-boletos',this)">📄 Boletos</button>
-    <button class="tab hidden" onclick="mostrarTab('tab-usuarios',this)">👥 Usuários</button>
-    <button class="tab hidden" onclick="mostrarTab('tab-novo-boleto',this)">+ Novo boleto</button>
-    <button class="tab hidden" onclick="mostrarTab('tab-novo-usuario',this)">+ Novo usuário</button>
+  <div class="tabs" style="justify-content:space-between;align-items:center;">
+    <div style="display:flex;gap:4px;">
+      <button class="tab active" onclick="mostrarTab('tab-boletos',this)">📄 Boletos</button>
+      <button class="tab hidden" onclick="mostrarTab('tab-usuarios',this)">👥 Usuários</button>
+      <button class="tab hidden" onclick="mostrarTab('tab-novo-boleto',this)">+ Novo boleto</button>
+      <button class="tab hidden" onclick="mostrarTab('tab-novo-usuario',this)">+ Novo usuário</button>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
+      <button class="btn-hdr" onclick="toggleDark()" id="btn-dark">🌙</button>
+      <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
+    </div>
   </div>
 
   <div id="msg-admin"></div>
@@ -303,11 +305,15 @@ tbody tr:hover td{background:var(--row-hover);}
       <h1>Meus Boletos</h1>
       <p id="lbl-forn-nome" style="color:rgba(255,255,255,.8);"></p>
     </div>
-    <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
   </div>
-  <div class="header-toolbar">
-    <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
-    <button class="btn-hdr" onclick="toggleDark()" id="btn-dark-forn">🌙</button>
+
+  <div class="tabs" style="justify-content:space-between;align-items:center;margin-bottom:1rem;">
+    <div></div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
+      <button class="btn-hdr" onclick="toggleDark()" id="btn-dark-forn">🌙</button>
+      <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
+    </div>
   </div>
 
   <div class="card">
