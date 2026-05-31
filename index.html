@@ -6,8 +6,8 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23002f6c'/><text x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='bold' fill='white' text-anchor='middle'>L</text></svg>"/>
 <title>Portal de Boletos — Leal</title>
 <style>
-:root {
-  --bg-gradient: linear-gradient(135deg,#002f6c 0%,#0057b8 45%,#0096c7 80%,#48cae4 100%);
+html{scroll-behavior:smooth;}
+:root {  --bg-gradient: linear-gradient(135deg,#002f6c 0%,#0057b8 45%,#0096c7 80%,#48cae4 100%);
   --card-bg:#fff; --card-bg2:#f8f9fb; --text-1:#1a1a1a; --text-2:#666;
   --text-hdr:#fff; --border:#e5e5e5; --input-bd:#ddd; --focus:#0057b8;
   --btn-bg:#0057b8; --btn-color:#fff; --sair-bg:#fff; --sair-color:#0057b8;
@@ -542,7 +542,9 @@ async function buscarBoletos(tipo){
       <td>${venc}</td>
       <td style="font-size:12px;">${rep}</td>
       <td style="white-space:nowrap;">
-        ${b.downloadUrl?`<a href="${b.downloadUrl}" target="_blank"><button style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button></a>`:'<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
+        ${b.downloadUrl
+          ? `<a href="${b.downloadUrl}" target="_blank" onclick="pdfFeedback(this)"><button style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button></a>`
+          : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
         ${isAdmin?`<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>
         <button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>`:''}
       </td>
@@ -550,6 +552,25 @@ async function buscarBoletos(tipo){
   });
   html+='</tbody></table></div>';
   document.getElementById(targetId).innerHTML=html;
+  // Scroll suave até os resultados
+  setTimeout(()=>{
+    document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
+  }, 100);
+}
+
+/* ── PDF FEEDBACK ── */
+function pdfFeedback(linkEl){
+  const btn = linkEl.querySelector('button');
+  if(!btn) return;
+  const original = btn.innerHTML;
+  btn.innerHTML = '✓ Baixando...';
+  btn.style.color = '#0a6640';
+  btn.style.borderColor = '#0a6640';
+  setTimeout(()=>{
+    btn.innerHTML = original;
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 2500);
 }
 
 /* ── EXPORTAR CSV ── */
@@ -671,6 +692,18 @@ function cancelarFormUsuario(){
 }
 
 document.getElementById('inp-senha').addEventListener('keypress',e=>{if(e.key==='Enter') fazerLogin();});
+
+// Atalho Enter nos filtros admin
+['fa-nf','fa-parcela','fa-cnpj','fa-representante'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('keypress',e=>{if(e.key==='Enter') buscarBoletos('admin');});
+});
+
+// Atalho Enter nos filtros fornecedor
+['ff-nf','ff-parcela','ff-representante'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('keypress',e=>{if(e.key==='Enter') buscarBoletos('fornecedor');});
+});
 </script>
 </body>
 </html>
