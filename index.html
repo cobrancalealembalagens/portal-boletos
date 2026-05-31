@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,..."/>
 <title>Portal de Boletos — Leal</title>
 <style>
 :root {
@@ -98,6 +99,19 @@ tr:hover td{background:var(--row-hover);}
 .btn-export:hover{opacity:.88;}
 /* OVERFLOW TABLE */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+/* SPINNER */
+.spinner-wrap{text-align:center;padding:2rem;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--btn-bg);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner-wrap p{color:var(--text-2);font-size:14px;margin-top:4px;}
+/* ENTRY ANIMATION */
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.card{animation:slideUp .35s ease both;}
+/* ROW HOVER */
+tbody tr{transition:background .18s;}
+tbody tr:hover td{background:var(--row-hover);}
+/* FOOTER */
+.footer{text-align:center;padding:2rem 1rem 1.5rem;font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;}
 /* MOBILE */
 @media(max-width:640px){
   .container{padding:1rem .75rem;}
@@ -316,6 +330,11 @@ tr:hover td{background:var(--row-hover);}
 
 </div><!-- /container -->
 
+<div class="footer">
+  Leal Embalagens de Papel &copy; 2026<br>
+  Criado e desenvolvido por Dennis Wandembruck
+</div>
+
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbx3o88jj0RBjXul1-nt6kaF6nEQOJkOHKMiOpy1hILNRq30ebXDspUA-CC7xhOH6IFK/exec';
 let usuarioAtual = null;
@@ -500,7 +519,8 @@ async function buscarBoletos(tipo){
   }
   const targetId=tipo==='admin'?'result-boletos-admin':'result-boletos-forn';
   const barId=tipo==='admin'?'export-bar-admin':'export-bar-forn';
-  document.getElementById(targetId).innerHTML='<div class="loading">Buscando...</div>';
+  const spinnerHtml='<div class="spinner-wrap"><div class="spinner"></div><p>Buscando boletos...</p></div>';
+  document.getElementById(targetId).innerHTML=spinnerHtml;
   document.getElementById(barId).classList.add('hidden');
   const res=await api(params); const boletos=res.boletos||[]; const isAdmin=tipo==='admin';
   boletosCarregados=boletos;
