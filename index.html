@@ -117,6 +117,17 @@ tr:hover td{background:var(--row-hover);}
 /* ROW HOVER */
 td{transition:background .18s;}
 tbody tr:hover td{background:var(--row-hover);}
+/* ── SORT ── */
+.th-sort{cursor:pointer;user-select:none;white-space:nowrap;}
+.th-sort:hover{color:var(--btn-bg);}
+.sort-icon{margin-left:4px;opacity:.5;font-size:10px;}
+.th-sort.asc .sort-icon::after{content:'▲';}
+.th-sort.desc .sort-icon::after{content:'▼';}
+.th-sort:not(.asc):not(.desc) .sort-icon::after{content:'⇅';}
+/* EXTERNAL BUTTONS */
+.btn-ext-looker{background:#4285f4;color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:opacity .18s;}
+.btn-ext-pipefy{background:#1c8a5e;color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:opacity .18s;}
+.btn-ext-looker:hover,.btn-ext-pipefy:hover{opacity:.85;}
 /* FOOTER */
 .footer{text-align:center;padding:2rem 1rem 1.5rem;font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;}
 /* MOBILE */
@@ -211,13 +222,13 @@ tbody tr:hover td{background:var(--row-hover);}
       <button class="tab hidden" onclick="mostrarTab('tab-novo-usuario',this)">+ Novo usuário</button>
     </div>
     <div style="display:flex;gap:6px;align-items:center;">
+      <a href="https://datastudio.google.com/s/sjlTLWEGhoI" target="_blank"><button class="btn-ext-looker">📊 Inadimplência</button></a>
+      <a href="https://app.pipefy.com/public/form/yg0oOER6" target="_blank"><button class="btn-ext-pipefy">🎫 Abrir chamado</button></a>
       <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
       <button class="btn-hdr" onclick="toggleDark()" id="btn-dark">🌙</button>
       <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
     </div>
   </div>
-
-  <div id="msg-admin"></div>
 
   <!-- Aba Boletos -->
   <div id="tab-boletos">
@@ -320,6 +331,8 @@ tbody tr:hover td{background:var(--row-hover);}
   <div class="tabs" style="justify-content:space-between;align-items:center;margin-bottom:1rem;">
     <div></div>
     <div style="display:flex;gap:6px;align-items:center;">
+      <a href="https://datastudio.google.com/s/sjlTLWEGhoI" target="_blank"><button class="btn-ext-looker">📊 Inadimplência</button></a>
+      <a href="https://app.pipefy.com/public/form/yg0oOER6" target="_blank"><button class="btn-ext-pipefy">🎫 Abrir chamado</button></a>
       <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
       <button class="btn-hdr" onclick="toggleDark()" id="btn-dark-forn">🌙</button>
       <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
@@ -529,6 +542,7 @@ function mostrarTabelaVazia(id){
 
 /* ── LIMPAR FILTROS ── */
 function limparFiltros(tipo){
+  sortCol=null; sortDir=1;
   if(tipo==='admin'){
     ['fa-nf','fa-parcela','fa-cnpj'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fa-representante').selectedIndex=0;
@@ -570,10 +584,41 @@ async function buscarBoletos(tipo){
     return;
   }
   document.getElementById(barId).classList.remove('hidden');
-  let html=`<div class="tbl-wrap"><table><thead><tr>
-    <th>Nota Fiscal</th><th>Parcela</th><th>CNPJ</th><th>Valor</th><th>Vencimento</th><th>Representante</th><th>Status</th><th>Ações</th>
-  </tr></thead><tbody>`;
-  boletos.forEach(b=>{
+  renderTabela(boletos, isAdmin, targetId);
+  setTimeout(()=>{
+    document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
+  }, 100);
+}
+
+/* ── SORT STATE ── */
+let sortCol = null, sortDir = 1;
+
+function renderTabela(boletos, isAdmin, targetId){
+  const cols = [
+    {key:'nf',      label:'Nota Fiscal'},
+    {key:'parcela', label:'Parcela'},
+    {key:'cnpj',    label:'CNPJ'},
+    {key:'valor',   label:'Valor'},
+    {key:'vencimento', label:'Vencimento'},
+    {key:'representante', label:'Representante'},
+    {key:'status',  label:'Status'},
+  ];
+
+  const thHtml = cols.map(c => {
+    const active = sortCol === c.key ? (sortDir===1?'asc':'desc') : '';
+    return `<th class="th-sort ${active}" onclick="sortTabela('${c.key}','${isAdmin}','${targetId}')">${c.label}<span class="sort-icon"></span></th>`;
+  }).join('') + '<th>Ações</th>';
+
+  const sorted = [...boletos].sort((a,b)=>{
+    if(!sortCol) return 0;
+    let va = sortCol==='representante' ? (a.descricao||a.representante||'') : (a[sortCol]||'');
+    let vb = sortCol==='representante' ? (b.descricao||b.representante||'') : (b[sortCol]||'');
+    if(sortCol==='valor'){ va=Number(va); vb=Number(vb); return (va-vb)*sortDir; }
+    return String(va).localeCompare(String(vb),'pt-BR',{numeric:true})*sortDir;
+  });
+
+  let html=`<div class="tbl-wrap"><table><thead><tr>${thHtml}</tr></thead><tbody>`;
+  sorted.forEach(b=>{
     const venc=formatarData(b.vencimento); const rep=b.descricao||b.representante||'—';
     html+=`<tr>
       <td><strong>${b.nf}</strong></td>
@@ -585,7 +630,7 @@ async function buscarBoletos(tipo){
       <td>${badge(b.status)}</td>
       <td style="white-space:nowrap;">
         ${b.downloadUrl
-          ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;" id="pdf-btn-${b.id}">⬇ PDF</button>`
+          ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>`
           : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
         ${isAdmin?`<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>
         <button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>`:''}
@@ -594,10 +639,11 @@ async function buscarBoletos(tipo){
   });
   html+='</tbody></table></div>';
   document.getElementById(targetId).innerHTML=html;
-  // Scroll suave até os resultados
-  setTimeout(()=>{
-    document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
-  }, 100);
+}
+
+function sortTabela(col, isAdmin, targetId){
+  if(sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=1; }
+  renderTabela(boletosCarregados, isAdmin==='true', targetId);
 }
 
 /* ── PRÉVIA PDF ── */
