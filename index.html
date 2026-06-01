@@ -52,6 +52,12 @@ tr:hover td{background:var(--row-hover);}
 .badge-pago{background:var(--bpg-bg);color:var(--bpg-c);}
 .badge-vencido{background:var(--bv-bg);color:var(--bv-c);}
 .badge-none{background:var(--bn-bg);color:var(--bn-c);}
+.badge-cobrado{background:#dbeafe;color:#1d4ed8;}
+.badge-negativado{background:#fce7f3;color:#9d174d;}
+.badge-protestado{background:#fef3c7;color:#92400e;}
+[data-theme="dark"] .badge-cobrado{background:#1e3a6e;color:#93c5fd;}
+[data-theme="dark"] .badge-negativado{background:#4a1030;color:#f9a8d4;}
+[data-theme="dark"] .badge-protestado{background:#3a2a00;color:#fcd34d;}
 .msg-erro{background:#f8d7da;color:#842029;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
 .msg-ok{background:#d1e7dd;color:#0a6640;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
 .tabs{display:flex;gap:4px;margin-bottom:1rem;flex-wrap:wrap;}
@@ -262,9 +268,13 @@ tbody tr:hover td{background:var(--row-hover);}
         </div>
         <div><label>Status</label>
           <select id="nb-status">
+            <option value="">—</option>
             <option value="pendente">Pendente</option>
             <option value="pago">Pago</option>
             <option value="vencido">Vencido</option>
+            <option value="cobrado">Cobrado</option>
+            <option value="negativado">Negativado</option>
+            <option value="protestado">Protestado</option>
           </select>
         </div>
         <p style="font-size:12px;color:#888;background:var(--card-bg2);padding:10px;border-radius:8px;transition:background .4s;">
@@ -455,7 +465,13 @@ function formatarData(valor){
 }
 function badge(s){
   if(!s) return '<span class="badge badge-none">—</span>';
-  return`<span class="badge badge-${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
+  const key = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const labels = {
+    pendente:'Pendente', pago:'Pago', vencido:'Vencido',
+    cobrado:'Cobrado', negativado:'Negativado', protestado:'Protestado'
+  };
+  const label = labels[key] || s;
+  return `<span class="badge badge-${key}">${label}</span>`;
 }
 
 /* ── REPRESENTANTES ── */
@@ -555,7 +571,7 @@ async function buscarBoletos(tipo){
   }
   document.getElementById(barId).classList.remove('hidden');
   let html=`<div class="tbl-wrap"><table><thead><tr>
-    <th>Nota Fiscal</th><th>Parcela</th><th>CNPJ</th><th>Valor</th><th>Vencimento</th><th>Representante</th><th>Ações</th>
+    <th>Nota Fiscal</th><th>Parcela</th><th>CNPJ</th><th>Valor</th><th>Vencimento</th><th>Representante</th><th>Status</th><th>Ações</th>
   </tr></thead><tbody>`;
   boletos.forEach(b=>{
     const venc=formatarData(b.vencimento); const rep=b.descricao||b.representante||'—';
@@ -566,6 +582,7 @@ async function buscarBoletos(tipo){
       <td style="font-weight:500;">${formatMoney(b.valor)}</td>
       <td>${venc}</td>
       <td style="font-size:12px;">${rep}</td>
+      <td>${badge(b.status)}</td>
       <td style="white-space:nowrap;">
         ${b.downloadUrl
           ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;" id="pdf-btn-${b.id}">⬇ PDF</button>`
