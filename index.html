@@ -350,7 +350,10 @@ tbody tr:hover td{background:var(--row-hover);}
     <div class="grid-3" style="margin-bottom:10px;">
       <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text"/></div>
       <div><label>Parcela</label><input id="ff-parcela" type="text"/></div>
-      <div><label>Representante</label>
+      
+      <div id="box-ff-cnpj"><label>CNPJ</label><input id="ff-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)"/></div>
+      
+      <div id="box-ff-representante"><label>Representante</label>
         <select id="ff-representante"><option value="">Todos</option></select>
       </div>
     </div>
@@ -391,7 +394,7 @@ tbody tr:hover td{background:var(--row-hover);}
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwN9gRLMN_r-ouA31zCQkK161lLCAhwiUZqm83UgTdlEWId-ggrEKf07aelKdyExoNy/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbx3o88jj0RBjXul1-nt6kaF6nEQOJkOHKMiOpy1hILNRq30ebXDspUA-CC7xhOH6IFK/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
@@ -523,7 +526,6 @@ async function fazerLogin(){
     if(usuarioAtual.role==='admin'){
       document.getElementById('tela-admin').classList.remove('hidden');
       document.getElementById('lbl-admin-nome').textContent='Painel administrativo — '+usuarioAtual.nome;
-      // Revela as abas restritas para o Administrador conseguir gerenciar
       document.querySelectorAll('#tela-admin .tab.hidden').forEach(el => el.classList.remove('hidden'));
       mostrarTabelaVazia('result-boletos-admin');
     } else {
@@ -537,14 +539,16 @@ async function fazerLogin(){
       }
       document.getElementById('lbl-forn-nome').textContent = subtitulo;
       
-      // Se for representante logado, oculta o filtro de seleção de representantes
-      const selectRep = document.getElementById('ff-representante');
-      if (selectRep) {
-        if (usuarioAtual.role === 'representante') {
-          selectRep.parentElement.style.display = 'none';
-        } else {
-          selectRep.parentElement.style.display = 'block';
-        }
+      // Ajusta os filtros: Fornecedor não vê CNPJ. Representante não vê a caixa de Representante.
+      const boxRep = document.getElementById('box-ff-representante');
+      const boxCnpj = document.getElementById('box-ff-cnpj');
+      
+      if (usuarioAtual.role === 'representante') {
+        if (boxRep) boxRep.style.display = 'none';
+        if (boxCnpj) boxCnpj.style.display = 'block';
+      } else {
+        if (boxRep) boxRep.style.display = 'block';
+        if (boxCnpj) boxCnpj.style.display = 'none';
       }
       mostrarTabelaVazia('result-boletos-forn');
     }
@@ -576,8 +580,14 @@ function limparFiltros(tipo){
     document.getElementById('export-bar-admin').classList.add('hidden');
     mostrarTabelaVazia('result-boletos-admin');
   } else {
-    ['ff-nf','ff-parcela'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('ff-representante').selectedIndex=0;
+    ['ff-nf','ff-parcela','ff-cnpj'].forEach(id=>{
+       const el = document.getElementById(id);
+       if (el) el.value='';
+    });
+    
+    const ffRep = document.getElementById('ff-representante');
+    if (ffRep) ffRep.selectedIndex=0;
+    
     document.getElementById('export-bar-forn').classList.add('hidden');
     mostrarTabelaVazia('result-boletos-forn');
   }
@@ -599,10 +609,10 @@ async function buscarBoletos(tipo){
     
     // Regra de filtros baseada no tipo de acesso
     if (usuarioAtual.role === 'representante') {
-      params.representante = usuarioAtual.representante; // Força apenas o dele
-      params.cnpj = "";
+      params.representante = usuarioAtual.representante; 
+      params.cnpj = document.getElementById('ff-cnpj').value; // Pega o CNPJ que o Rep digitou
     } else {
-      params.cnpj = usuarioAtual.cnpj;
+      params.cnpj = usuarioAtual.cnpj; 
       params.representante = document.getElementById('ff-representante').value;
     }
   }
@@ -770,7 +780,7 @@ async function salvarBoleto(){
   if(!data.nf||!data.parcela||!data.cnpj||!data.valor||!data.vencimento){alert('Preencha os campos obrigatórios.');return;}
   const res=await apiPost(data);
   if(res.ok){
-    alert(id?'Boleto atualizado!':'Boleto cadastrado!');
+    alert(id?'Boleto updated!':'Boleto cadastrado!');
     cancelarFormBoleto(); mostrarTab('tab-boletos',document.querySelectorAll('.tab')[0]); buscarBoletos('admin');
   } else {alert('Erro: '+res.erro);}
 }
