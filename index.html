@@ -157,7 +157,7 @@ tbody tr:hover td{background:var(--row-hover);}
     <h2>Bem-vindo ao Portal de Boletos</h2>
     <p>Antes de acessar, leia com atenção:</p>
     <ul class="popup-list">
-      <li>Este portal é exclusivo para Representantes;</li>
+      <li>Este portal é exclusivo para Fornecedores e Representantes;</li>
       <li>Os boletos são atualizados diariamente até as 15h;</li>
       <li>Se verificar que um boleto já foi pago, basta apagá-lo (ícone de lixeira);</li>
       <li>Caso hajam muitos boletos, pode demorar um pouco para carregar;</li>
@@ -231,6 +231,8 @@ tbody tr:hover td{background:var(--row-hover);}
       <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
     </div>
   </div>
+  
+  <div id="msg-admin"></div>
 
   <!-- Aba Boletos -->
   <div id="tab-boletos">
@@ -304,11 +306,14 @@ tbody tr:hover td{background:var(--row-hover);}
   <!-- Aba Novo Usuário -->
   <div id="tab-novo-usuario" class="hidden">
     <div class="card" style="max-width:420px;">
-      <p style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;" id="lbl-form-usuario">Cadastrar fornecedor</p>
+      <p style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;" id="lbl-form-usuario">Cadastrar usuário</p>
       <input type="hidden" id="nu-id"/>
       <div style="display:flex;flex-direction:column;gap:12px;">
         <div><label>Nome *</label><input id="nu-nome" type="text"/></div>
-        <div><label>CNPJ *</label><input id="nu-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)"/></div>
+        <div><label>CNPJ (Preencher apenas se for Fornecedor)</label><input id="nu-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)"/></div>
+        <div><label>Representante Vinculado (Preencher apenas se for usuário Representante)</label>
+          <select id="nu-representante"><option value="">Nenhum (Admin ou Fornecedor)</option></select>
+        </div>
         <div><label>Login *</label><input id="nu-login" type="text"/></div>
         <div><label>Senha *</label><input id="nu-senha" type="password"/></div>
         <div style="display:flex;gap:8px;margin-top:4px;">
@@ -320,7 +325,7 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 </div>
 
-<!-- ═══ FORNECEDOR ═══ -->
+<!-- ═══ FORNECEDOR / REPRESENTANTE ═══ -->
 <div id="tela-fornecedor" class="hidden">
   <div class="header">
     <img class="header-logo" src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
@@ -441,7 +446,7 @@ async function trocarSenha(){
   msgEl.innerHTML='<p style="color:var(--text-2);font-size:13px;">Verificando...</p>';
   const verify = await api({action:'login', login:usuarioAtual.login, senha:atual});
   if(!verify.ok){ msgEl.innerHTML='<div class="msg-erro">Senha atual incorreta.</div>'; return; }
-  const res = await apiPost({action:'salvar_usuario', id:usuarioAtual.id, nome:usuarioAtual.nome, cnpj:usuarioAtual.cnpj, login:usuarioAtual.login, senha:nova});
+  const res = await apiPost({action:'salvar_usuario', id:usuarioAtual.id, nome:usuarioAtual.nome, cnpj:usuarioAtual.cnpj, login:usuarioAtual.login, senha:nova, representante:usuarioAtual.representante});
   if(res.ok){
     msgEl.innerHTML='<div class="msg-ok">Senha alterada com sucesso!</div>';
     setTimeout(()=>fecharModalSenha(), 1600);
@@ -480,7 +485,7 @@ function formatarData(valor){
 }
 function badge(s){
   if(!s) return '<span class="badge badge-none">—</span>';
-  const key = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const key = s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
   const labels = {
     pendente:'Pendente', pago:'Pago', vencido:'Vencido',
     cobrado:'Cobrado', negativado:'Negativado', protestado:'Protestado'
@@ -493,7 +498,7 @@ function badge(s){
 async function carregarRepresentantes(){
   try{
     const res=await api({action:'representantes'}); const lista=res.representantes||[];
-    ['fa-representante','ff-representante','nb-representante'].forEach(id=>{
+    ['fa-representante','ff-representante','nb-representante','nu-representante'].forEach(id=>{
       const sel=document.getElementById(id); if(!sel) return;
       const first=sel.options[0]; sel.innerHTML=''; sel.appendChild(first);
       lista.forEach(rep=>{ const o=document.createElement('option'); o.value=rep; o.textContent=rep; sel.appendChild(o); });
@@ -514,13 +519,33 @@ async function fazerLogin(){
     await carregarRepresentantes();
     syncDarkBtn();
     popupEl.classList.remove('hidden'); popupEl.style.opacity='1';
+    
     if(usuarioAtual.role==='admin'){
       document.getElementById('tela-admin').classList.remove('hidden');
       document.getElementById('lbl-admin-nome').textContent='Painel administrativo — '+usuarioAtual.nome;
+      // Revela as abas restritas para o Administrador conseguir gerenciar
+      document.querySelectorAll('#tela-admin .tab.hidden').forEach(el => el.classList.remove('hidden'));
       mostrarTabelaVazia('result-boletos-admin');
     } else {
       document.getElementById('tela-fornecedor').classList.remove('hidden');
-      document.getElementById('lbl-forn-nome').textContent=usuarioAtual.nome+' — '+usuarioAtual.cnpj;
+      
+      let subtitulo = usuarioAtual.nome;
+      if (usuarioAtual.cnpj) {
+        subtitulo += ' — ' + usuarioAtual.cnpj;
+      } else if (usuarioAtual.role === 'representante') {
+        subtitulo += ' (Representante: ' + usuarioAtual.representante + ')';
+      }
+      document.getElementById('lbl-forn-nome').textContent = subtitulo;
+      
+      // Se for representante logado, oculta o filtro de seleção de representantes
+      const selectRep = document.getElementById('ff-representante');
+      if (selectRep) {
+        if (usuarioAtual.role === 'representante') {
+          selectRep.parentElement.style.display = 'none';
+        } else {
+          selectRep.parentElement.style.display = 'block';
+        }
+      }
       mostrarTabelaVazia('result-boletos-forn');
     }
   }catch(e){
@@ -569,10 +594,17 @@ async function buscarBoletos(tipo){
     params.cnpj=document.getElementById('fa-cnpj').value;
     params.representante=document.getElementById('fa-representante').value;
   } else {
-    params.cnpj=usuarioAtual.cnpj;
     params.nf=document.getElementById('ff-nf').value;
     params.parcela=document.getElementById('ff-parcela').value;
-    params.representante=document.getElementById('ff-representante').value;
+    
+    // Regra de filtros baseada no tipo de acesso
+    if (usuarioAtual.role === 'representante') {
+      params.representante = usuarioAtual.representante; // Força apenas o dele
+      params.cnpj = "";
+    } else {
+      params.cnpj = usuarioAtual.cnpj;
+      params.representante = document.getElementById('ff-representante').value;
+    }
   }
   const targetId=tipo==='admin'?'result-boletos-admin':'result-boletos-forn';
   const barId=tipo==='admin'?'export-bar-admin':'export-bar-forn';
@@ -645,12 +677,11 @@ function renderTabela(boletos, isAdmin, targetId){
 
 function sortTabela(col, isAdmin, targetId){
   if(sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=1; }
-  renderTabela(boletosCarregados, isAdmin==='true', targetId);
+  renderTabela(boletosCarregados, isAdmin==='true' || isAdmin===true, targetId);
 }
 
 /* ── PRÉVIA PDF ── */
 function abrirPrevia(downloadUrl, nf, parcela){
-  // Extrai o file ID do Drive para montar a URL de preview
   const match = downloadUrl.match(/id=([^&]+)/);
   if(!match){ window.open(downloadUrl,'_blank'); return; }
   const fileId = match[1];
@@ -665,13 +696,9 @@ function abrirPrevia(downloadUrl, nf, parcela){
   const backdrop = document.getElementById('preview-backdrop');
   panel.style.display = 'flex';
   backdrop.style.display = 'block';
-  // Força reflow para a animação funcionar
   panel.getBoundingClientRect();
   panel.style.transform = 'translateX(0)';
   backdrop.style.opacity = '1';
-  // Inicialmente fora da tela
-  panel.style.transform = 'translateX(100%)';
-  setTimeout(()=>{ panel.style.transform = 'translateX(0)'; }, 10);
 }
 
 function fecharPrevia(){
@@ -708,10 +735,11 @@ function exportarCSV(){
 async function carregarUsuarios(){
   document.getElementById('result-usuarios').innerHTML='<div class="loading">Carregando...</div>';
   const res=await api({action:'usuarios'}); const usuarios=res.usuarios||[];
-  if(!usuarios.length){document.getElementById('result-usuarios').innerHTML='<p style="text-align:center;padding:2rem;color:var(--text-2);font-size:14px;">Nenhum fornecedor cadastrado</p>';return;}
-  let html=`<table><thead><tr><th>Nome</th><th>Login</th><th>CNPJ</th><th>Ações</th></tr></thead><tbody>`;
+  if(!usuarios.length){document.getElementById('result-usuarios').innerHTML='<p style="text-align:center;padding:2rem;color:var(--text-2);font-size:14px;">Nenhum usuário cadastrado</p>';return;}
+  let html=`<table><thead><tr><th>Nome</th><th>Login</th><th>CNPJ / Representante</th><th>Ações</th></tr></thead><tbody>`;
   usuarios.forEach(u=>{
-    html+=`<tr><td>${u.nome}</td><td><code style="font-size:12px;">${u.login}</code></td><td style="font-size:12px;color:var(--text-2);">${u.cnpj||'—'}</td>
+    let info = u.cnpj ? u.cnpj : (u.representante ? `Rep: ${u.representante}` : 'Admin');
+    html+=`<tr><td>${u.nome}</td><td><code style="font-size:12px;">${u.login}</code></td><td style="font-size:12px;color:var(--text-2);">${info}</td>
     <td><button onclick="editarUsuario(${JSON.stringify(u).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️ Editar</button>
     <button class="btn-danger" onclick="excluirUsuario('${u.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button></td></tr>`;
   });
@@ -742,7 +770,7 @@ async function salvarBoleto(){
   if(!data.nf||!data.parcela||!data.cnpj||!data.valor||!data.vencimento){alert('Preencha os campos obrigatórios.');return;}
   const res=await apiPost(data);
   if(res.ok){
-    document.getElementById('msg-admin').innerHTML=`<div class="msg-ok">${id?'Boleto atualizado!':'Boleto cadastrado!'}</div>`;
+    alert(id?'Boleto atualizado!':'Boleto cadastrado!');
     cancelarFormBoleto(); mostrarTab('tab-boletos',document.querySelectorAll('.tab')[0]); buscarBoletos('admin');
   } else {alert('Erro: '+res.erro);}
 }
@@ -776,12 +804,13 @@ async function salvarUsuario(){
     nome:document.getElementById('nu-nome').value.trim(),
     cnpj:document.getElementById('nu-cnpj').value.trim(),
     login:document.getElementById('nu-login').value.trim(),
-    senha:document.getElementById('nu-senha').value.trim()};
-  if(!data.nome||!data.cnpj||!data.login){alert('Preencha os campos obrigatórios.');return;}
+    senha:document.getElementById('nu-senha').value.trim(),
+    representante:document.getElementById('nu-representante').value};
+  if(!data.nome||!data.login){alert('Preencha os campos obrigatórios (Nome e Login).');return;}
   if(!id&&!data.senha){alert('Informe uma senha.');return;}
   const res=await apiPost(data);
   if(res.ok){
-    document.getElementById('msg-admin').innerHTML=`<div class="msg-ok">${id?'Usuário atualizado!':'Usuário cadastrado!'}</div>`;
+    alert(id?'Usuário atualizado com sucesso!':'Usuário cadastrado com sucesso!');
     cancelarFormUsuario(); mostrarTab('tab-usuarios',document.querySelectorAll('.tab')[1]);
   } else {alert('Erro: '+res.erro);}
 }
@@ -790,7 +819,8 @@ function editarUsuario(u){
   document.getElementById('nu-id').value=u.id; document.getElementById('nu-nome').value=u.nome;
   document.getElementById('nu-cnpj').value=u.cnpj; document.getElementById('nu-login').value=u.login;
   document.getElementById('nu-senha').value='';
-  document.getElementById('lbl-form-usuario').textContent='Editar fornecedor';
+  document.getElementById('nu-representante').value=u.representante||'';
+  document.getElementById('lbl-form-usuario').textContent='Editar usuário';
   mostrarTab('tab-novo-usuario',document.querySelectorAll('.tab')[3]);
 }
 
@@ -801,7 +831,8 @@ async function excluirUsuario(id){
 
 function cancelarFormUsuario(){
   ['nu-id','nu-nome','nu-cnpj','nu-login','nu-senha'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('lbl-form-usuario').textContent='Cadastrar fornecedor';
+  document.getElementById('nu-representante').selectedIndex=0;
+  document.getElementById('lbl-form-usuario').textContent='Cadastrar usuário';
 }
 
 document.getElementById('inp-senha').addEventListener('keypress',e=>{if(e.key==='Enter') fazerLogin();});
