@@ -160,7 +160,6 @@ tbody tr:hover td{background:var(--row-hover);}
 </head>
 <body>
 
-<!-- ═══ POPUP BOAS-VINDAS ═══ -->
 <div class="overlay hidden" id="popup-boas-vindas">
   <div class="popup-box">
     <img src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
@@ -178,7 +177,6 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 </div>
 
-<!-- ═══ MODAL TROCAR SENHA ═══ -->
 <div class="overlay hidden" id="modal-senha">
   <div class="modal-box">
     <h2>🔑 Trocar senha</h2>
@@ -197,7 +195,6 @@ tbody tr:hover td{background:var(--row-hover);}
 
 <div class="container">
 
-<!-- ═══ LOGIN ═══ -->
 <div id="tela-login">
   <div class="login-card-wrap">
     <div class="login-logo-wrap">
@@ -216,7 +213,6 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 </div>
 
-<!-- ═══ ADMIN ═══ -->
 <div id="tela-admin" class="hidden">
   <div class="header">
     <img class="header-logo" src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
@@ -231,7 +227,6 @@ tbody tr:hover td{background:var(--row-hover);}
       <button class="tab active" onclick="mostrarTab('tab-boletos',this)">📄 Boletos</button>
       <button class="tab hidden" onclick="mostrarTab('tab-usuarios',this)">👥 Usuários</button>
       
-      <!-- Botão oculto -->
       <button class="tab" style="display:none !important;" onclick="mostrarTab('tab-novo-boleto',this)">+ Novo boleto</button>
       
       <button class="tab hidden" onclick="mostrarTab('tab-novo-usuario',this)">+ Novo usuário</button>
@@ -247,7 +242,6 @@ tbody tr:hover td{background:var(--row-hover);}
   
   <div id="msg-admin"></div>
 
-  <!-- Aba Boletos -->
   <div id="tab-boletos">
     <div class="card">
       <div class="grid-4" style="margin-bottom:10px;">
@@ -269,12 +263,10 @@ tbody tr:hover td{background:var(--row-hover);}
     <div class="card" id="result-boletos-admin"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
   </div>
 
-  <!-- Aba Usuários -->
   <div id="tab-usuarios" class="hidden">
     <div class="card" id="result-usuarios"><div class="loading">Carregando...</div></div>
   </div>
 
-  <!-- Aba Novo Boleto -->
   <div id="tab-novo-boleto" class="hidden">
     <div class="card" style="max-width:520px;">
       <p style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;" id="lbl-form-boleto">Cadastrar novo boleto</p>
@@ -316,7 +308,6 @@ tbody tr:hover td{background:var(--row-hover);}
     </div>
   </div>
 
-  <!-- Aba Novo Usuário -->
   <div id="tab-novo-usuario" class="hidden">
     <div class="card" style="max-width:420px;">
       <p style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;" id="lbl-form-usuario">Cadastrar usuário</p>
@@ -338,7 +329,6 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 </div>
 
-<!-- ═══ FORNECEDOR / REPRESENTANTE ═══ -->
 <div id="tela-fornecedor" class="hidden">
   <div class="header">
     <img class="header-logo" src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
@@ -381,7 +371,6 @@ tbody tr:hover td{background:var(--row-hover);}
   <div class="card" id="result-boletos-forn"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
 </div>
 
-<!-- ═══ PAINEL PRÉVIA PDF ═══ -->
 <div id="preview-backdrop" onclick="fecharPrevia()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8888;transition:opacity .3s;"></div>
 <div id="preview-panel" style="display:none;position:fixed;top:0;right:0;width:min(520px,95vw);height:100vh;background:var(--card-bg);box-shadow:-4px 0 32px rgba(0,0,0,.25);z-index:8889;flex-direction:column;transition:transform .32s cubic-bezier(.4,0,.2,1);">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:10px;flex-shrink:0;">
@@ -399,16 +388,14 @@ tbody tr:hover td{background:var(--row-hover);}
   <iframe id="preview-iframe" src="" style="flex:1;border:none;width:100%;background:#f5f5f5;" allowfullscreen></iframe>
 </div>
 
-</div><!-- /container -->
-
-<div class="footer">
+</div><div class="footer">
   Leal Embalagens de Papel &copy; 2026<br>
   Criado e desenvolvido por Dennis Wandembruck
 </div>
 
 <script>
 // URL DEFINITIVA CORRIGIDA:
-const API_URL = 'https://script.google.com/macros/s/AKfycbwh3RZYj3cxc9wpYOSOvQTJL_2JfBiXhhf8criV3-lguURdPfuYRIhagWp2lRl239Sd/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwN9gRLMN_r-ouA31zCQkK161lLCAhwiUZqm83UgTdlEWId-ggrEKf07aelKdyExoNy/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
@@ -705,8 +692,8 @@ function renderTabela(boletos, isAdmin, targetId){
         ${b.downloadUrl
           ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>`
           : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
-        ${isAdmin?`<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>
-        <button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>`:''}
+        ${isAdmin ? `<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>` : ''}
+        ${(isAdmin || usuarioAtual.role === 'representante') ? `<button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>` : ''}
       </td>
     </tr>`;
   });
@@ -843,7 +830,7 @@ function editarBoleto(b){
 
 async function excluirBoleto(id){
   if(!confirm('Excluir este boleto?')) return;
-  const res=await apiPost({action:'excluir_boleto',id}); if(res.ok) buscarBoletos('admin');
+  const res=await apiPost({action:'excluir_boleto',id}); if(res.ok) buscarBoletos(tipoAtual);
 }
 
 function cancelarFormBoleto(){
