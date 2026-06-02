@@ -340,12 +340,9 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 
   <div class="card">
-    <div class="grid-3" style="margin-bottom:10px;">
+    <div class="grid-2" style="margin-bottom:10px;">
       <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text"/></div>
       <div><label>Parcela</label><input id="ff-parcela" type="text"/></div>
-      <div><label>Representante</label>
-        <select id="ff-representante"><option value="">Todos</option></select>
-      </div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button onclick="buscarBoletos('fornecedor')">🔍 Buscar</button>
@@ -518,8 +515,9 @@ async function fazerLogin(){
       mostrarTabelaVazia('result-boletos-admin');
     } else {
       document.getElementById('tela-fornecedor').classList.remove('hidden');
-      document.getElementById('lbl-forn-nome').textContent=usuarioAtual.nome+' — '+usuarioAtual.cnpj;
-      mostrarTabelaVazia('result-boletos-forn');
+      document.getElementById('lbl-forn-nome').textContent=usuarioAtual.nome+(usuarioAtual.representante?' — '+usuarioAtual.representante:'');
+      // Carrega automaticamente os boletos do representante ao entrar
+      buscarBoletos('fornecedor');
     }
   }catch(e){
     document.getElementById('msg-login').innerHTML='<div class="msg-erro">Erro ao conectar com o servidor.</div>';
@@ -550,7 +548,6 @@ function limparFiltros(tipo){
     mostrarTabelaVazia('result-boletos-admin');
   } else {
     ['ff-nf','ff-parcela'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('ff-representante').selectedIndex=0;
     document.getElementById('export-bar-forn').classList.add('hidden');
     mostrarTabelaVazia('result-boletos-forn');
   }
@@ -567,10 +564,10 @@ async function buscarBoletos(tipo){
     params.cnpj=document.getElementById('fa-cnpj').value;
     params.representante=document.getElementById('fa-representante').value;
   } else {
-    params.cnpj=usuarioAtual.cnpj;
-    params.nf=document.getElementById('ff-nf').value;
-    params.parcela=document.getElementById('ff-parcela').value;
-    params.representante=document.getElementById('ff-representante').value;
+    params.cnpj          = usuarioAtual.cnpj          || '';
+    params.representante = usuarioAtual.representante  || '';
+    params.nf            = document.getElementById('ff-nf').value;
+    params.parcela       = document.getElementById('ff-parcela').value;
   }
   const targetId=tipo==='admin'?'result-boletos-admin':'result-boletos-forn';
   const barId=tipo==='admin'?'export-bar-admin':'export-bar-forn';
@@ -632,8 +629,7 @@ function renderTabela(boletos, isAdmin, targetId){
         ${b.downloadUrl
           ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>`
           : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
-        ${isAdmin?`<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>
-        <button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>`:''}
+        ${isAdmin?`<button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>`:''}
       </td>
     </tr>`;
   });
