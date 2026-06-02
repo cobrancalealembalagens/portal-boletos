@@ -61,9 +61,19 @@ tr:hover td{background:var(--row-hover);}
 .msg-erro{background:#f8d7da;color:#842029;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
 .msg-ok{background:#d1e7dd;color:#0a6640;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
 .tabs{display:flex;gap:4px;margin-bottom:1rem;flex-wrap:wrap;}
-.tab{font-size:13px;padding:6px 14px;border-radius:8px;border:none;background:transparent;cursor:pointer;color:var(--text-2);}
-.tab.active{background:#e8f1ff;color:#0057b8;font-weight:500;}
-.tab:hover:not(.active){background:var(--card-bg2);}
+
+/* TAB STYLE UPDATE */
+.tab{font-size:13px;padding:6px 14px;border-radius:8px;border:none;background:var(--card-bg);cursor:pointer;color:var(--text-1);box-shadow:0 2px 6px rgba(0,0,0,.08);font-weight:500;transition:all .2s;}
+.tab.active{background:var(--card-bg);color:var(--focus);font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.08), inset 0 0 0 2px var(--focus);}
+[data-theme="dark"] .tab.active{background:var(--card-bg);color:#93c5fd;box-shadow:0 2px 6px rgba(0,0,0,.08), inset 0 0 0 2px #93c5fd;}
+.tab:hover:not(.active){background:var(--card-bg2);opacity:.9;}
+
+/* PAGINATION */
+.pagination{display:flex;justify-content:center;gap:6px;margin-top:16px;flex-wrap:wrap;}
+.btn-page{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-1);font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-page.active{background:var(--btn-bg);color:var(--btn-color);border-color:var(--btn-bg);font-weight:bold;}
+.btn-page:hover:not(.active){background:var(--row-hover);}
+
 .hidden{display:none!important;}
 /* HEADER */
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:8px;flex-wrap:wrap;}
@@ -198,9 +208,9 @@ tbody tr:hover td{background:var(--row-hover);}
     <div class="card">
       <div id="msg-login"></div>
       <div style="display:flex;flex-direction:column;gap:12px;">
-        <div><label>Login</label><input id="inp-login" type="text"/></div>
-        <div><label>Senha</label><input id="inp-senha" type="password"/></div>
-        <button class="btn-primary" onclick="fazerLogin()" style="width:100%;margin-top:4px;">Entrar</button>
+        <div><label>Login</label><input id="inp-login" type="text" enterkeyhint="go"/></div>
+        <div><label>Senha</label><input id="inp-senha" type="password" enterkeyhint="go"/></div>
+        <button class="btn-primary" onclick="fazerLogin()" style="width:100%;margin-top:4px;">OK (Entrar)</button>
       </div>
     </div>
   </div>
@@ -217,10 +227,13 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 
   <div class="tabs" style="justify-content:space-between;align-items:center;">
-    <div style="display:flex;gap:4px;">
+    <div style="display:flex;gap:8px;">
       <button class="tab active" onclick="mostrarTab('tab-boletos',this)">📄 Boletos</button>
       <button class="tab hidden" onclick="mostrarTab('tab-usuarios',this)">👥 Usuários</button>
-      <button class="tab hidden" onclick="mostrarTab('tab-novo-boleto',this)">+ Novo boleto</button>
+      
+      <!-- Botão oculto -->
+      <button class="tab" style="display:none !important;" onclick="mostrarTab('tab-novo-boleto',this)">+ Novo boleto</button>
+      
       <button class="tab hidden" onclick="mostrarTab('tab-novo-usuario',this)">+ Novo usuário</button>
     </div>
     <div style="display:flex;gap:6px;align-items:center;">
@@ -238,15 +251,15 @@ tbody tr:hover td{background:var(--row-hover);}
   <div id="tab-boletos">
     <div class="card">
       <div class="grid-4" style="margin-bottom:10px;">
-        <div><label>Nº Nota Fiscal</label><input id="fa-nf" type="text"/></div>
-        <div><label>Parcela</label><input id="fa-parcela" type="text"/></div>
-        <div><label>CNPJ</label><input id="fa-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)"/></div>
+        <div><label>Nº Nota Fiscal</label><input id="fa-nf" type="text" enterkeyhint="search"/></div>
+        <div><label>Parcela</label><input id="fa-parcela" type="text" enterkeyhint="search"/></div>
+        <div><label>CNPJ</label><input id="fa-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="search"/></div>
         <div><label>Representante</label>
           <select id="fa-representante"><option value="">Todos</option></select>
         </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button onclick="buscarBoletos('admin')">🔍 Filtrar</button>
+        <button class="btn-primary" onclick="buscarBoletos('admin')">🔍 OK</button>
         <button onclick="limparFiltros('admin')" style="color:var(--text-2);">✕ Limpar</button>
       </div>
     </div>
@@ -348,17 +361,17 @@ tbody tr:hover td{background:var(--row-hover);}
 
   <div class="card">
     <div class="grid-3" style="margin-bottom:10px;">
-      <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text"/></div>
-      <div><label>Parcela</label><input id="ff-parcela" type="text"/></div>
+      <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text" enterkeyhint="search"/></div>
+      <div><label>Parcela</label><input id="ff-parcela" type="text" enterkeyhint="search"/></div>
       
-      <div id="box-ff-cnpj"><label>CNPJ</label><input id="ff-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)"/></div>
+      <div id="box-ff-cnpj"><label>CNPJ</label><input id="ff-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="search"/></div>
       
       <div id="box-ff-representante"><label>Representante</label>
         <select id="ff-representante"><option value="">Todos</option></select>
       </div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button onclick="buscarBoletos('fornecedor')">🔍 Buscar</button>
+      <button class="btn-primary" onclick="buscarBoletos('fornecedor')">🔍 OK</button>
       <button onclick="limparFiltros('fornecedor')" style="color:var(--text-2);">✕ Limpar</button>
     </div>
   </div>
@@ -394,10 +407,13 @@ tbody tr:hover td{background:var(--row-hover);}
 </div>
 
 <script>
+// URL DEFINITIVA CORRIGIDA:
 const API_URL = 'https://script.google.com/macros/s/AKfycbwN9gRLMN_r-ouA31zCQkK161lLCAhwiUZqm83UgTdlEWId-ggrEKf07aelKdyExoNy/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
+let paginaAtual = 1;
+const ITENS_POR_PAGINA = 15;
 
 /* ── DARK MODE ── */
 (function(){
@@ -423,7 +439,13 @@ function syncDarkBtn(){
 const popupEl = document.getElementById('popup-boas-vindas');
 function fecharPopup(){
   popupEl.style.opacity='0'; popupEl.style.transition='opacity .28s';
-  setTimeout(()=>popupEl.classList.add('hidden'),280);
+  setTimeout(()=>{
+    popupEl.classList.add('hidden');
+    // Verifica se precisa carregar os boletos logo após fechar o popup (para representantes)
+    if (usuarioAtual && usuarioAtual.role === 'representante') {
+      buscarBoletos('fornecedor');
+    }
+  },280);
 }
 
 /* ── MODAL SENHA ── */
@@ -546,11 +568,12 @@ async function fazerLogin(){
       if (usuarioAtual.role === 'representante') {
         if (boxRep) boxRep.style.display = 'none';
         if (boxCnpj) boxCnpj.style.display = 'block';
+        // Auto-busca será chamada após fechar o popup
       } else {
         if (boxRep) boxRep.style.display = 'block';
         if (boxCnpj) boxCnpj.style.display = 'none';
+        mostrarTabelaVazia('result-boletos-forn'); // Fornecedor vê a tela vazia
       }
-      mostrarTabelaVazia('result-boletos-forn');
     }
   }catch(e){
     document.getElementById('msg-login').innerHTML='<div class="msg-erro">Erro ao conectar com o servidor.</div>';
@@ -558,7 +581,7 @@ async function fazerLogin(){
 }
 
 function sair(){
-  usuarioAtual=null; boletosCarregados=[];
+  usuarioAtual=null; boletosCarregados=[]; paginaAtual=1;
   ['tela-admin','tela-fornecedor'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('tela-login').classList.remove('hidden');
   document.getElementById('inp-login').value='';
@@ -574,6 +597,7 @@ function mostrarTabelaVazia(id){
 /* ── LIMPAR FILTROS ── */
 function limparFiltros(tipo){
   sortCol=null; sortDir=1;
+  paginaAtual = 1;
   if(tipo==='admin'){
     ['fa-nf','fa-parcela','fa-cnpj'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fa-representante').selectedIndex=0;
@@ -597,6 +621,7 @@ function limparFiltros(tipo){
 /* ── BUSCAR BOLETOS ── */
 async function buscarBoletos(tipo){
   tipoAtual=tipo;
+  paginaAtual = 1;
   const params={action:'boletos'};
   if(tipo==='admin'){
     params.nf=document.getElementById('fa-nf').value;
@@ -661,8 +686,12 @@ function renderTabela(boletos, isAdmin, targetId){
     return String(va).localeCompare(String(vb),'pt-BR',{numeric:true})*sortDir;
   });
 
+  const totalPaginas = Math.ceil(sorted.length / ITENS_POR_PAGINA);
+  const startIndex = (paginaAtual - 1) * ITENS_POR_PAGINA;
+  const paginados = sorted.slice(startIndex, startIndex + ITENS_POR_PAGINA);
+
   let html=`<div class="tbl-wrap"><table><thead><tr>${thHtml}</tr></thead><tbody>`;
-  sorted.forEach(b=>{
+  paginados.forEach(b=>{
     const venc=formatarData(b.vencimento); const rep=b.descricao||b.representante||'—';
     html+=`<tr>
       <td><strong>${b.nf}</strong></td>
@@ -682,12 +711,29 @@ function renderTabela(boletos, isAdmin, targetId){
     </tr>`;
   });
   html+='</tbody></table></div>';
+
+  if (totalPaginas > 1) {
+    html += '<div class="pagination">';
+    for (let i = 1; i <= totalPaginas; i++) {
+      const activeCls = i === paginaAtual ? ' active' : '';
+      html += `<button class="btn-page${activeCls}" onclick="mudarPagina(${i}, ${isAdmin}, '${targetId}')">${i}</button>`;
+    }
+    html += '</div>';
+  }
+
   document.getElementById(targetId).innerHTML=html;
 }
 
 function sortTabela(col, isAdmin, targetId){
+  paginaAtual = 1;
   if(sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=1; }
   renderTabela(boletosCarregados, isAdmin==='true' || isAdmin===true, targetId);
+}
+
+function mudarPagina(novaPagina, isAdmin, targetId) {
+  paginaAtual = novaPagina;
+  renderTabela(boletosCarregados, isAdmin, targetId);
+  document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 /* ── PRÉVIA PDF ── */
@@ -855,7 +901,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharPrevia(); })
 });
 
 // Atalho Enter nos filtros fornecedor
-['ff-nf','ff-parcela','ff-representante'].forEach(id=>{
+['ff-nf','ff-parcela','ff-representante','ff-cnpj'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('keypress',e=>{if(e.key==='Enter') buscarBoletos('fornecedor');});
 });
