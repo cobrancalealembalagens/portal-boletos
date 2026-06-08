@@ -655,6 +655,7 @@ function renderTabela(boletos, isAdmin, targetId){
     {key:'nf',      label:'Nota Fiscal'},
     {key:'parcela', label:'Parcela'},
     {key:'cnpj',    label:'CNPJ'},
+    {key:'cliente', label:'Cliente'},
     {key:'valor',   label:'Valor'},
     {key:'vencimento', label:'Vencimento'},
     {key:'representante', label:'Representante'},
@@ -685,6 +686,7 @@ function renderTabela(boletos, isAdmin, targetId){
       <td><strong>${b.nf}</strong></td>
       <td style="color:var(--text-2);">${b.parcela}</td>
       <td style="font-size:12px;color:var(--text-2);">${b.cnpj||'—'}</td>
+      <td style="font-size:12px;font-weight:500;">${b.cliente||'—'}</td>
       <td style="font-weight:500;">${formatMoney(b.valor)}</td>
       <td>${venc}</td>
       <td style="font-size:12px;">${rep}</td>
@@ -760,9 +762,10 @@ function fecharPrevia(){
 /* ── EXPORTAR CSV ── */
 function exportarCSV(){
   if(!boletosCarregados.length) return;
-  const headers=['Nota Fiscal','Parcela','CNPJ','Valor (R$)','Vencimento','Representante'];
+  const headers=['Nota Fiscal','Parcela','CNPJ','Cliente','Valor (R$)','Vencimento','Representante'];
   const rows=boletosCarregados.map(b=>[
     b.nf, b.parcela, b.cnpj||'',
+    b.cliente||'',
     Number(b.valor).toFixed(2).replace('.',','),
     formatarData(b.vencimento),
     b.descricao||b.representante||''
