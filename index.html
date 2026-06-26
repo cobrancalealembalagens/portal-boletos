@@ -905,6 +905,7 @@ async function excluirSelecionados(targetId){
   const ids = checkboxes.map(c => c.dataset.id);
   const btnId = targetId === 'result-boletos-admin' ? 'btn-bulk-admin' : 'btn-bulk-forn';
   const btn = document.getElementById(btnId);
+  const btnHtmlOriginal = btn ? btn.innerHTML : '';
   if(btn){ btn.textContent = '⏳ Excluindo...'; btn.disabled = true; }
 
   // Deleta em sequência sem recarregar a página a cada item
@@ -918,7 +919,7 @@ async function excluirSelecionados(targetId){
     } else { erros++; }
   }
 
-  if(btn){ btn.disabled = false; }
+  if(btn){ btn.innerHTML = btnHtmlOriginal; btn.disabled = false; }
   atualizarContador(targetId);
   if(erros > 0) alert(`${erros} boleto(s) não puderam ser excluídos.`);
 }
