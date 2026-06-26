@@ -111,9 +111,20 @@ tr:hover td{background:var(--row-hover);}
 .btn-popup{display:block;width:100%;background:linear-gradient(90deg,#002f6c,#0057b8);color:#fff;border:none;border-radius:10px;padding:13px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:inherit;transition:opacity .18s;}
 .btn-popup:hover{opacity:.88;}
 /* EXPORT */
-.export-bar{display:flex;justify-content:flex-end;margin-bottom:8px;}
+.export-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap;}
 .btn-export{background:var(--export-bg);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
 .btn-export:hover{opacity:.88;}
+/* BULK DELETE */
+.btn-bulk-delete{background:#c0392b;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .18s;}
+.btn-bulk-delete:hover{opacity:.85;}
+.bulk-actions{display:flex;align-items:center;gap:10px;}
+/* CHECKBOX */
+input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--btn-bg);}
+th input[type=checkbox]{margin:0;}
+td.col-check{width:32px;text-align:center;}
+th.col-check{width:32px;text-align:center;}
+tr.row-selected td{background:rgba(0,87,184,.07)!important;}
+[data-theme="dark"] tr.row-selected td{background:rgba(100,160,255,.08)!important;}
 /* OVERFLOW TABLE */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
 /* SPINNER */
@@ -259,6 +270,9 @@ tbody tr:hover td{background:var(--row-hover);}
       </div>
     </div>
     <div class="export-bar hidden" id="export-bar-admin">
+      <div class="bulk-actions">
+        <button class="btn-bulk-delete hidden" id="btn-bulk-admin" onclick="excluirSelecionados('result-boletos-admin')">🗑️ Excluir selecionados (<span id="count-admin">0</span>)</button>
+      </div>
       <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
     </div>
     <div class="card" id="result-boletos-admin"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
@@ -367,6 +381,9 @@ tbody tr:hover td{background:var(--row-hover);}
     </div>
   </div>
   <div class="export-bar hidden" id="export-bar-forn">
+    <div class="bulk-actions">
+      <button class="btn-bulk-delete hidden" id="btn-bulk-forn" onclick="excluirSelecionados('result-boletos-forn')">🗑️ Excluir selecionados (<span id="count-forn">0</span>)</button>
+    </div>
     <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
   </div>
   <div class="card" id="result-boletos-forn"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
@@ -662,7 +679,10 @@ function renderTabela(boletos, isAdmin, targetId){
     {key:'status',  label:'Status'},
   ];
 
-  const thHtml = cols.map(c => {
+  const canDelete = isAdmin || (usuarioAtual && usuarioAtual.role === 'representante');
+  const checkTh = canDelete ? `<th class="col-check"><input type="checkbox" id="chk-all-${targetId}" onclick="toggleTodos(this,'${targetId}')"/></th>` : '';
+
+  const thHtml = checkTh + cols.map(c => {
     const active = sortCol === c.key ? (sortDir===1?'asc':'desc') : '';
     return `<th class="th-sort ${active}" onclick="sortTabela('${c.key}','${isAdmin}','${targetId}')">${c.label}<span class="sort-icon"></span></th>`;
   }).join('') + '<th>Ações</th>';
@@ -682,7 +702,10 @@ function renderTabela(boletos, isAdmin, targetId){
   let html=`<div class="tbl-wrap"><table><thead><tr>${thHtml}</tr></thead><tbody>`;
   paginados.forEach(b=>{
     const venc=formatarData(b.vencimento); const rep=b.descricao||b.representante||'—';
-    html+=`<tr>
+    const checkTd = canDelete ? `<td class="col-check"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/></td>` : '';
+    html+=`<tr id="row-${b.id}">
+      ${checkTd}
+      <td><strong>${b.nf}</strong></td>
       <td><strong>${b.nf}</strong></td>
       <td style="color:var(--text-2);">${b.parcela}</td>
       <td style="font-size:12px;color:var(--text-2);">${b.cnpj||'—'}</td>
@@ -834,7 +857,71 @@ function editarBoleto(b){
 
 async function excluirBoleto(id){
   if(!confirm('Excluir este boleto?')) return;
-  const res=await apiPost({action:'excluir_boleto',id}); if(res.ok) buscarBoletos(tipoAtual);
+  const res=await apiPost({action:'excluir_boleto',id});
+  if(res.ok){
+    // Remove a linha da tabela sem recarregar tudo
+    const row = document.getElementById('row-'+id);
+    if(row) row.remove();
+    // Remove do array em memória
+    boletosCarregados = boletosCarregados.filter(b => b.id !== id);
+    atualizarContador(tipoAtual === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn');
+  }
+}
+
+/* ── CHECKBOX / BULK DELETE ── */
+function toggleTodos(chkAll, targetId){
+  document.querySelectorAll(`#${targetId} .chk-boleto`).forEach(c => {
+    c.checked = chkAll.checked;
+    c.closest('tr').classList.toggle('row-selected', chkAll.checked);
+  });
+  atualizarContador(targetId);
+}
+
+function atualizarContador(targetId){
+  const checked = document.querySelectorAll(`#${targetId} .chk-boleto:checked`).length;
+  const isAdmin = targetId === 'result-boletos-admin';
+  const btnId   = isAdmin ? 'btn-bulk-admin' : 'btn-bulk-forn';
+  const countId = isAdmin ? 'count-admin'    : 'count-forn';
+  const btn     = document.getElementById(btnId);
+  if(btn){
+    document.getElementById(countId).textContent = checked;
+    btn.classList.toggle('hidden', checked === 0);
+  }
+  // Marca/desmarca o "selecionar todos" conforme situação
+  const total = document.querySelectorAll(`#${targetId} .chk-boleto`).length;
+  const chkAll = document.getElementById('chk-all-'+targetId);
+  if(chkAll) chkAll.indeterminate = checked > 0 && checked < total;
+  if(chkAll) chkAll.checked = total > 0 && checked === total;
+  // Highlight nas linhas
+  document.querySelectorAll(`#${targetId} .chk-boleto`).forEach(c => {
+    c.closest('tr').classList.toggle('row-selected', c.checked);
+  });
+}
+
+async function excluirSelecionados(targetId){
+  const checkboxes = [...document.querySelectorAll(`#${targetId} .chk-boleto:checked`)];
+  if(!checkboxes.length) return;
+  if(!confirm(`Excluir ${checkboxes.length} boleto(s) selecionado(s)?`)) return;
+
+  const ids = checkboxes.map(c => c.dataset.id);
+  const btnId = targetId === 'result-boletos-admin' ? 'btn-bulk-admin' : 'btn-bulk-forn';
+  const btn = document.getElementById(btnId);
+  if(btn){ btn.textContent = '⏳ Excluindo...'; btn.disabled = true; }
+
+  // Deleta em sequência sem recarregar a página a cada item
+  let erros = 0;
+  for(const id of ids){
+    const res = await apiPost({action:'excluir_boleto', id});
+    if(res.ok){
+      const row = document.getElementById('row-'+id);
+      if(row) row.remove();
+      boletosCarregados = boletosCarregados.filter(b => b.id !== id);
+    } else { erros++; }
+  }
+
+  if(btn){ btn.disabled = false; }
+  atualizarContador(targetId);
+  if(erros > 0) alert(`${erros} boleto(s) não puderam ser excluídos.`);
 }
 
 function cancelarFormBoleto(){
