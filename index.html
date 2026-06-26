@@ -43,6 +43,7 @@ button{padding:8px 20px;border-radius:8px;border:1px solid var(--border);backgro
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 .grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
+.grid-5{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:12px;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text-2);font-weight:500;font-size:12px;transition:color .4s,border-color .4s;}
 td{padding:10px 10px;border-bottom:1px solid var(--border);color:var(--text-1);transition:color .4s,border-color .4s;}
@@ -159,13 +160,13 @@ tbody tr:hover td{background:var(--row-hover);}
   .header-title h1{font-size:15px;}
   .header-title p{font-size:10px;}
   .btn-hdr{font-size:11px;padding:6px 9px;}
-  .grid-3,.grid-4{grid-template-columns:1fr 1fr;}
+  .grid-3,.grid-4,.grid-5{grid-template-columns:1fr 1fr;}
   .card{padding:1rem;}
   table{font-size:12px;}
   th,td{padding:7px 6px;}
 }
 @media(max-width:380px){
-  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -256,10 +257,13 @@ tbody tr:hover td{background:var(--row-hover);}
 
   <div id="tab-boletos">
     <div class="card">
-      <div class="grid-4" style="margin-bottom:10px;">
+      <div class="grid-5" style="margin-bottom:10px;">
         <div><label>Nº Nota Fiscal</label><input id="fa-nf" type="text" enterkeyhint="search"/></div>
         <div><label>Parcela</label><input id="fa-parcela" type="text" enterkeyhint="search"/></div>
         <div><label>CNPJ</label><input id="fa-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="search"/></div>
+        <div><label>Situação</label>
+          <select id="fa-situacao"><option value="">Todas</option><option value="vencido">Vencido</option><option value="a_vencer">A vencer</option></select>
+        </div>
         <div><label>Representante</label>
           <select id="fa-representante"><option value="">Todos</option></select>
         </div>
@@ -365,11 +369,14 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 
   <div class="card">
-    <div class="grid-3" style="margin-bottom:10px;">
+    <div class="grid-4" style="margin-bottom:10px;">
       <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text" enterkeyhint="search"/></div>
       <div><label>Parcela</label><input id="ff-parcela" type="text" enterkeyhint="search"/></div>
       
       <div id="box-ff-cnpj"><label>CNPJ</label><input id="ff-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="search"/></div>
+      <div><label>Situação</label>
+        <select id="ff-situacao"><option value="">Todas</option><option value="vencido">Vencido</option><option value="a_vencer">A vencer</option></select>
+      </div>
       
       <div id="box-ff-representante"><label>Representante</label>
         <select id="ff-representante"><option value="">Todos</option></select>
@@ -606,6 +613,7 @@ function limparFiltros(tipo){
   if(tipo==='admin'){
     ['fa-nf','fa-parcela','fa-cnpj'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fa-representante').selectedIndex=0;
+    document.getElementById('fa-situacao').selectedIndex=0;
     document.getElementById('export-bar-admin').classList.add('hidden');
     mostrarTabelaVazia('result-boletos-admin');
   } else {
@@ -616,11 +624,23 @@ function limparFiltros(tipo){
     
     const ffRep = document.getElementById('ff-representante');
     if (ffRep) ffRep.selectedIndex=0;
+    document.getElementById('ff-situacao').selectedIndex=0;
     
     document.getElementById('export-bar-forn').classList.add('hidden');
     mostrarTabelaVazia('result-boletos-forn');
   }
   boletosCarregados=[];
+}
+
+/* ── SITUAÇÃO (calculada pela data de vencimento) ── */
+function calcularSituacao(vencimentoStr){
+  if(!vencimentoStr) return null;
+  const venc = new Date(vencimentoStr);
+  if(isNaN(venc.getTime())) return null;
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  venc.setHours(0,0,0,0);
+  return venc < hoje ? 'vencido' : 'a_vencer';
 }
 
 /* ── BUSCAR BOLETOS ── */
@@ -648,10 +668,14 @@ async function buscarBoletos(tipo){
   }
   const targetId=tipo==='admin'?'result-boletos-admin':'result-boletos-forn';
   const barId=tipo==='admin'?'export-bar-admin':'export-bar-forn';
+  const situacaoSel = tipo==='admin' ? document.getElementById('fa-situacao').value : document.getElementById('ff-situacao').value;
   const spinnerHtml='<div class="spinner-wrap"><div class="spinner"></div><p>Buscando boletos...</p></div>';
   document.getElementById(targetId).innerHTML=spinnerHtml;
   document.getElementById(barId).classList.add('hidden');
-  const res=await api(params); const boletos=res.boletos||[]; const isAdmin=tipo==='admin';
+  const res=await api(params); let boletos=res.boletos||[]; const isAdmin=tipo==='admin';
+  if(situacaoSel){
+    boletos = boletos.filter(b => calcularSituacao(b.vencimento) === situacaoSel);
+  }
   boletosCarregados=boletos;
   if(!boletos.length){
     document.getElementById(targetId).innerHTML='<p style="text-align:center;padding:2rem;color:var(--text-2);font-size:14px;">Nenhum boleto encontrado</p>';
