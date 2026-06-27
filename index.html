@@ -329,11 +329,10 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
         <button onclick="limparFiltros('admin')" style="color:var(--text-2);">✕ Limpar</button>
       </div>
     </div>
-    <div class="export-bar hidden" id="export-bar-admin">
+    <div class="hidden" id="export-bar-admin">
       <div class="bulk-actions">
         <button class="btn-bulk-delete hidden" id="btn-bulk-admin" onclick="excluirSelecionados('result-boletos-admin')">🗑️ Excluir selecionados (<span id="count-admin">0</span>)</button>
       </div>
-      <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
     </div>
     <div class="hidden" id="pills-admin">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
@@ -459,11 +458,10 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       <button onclick="limparFiltros('fornecedor')" style="color:var(--text-2);">✕ Limpar</button>
     </div>
   </div>
-  <div class="export-bar hidden" id="export-bar-forn">
+  <div class="hidden" id="export-bar-forn">
     <div class="bulk-actions">
       <button class="btn-bulk-delete hidden" id="btn-bulk-forn" onclick="excluirSelecionados('result-boletos-forn')">🗑️ Excluir selecionados (<span id="count-forn">0</span>)</button>
     </div>
-    <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
   </div>
   <div class="hidden" id="pills-forn">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
