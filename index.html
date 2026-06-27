@@ -115,7 +115,15 @@ tr:hover td{background:var(--row-hover);}
 .export-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap;}
 .btn-export{background:var(--export-bg);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
 .btn-export:hover{opacity:.88;}
-/* BULK DELETE */
+/* FONTE TOGGLE */
+.fonte-toggle{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1.5px solid var(--btn-bg);margin-bottom:14px;width:fit-content;}
+.fonte-btn{padding:7px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:transparent;color:var(--btn-bg);font-family:inherit;transition:background .18s,color .18s;}
+.fonte-btn.active{background:var(--btn-bg);color:#fff;}
+.fonte-btn:first-child{border-right:1.5px solid var(--btn-bg);}
+[data-theme="dark"] .fonte-toggle{border-color:#4a9af0;}
+[data-theme="dark"] .fonte-btn{color:#4a9af0;}
+[data-theme="dark"] .fonte-btn.active{background:#1a6fd4;color:#fff;}
+[data-theme="dark"] .fonte-btn:first-child{border-right-color:#4a9af0;}
 .btn-bulk-delete{background:#c0392b;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .18s;}
 .btn-bulk-delete:hover{opacity:.85;}
 .bulk-actions{display:flex;align-items:center;gap:10px;}
@@ -257,6 +265,10 @@ tbody tr:hover td{background:var(--row-hover);}
 
   <div id="tab-boletos">
     <div class="card">
+      <div class="fonte-toggle">
+        <button class="fonte-btn active" id="fonte-btn-vencidos-admin" onclick="setFonte('vencidos','admin')">📋 Vencidos</button>
+        <button class="fonte-btn" id="fonte-btn-avencer-admin" onclick="setFonte('avencer','admin')">📅 A Vencer</button>
+      </div>
       <div class="grid-5" style="margin-bottom:10px;">
         <div><label>Nº Nota Fiscal</label><input id="fa-nf" type="text" enterkeyhint="search"/></div>
         <div><label>Parcela</label><input id="fa-parcela" type="text" enterkeyhint="search"/></div>
@@ -369,6 +381,10 @@ tbody tr:hover td{background:var(--row-hover);}
   </div>
 
   <div class="card">
+    <div class="fonte-toggle">
+      <button class="fonte-btn active" id="fonte-btn-vencidos-forn" onclick="setFonte('vencidos','fornecedor')">📋 Vencidos</button>
+      <button class="fonte-btn" id="fonte-btn-avencer-forn" onclick="setFonte('avencer','fornecedor')">📅 A Vencer</button>
+    </div>
     <div class="grid-4" style="margin-bottom:10px;">
       <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text" enterkeyhint="search"/></div>
       <div><label>Parcela</label><input id="ff-parcela" type="text" enterkeyhint="search"/></div>
@@ -593,7 +609,7 @@ async function fazerLogin(){
 }
 
 function sair(){
-  usuarioAtual=null; boletosCarregados=[]; paginaAtual=1;
+  usuarioAtual=null; boletosCarregados=[]; paginaAtual=1; fonteAtual='vencidos';
   ['tela-admin','tela-fornecedor'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('tela-login').classList.remove('hidden');
   document.getElementById('inp-login').value='';
@@ -643,11 +659,28 @@ function calcularSituacao(vencimentoStr){
   return venc < hoje ? 'vencido' : 'a_vencer';
 }
 
+/* ── FONTE (qual aba da planilha) ── */
+let fonteAtual = 'vencidos'; // 'vencidos' = aba boletos | 'avencer' = aba aVencer
+
+function setFonte(fonte, tipo) {
+  fonteAtual = fonte;
+  const prefix = tipo === 'admin' ? 'admin' : 'forn';
+  document.getElementById(`fonte-btn-vencidos-${prefix}`).classList.toggle('active', fonte === 'vencidos');
+  document.getElementById(`fonte-btn-avencer-${prefix}`).classList.toggle('active', fonte === 'avencer');
+  // Limpa a tabela e reseta ao trocar de fonte
+  const targetId = tipo === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
+  const barId    = tipo === 'admin' ? 'export-bar-admin' : 'export-bar-forn';
+  mostrarTabelaVazia(targetId);
+  document.getElementById(barId).classList.add('hidden');
+  boletosCarregados = [];
+  sortCol = null; sortDir = 1; paginaAtual = 1;
+}
+
 /* ── BUSCAR BOLETOS ── */
 async function buscarBoletos(tipo){
   tipoAtual=tipo;
   paginaAtual = 1;
-  const params={action:'boletos'};
+  const params={action:'boletos', fonte: fonteAtual};
   if(tipo==='admin'){
     params.nf=document.getElementById('fa-nf').value;
     params.parcela=document.getElementById('fa-parcela').value;
