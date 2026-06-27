@@ -305,15 +305,9 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
   
   <div id="msg-admin"></div>
 
-  <!-- GREETING + DASHBOARD (só admin) -->
+  <!-- GREETING (admin) -->
   <div id="admin-dashboard">
     <div class="greeting" id="admin-greeting"></div>
-    <div class="dashboard" id="admin-dash-cards">
-      <div class="dash-card dash-vencido"><div class="dash-label">Total vencido</div><div class="dash-val" id="dash-val-vencido">—</div><div class="dash-sub" id="dash-sub-vencido">— boletos</div></div>
-      <div class="dash-card dash-avencer"><div class="dash-label">A vencer</div><div class="dash-val" id="dash-val-avencer">—</div><div class="dash-sub" id="dash-sub-avencer">— boletos</div></div>
-      <div class="dash-card dash-cobrado"><div class="dash-label">Cobrados</div><div class="dash-val" id="dash-val-cobrado">—</div><div class="dash-sub" id="dash-sub-cobrado">— boletos</div></div>
-      <div class="dash-card dash-protestado"><div class="dash-label">Protestados</div><div class="dash-val" id="dash-val-protestado">—</div><div class="dash-sub" id="dash-sub-protestado">— boletos</div></div>
-    </div>
   </div>
 
   <div id="tab-boletos">
@@ -342,11 +336,14 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
     </div>
     <div class="hidden" id="pills-admin">
-      <div class="status-pills">
-        <button class="pill-status p-all active" onclick="filtrarPill('','admin')">Todos</button>
-        <button class="pill-status p-cobrado" onclick="filtrarPill('cobrado','admin')">Cobrado</button>
-        <button class="pill-status p-negativado" onclick="filtrarPill('negativado','admin')">Negativado</button>
-        <button class="pill-status p-protestado" onclick="filtrarPill('protestado','admin')">Protestado</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+        <div class="status-pills" style="margin-bottom:0;">
+          <button class="pill-status p-all active" onclick="filtrarPill('','admin')">Todos</button>
+          <button class="pill-status p-cobrado" onclick="filtrarPill('cobrado','admin')">Cobrado</button>
+          <button class="pill-status p-negativado" onclick="filtrarPill('negativado','admin')">Negativado</button>
+          <button class="pill-status p-protestado" onclick="filtrarPill('protestado','admin')">Protestado</button>
+        </div>
+        <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
       </div>
       <div class="totalizador" id="tot-admin">
         🔍 <span id="tot-admin-txt">—</span>
@@ -469,11 +466,14 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
     <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
   </div>
   <div class="hidden" id="pills-forn">
-    <div class="status-pills">
-      <button class="pill-status p-all active" onclick="filtrarPill('','fornecedor')">Todos</button>
-      <button class="pill-status p-cobrado" onclick="filtrarPill('cobrado','fornecedor')">Cobrado</button>
-      <button class="pill-status p-negativado" onclick="filtrarPill('negativado','fornecedor')">Negativado</button>
-      <button class="pill-status p-protestado" onclick="filtrarPill('protestado','fornecedor')">Protestado</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+      <div class="status-pills" style="margin-bottom:0;">
+        <button class="pill-status p-all active" onclick="filtrarPill('','fornecedor')">Todos</button>
+        <button class="pill-status p-cobrado" onclick="filtrarPill('cobrado','fornecedor')">Cobrado</button>
+        <button class="pill-status p-negativado" onclick="filtrarPill('negativado','fornecedor')">Negativado</button>
+        <button class="pill-status p-protestado" onclick="filtrarPill('protestado','fornecedor')">Protestado</button>
+      </div>
+      <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
     </div>
     <div class="totalizador" id="tot-forn">
       🔍 <span id="tot-forn-txt">—</span>
@@ -723,10 +723,7 @@ async function carregarDashboard(){
 }
 
 function atualizarContadorToggle(prefix, nVenc, nAVenc){
-  const bv = document.getElementById(`fonte-btn-vencidos-${prefix}`);
-  const ba = document.getElementById(`fonte-btn-avencer-${prefix}`);
-  if(bv) bv.innerHTML = `📋 Vencidos <span style="opacity:.75">(${nVenc})</span>`;
-  if(ba) ba.innerHTML = `📅 A Vencer <span style="opacity:.75">(${nAVenc})</span>`;
+  // Contador removido a pedido — labels permanecem fixos
 }
 
 function normalizar(v){
