@@ -160,6 +160,48 @@ tbody tr:hover td{background:var(--row-hover);}
 .btn-ext-looker:hover,.btn-ext-pipefy:hover{opacity:.85;}
 /* FOOTER */
 .footer{text-align:center;padding:2rem 1rem 1.5rem;font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;}
+/* GREETING */
+.greeting{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border-radius:10px;padding:10px 16px;margin-bottom:14px;color:rgba(255,255,255,.9);font-size:14px;backdrop-filter:blur(4px);}
+.greeting strong{color:#fff;}
+/* DASHBOARD */
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+.dash-card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.07);transition:background .4s,border-color .4s;}
+.dash-label{font-size:11px;color:var(--text-2);margin-bottom:4px;font-weight:500;}
+.dash-val{font-size:20px;font-weight:600;margin-bottom:2px;}
+.dash-sub{font-size:11px;color:var(--text-2);}
+.dash-vencido .dash-val{color:#c0392b;}
+.dash-avencer .dash-val{color:#d97706;}
+.dash-cobrado .dash-val{color:var(--btn-bg);}
+.dash-protestado .dash-val{color:#6b21a8;}
+[data-theme="dark"] .dash-vencido .dash-val{color:#f08080;}
+[data-theme="dark"] .dash-avencer .dash-val{color:#fbbf24;}
+[data-theme="dark"] .dash-cobrado .dash-val{color:#60a8f0;}
+[data-theme="dark"] .dash-protestado .dash-val{color:#c084fc;}
+/* STATUS PILLS */
+.status-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.pill-status{padding:4px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card-bg);font-size:12px;font-weight:500;cursor:pointer;color:var(--text-2);transition:all .15s;font-family:inherit;}
+.pill-status:hover{border-color:var(--input-bd);}
+.pill-status.p-all.active{background:var(--btn-bg);color:#fff;border-color:var(--btn-bg);}
+.pill-status.p-cobrado.active{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd;}
+.pill-status.p-negativado.active{background:#fce7f3;color:#9d174d;border-color:#f9a8d4;}
+.pill-status.p-protestado.active{background:#fef3c7;color:#92400e;border-color:#fcd34d;}
+[data-theme="dark"] .pill-status.p-cobrado.active{background:#1e3a6e;color:#93c5fd;border-color:#1e3a6e;}
+[data-theme="dark"] .pill-status.p-negativado.active{background:#4a1030;color:#f9a8d4;border-color:#4a1030;}
+[data-theme="dark"] .pill-status.p-protestado.active{background:#3a2a00;color:#fcd34d;border-color:#3a2a00;}
+/* TOTALIZADOR */
+.totalizador{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--card-bg2);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--text-2);border:1px solid var(--border);transition:background .4s,border-color .4s;}
+.tot-num{font-weight:600;color:var(--btn-bg);}
+/* TOTAL ROW */
+tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-top:2px solid var(--border);background:var(--card-bg2)!important;transition:background .4s;}
+/* CNPJ COPY */
+.cnpj-copiavel{cursor:pointer;border-bottom:1px dashed var(--border);transition:color .15s;}
+.cnpj-copiavel:hover{color:var(--btn-bg);}
+.cnpj-toast{display:inline-block;background:#d1e7dd;color:#0a6640;font-size:10px;padding:1px 5px;border-radius:4px;margin-left:4px;opacity:0;transition:opacity .2s;pointer-events:none;}
+.cnpj-toast.show{opacity:1;}
+/* BACK TO TOP */
+#btn-topo{position:fixed;bottom:24px;right:24px;width:42px;height:42px;border-radius:50%;background:var(--btn-bg);color:#fff;border:none;cursor:pointer;font-size:18px;box-shadow:0 4px 16px rgba(0,0,0,.2);display:none;align-items:center;justify-content:center;z-index:7777;transition:opacity .2s,transform .2s;}
+#btn-topo.show{display:flex;}
+#btn-topo:hover{transform:translateY(-2px);opacity:.88;}
 /* MOBILE */
 @media(max-width:640px){
   .container{padding:1rem .75rem;}
@@ -263,6 +305,17 @@ tbody tr:hover td{background:var(--row-hover);}
   
   <div id="msg-admin"></div>
 
+  <!-- GREETING + DASHBOARD (só admin) -->
+  <div id="admin-dashboard">
+    <div class="greeting" id="admin-greeting"></div>
+    <div class="dashboard" id="admin-dash-cards">
+      <div class="dash-card dash-vencido"><div class="dash-label">Total vencido</div><div class="dash-val" id="dash-val-vencido">—</div><div class="dash-sub" id="dash-sub-vencido">— boletos</div></div>
+      <div class="dash-card dash-avencer"><div class="dash-label">A vencer</div><div class="dash-val" id="dash-val-avencer">—</div><div class="dash-sub" id="dash-sub-avencer">— boletos</div></div>
+      <div class="dash-card dash-cobrado"><div class="dash-label">Cobrados</div><div class="dash-val" id="dash-val-cobrado">—</div><div class="dash-sub" id="dash-sub-cobrado">— boletos</div></div>
+      <div class="dash-card dash-protestado"><div class="dash-label">Protestados</div><div class="dash-val" id="dash-val-protestado">—</div><div class="dash-sub" id="dash-sub-protestado">— boletos</div></div>
+    </div>
+  </div>
+
   <div id="tab-boletos">
     <div class="card">
       <div class="fonte-toggle">
@@ -287,6 +340,17 @@ tbody tr:hover td{background:var(--row-hover);}
         <button class="btn-bulk-delete hidden" id="btn-bulk-admin" onclick="excluirSelecionados('result-boletos-admin')">🗑️ Excluir selecionados (<span id="count-admin">0</span>)</button>
       </div>
       <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
+    </div>
+    <div class="hidden" id="pills-admin">
+      <div class="status-pills">
+        <button class="pill-status p-all active" onclick="filtrarPill('','admin')">Todos</button>
+        <button class="pill-status p-cobrado" onclick="filtrarPill('cobrado','admin')">Cobrado</button>
+        <button class="pill-status p-negativado" onclick="filtrarPill('negativado','admin')">Negativado</button>
+        <button class="pill-status p-protestado" onclick="filtrarPill('protestado','admin')">Protestado</button>
+      </div>
+      <div class="totalizador" id="tot-admin">
+        🔍 <span id="tot-admin-txt">—</span>
+      </div>
     </div>
     <div class="card" id="result-boletos-admin"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
   </div>
@@ -377,6 +441,9 @@ tbody tr:hover td{background:var(--row-hover);}
     </div>
   </div>
 
+  <!-- GREETING fornecedor -->
+  <div class="greeting" id="forn-greeting" style="margin-bottom:14px;"></div>
+
   <div class="card">
     <div class="fonte-toggle">
       <button class="fonte-btn active" id="fonte-btn-vencidos-forn" onclick="setFonte('vencidos','fornecedor')">📋 Vencidos</button>
@@ -385,7 +452,6 @@ tbody tr:hover td{background:var(--row-hover);}
     <div class="grid-4" style="margin-bottom:10px;">
       <div><label>Nº Nota Fiscal</label><input id="ff-nf" type="text" enterkeyhint="search"/></div>
       <div><label>Parcela</label><input id="ff-parcela" type="text" enterkeyhint="search"/></div>
-      
       <div id="box-ff-cnpj"><label>CNPJ</label><input id="ff-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="search"/></div>
       <div id="box-ff-representante"><label>Representante</label>
         <select id="ff-representante"><option value="">Todos</option></select>
@@ -401,6 +467,17 @@ tbody tr:hover td{background:var(--row-hover);}
       <button class="btn-bulk-delete hidden" id="btn-bulk-forn" onclick="excluirSelecionados('result-boletos-forn')">🗑️ Excluir selecionados (<span id="count-forn">0</span>)</button>
     </div>
     <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
+  </div>
+  <div class="hidden" id="pills-forn">
+    <div class="status-pills">
+      <button class="pill-status p-all active" onclick="filtrarPill('','fornecedor')">Todos</button>
+      <button class="pill-status p-cobrado" onclick="filtrarPill('cobrado','fornecedor')">Cobrado</button>
+      <button class="pill-status p-negativado" onclick="filtrarPill('negativado','fornecedor')">Negativado</button>
+      <button class="pill-status p-protestado" onclick="filtrarPill('protestado','fornecedor')">Protestado</button>
+    </div>
+    <div class="totalizador" id="tot-forn">
+      🔍 <span id="tot-forn-txt">—</span>
+    </div>
   </div>
   <div class="card" id="result-boletos-forn"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
 </div>
@@ -422,7 +499,9 @@ tbody tr:hover td{background:var(--row-hover);}
   <iframe id="preview-iframe" src="" style="flex:1;border:none;width:100%;background:#f5f5f5;" allowfullscreen></iframe>
 </div>
 
-</div><div class="footer">
+</div><button id="btn-topo" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Voltar ao topo">▲</button>
+
+<div class="footer">
   Leal Embalagens de Papel &copy; 2026<br>
   Criado e desenvolvido por Dennis Wandembruck
 </div>
@@ -570,10 +649,12 @@ async function fazerLogin(){
       document.getElementById('tela-admin').classList.remove('hidden');
       document.getElementById('lbl-admin-nome').textContent='Painel administrativo — '+usuarioAtual.nome;
       document.querySelectorAll('#tela-admin .tab.hidden').forEach(el => el.classList.remove('hidden'));
+      mostrarGreeting(usuarioAtual.nome, 'admin-greeting');
+      carregarDashboard();
       mostrarTabelaVazia('result-boletos-admin');
     } else {
       document.getElementById('tela-fornecedor').classList.remove('hidden');
-      
+      mostrarGreeting(usuarioAtual.nome, 'forn-greeting');
       let subtitulo = usuarioAtual.nome;
       if (usuarioAtual.cnpj) {
         subtitulo += ' — ' + usuarioAtual.cnpj;
@@ -581,19 +662,15 @@ async function fazerLogin(){
         subtitulo += ' (Representante: ' + usuarioAtual.representante + ')';
       }
       document.getElementById('lbl-forn-nome').textContent = subtitulo;
-      
-      // Ajusta os filtros: Fornecedor não vê CNPJ. Representante não vê a caixa de Representante.
       const boxRep = document.getElementById('box-ff-representante');
       const boxCnpj = document.getElementById('box-ff-cnpj');
-      
       if (usuarioAtual.role === 'representante') {
         if (boxRep) boxRep.style.display = 'none';
         if (boxCnpj) boxCnpj.style.display = 'block';
-        // Auto-busca será chamada após fechar o popup
       } else {
         if (boxRep) boxRep.style.display = 'block';
         if (boxCnpj) boxCnpj.style.display = 'none';
-        mostrarTabelaVazia('result-boletos-forn'); // Fornecedor vê a tela vazia
+        mostrarTabelaVazia('result-boletos-forn');
       }
     }
   }catch(e){
@@ -610,6 +687,97 @@ function sair(){
   document.getElementById('msg-login').innerHTML='';
 }
 
+/* ── GREETING ── */
+function mostrarGreeting(nome, targetId){
+  const h = new Date().getHours();
+  const saud = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+  const icon = h < 12 ? '☀️' : h < 18 ? '🌤️' : '🌙';
+  const el = document.getElementById(targetId);
+  if(el) el.innerHTML = `${icon} ${saud}, <strong>${nome}!</strong>`;
+}
+
+/* ── DASHBOARD (admin) ── */
+async function carregarDashboard(){
+  try{
+    // Busca ambas as abas para montar os cards
+    const [resV, resA] = await Promise.all([
+      api({action:'boletos', fonte:'vencidos'}),
+      api({action:'boletos', fonte:'avencer'})
+    ]);
+    const vencidos  = resV.boletos || [];
+    const aVencer   = resA.boletos || [];
+    const cobrados  = vencidos.filter(b => normalizar(b.status) === 'cobrado');
+    const protest   = vencidos.filter(b => normalizar(b.status) === 'protestado');
+    const somarValor = arr => arr.reduce((s,b) => s + Number(b.valor||0), 0);
+    document.getElementById('dash-val-vencido').textContent  = formatMoney(somarValor(vencidos));
+    document.getElementById('dash-sub-vencido').textContent  = `${vencidos.length} boletos`;
+    document.getElementById('dash-val-avencer').textContent  = formatMoney(somarValor(aVencer));
+    document.getElementById('dash-sub-avencer').textContent  = `${aVencer.length} boletos`;
+    document.getElementById('dash-val-cobrado').textContent  = formatMoney(somarValor(cobrados));
+    document.getElementById('dash-sub-cobrado').textContent  = `${cobrados.length} boletos`;
+    document.getElementById('dash-val-protestado').textContent = formatMoney(somarValor(protest));
+    document.getElementById('dash-sub-protestado').textContent = `${protest.length} boletos`;
+    // Atualiza contador no toggle
+    atualizarContadorToggle('admin', vencidos.length, aVencer.length);
+  } catch(e){ console.warn('Dashboard:', e); }
+}
+
+function atualizarContadorToggle(prefix, nVenc, nAVenc){
+  const bv = document.getElementById(`fonte-btn-vencidos-${prefix}`);
+  const ba = document.getElementById(`fonte-btn-avencer-${prefix}`);
+  if(bv) bv.innerHTML = `📋 Vencidos <span style="opacity:.75">(${nVenc})</span>`;
+  if(ba) ba.innerHTML = `📅 A Vencer <span style="opacity:.75">(${nAVenc})</span>`;
+}
+
+function normalizar(v){
+  return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+}
+
+/* ── STATUS PILLS ── */
+let pillFiltroAtual = {admin:'', fornecedor:''};
+
+function filtrarPill(status, tipo){
+  pillFiltroAtual[tipo] = status;
+  const prefix = tipo === 'admin' ? 'admin' : 'forn';
+  document.querySelectorAll(`#pills-${prefix} .pill-status`).forEach(p => p.classList.remove('active'));
+  const alvo = status === '' ? 'p-all' : `p-${status}`;
+  document.querySelector(`#pills-${prefix} .${alvo}`)?.classList.add('active');
+  // Aplica filtro nos dados já carregados
+  const targetId = tipo === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
+  const isAdmin = tipo === 'admin';
+  const filtrados = status === '' ? boletosCarregados
+    : boletosCarregados.filter(b => normalizar(b.status) === status);
+  renderTabela(filtrados, isAdmin, targetId);
+}
+
+/* ── TOTALIZADOR ── */
+function atualizarTotalizador(boletos, tipo){
+  const prefix = tipo === 'admin' ? 'admin' : 'forn';
+  const total = boletos.reduce((s,b) => s + Number(b.valor||0), 0);
+  const txt = `<span class="tot-num">${boletos.length} boleto(s)</span> encontrado(s) · Total: <span class="tot-num">${formatMoney(total)}</span>`;
+  const el = document.getElementById(`tot-${prefix}-txt`);
+  if(el) el.innerHTML = txt;
+  document.getElementById(`pills-${prefix}`)?.classList.remove('hidden');
+}
+
+/* ── CNPJ COPY ── */
+let toastTimer = null;
+function copiarCNPJ(el, cnpj){
+  navigator.clipboard.writeText(cnpj).catch(()=>{});
+  const toast = el.nextElementSibling;
+  if(!toast) return;
+  toast.textContent = '✓ copiado';
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove('show'), 2000);
+}
+
+/* ── BACK TO TOP ── */
+window.addEventListener('scroll', ()=>{
+  const btn = document.getElementById('btn-topo');
+  if(btn) btn.classList.toggle('show', window.scrollY > 300);
+});
+
 /* ── TABELA VAZIA ── */
 function mostrarTabelaVazia(id){
   document.getElementById(id).innerHTML='<p style="text-align:center;padding:2rem;color:var(--text-2);font-size:14px;">🔍 Use os filtros acima para buscar boletos.</p>';
@@ -623,6 +791,7 @@ function limparFiltros(tipo){
     ['fa-nf','fa-parcela','fa-cnpj'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fa-representante').selectedIndex=0;
     document.getElementById('export-bar-admin').classList.add('hidden');
+    document.getElementById('pills-admin')?.classList.add('hidden');
     mostrarTabelaVazia('result-boletos-admin');
   } else {
     ['ff-nf','ff-parcela','ff-cnpj'].forEach(id=>{
@@ -634,6 +803,7 @@ function limparFiltros(tipo){
     if (ffRep) ffRep.selectedIndex=0;
     
     document.getElementById('export-bar-forn').classList.add('hidden');
+    document.getElementById('pills-forn')?.classList.add('hidden');
     mostrarTabelaVazia('result-boletos-forn');
   }
   boletosCarregados=[];
@@ -702,6 +872,11 @@ async function buscarBoletos(tipo){
     return;
   }
   document.getElementById(barId).classList.remove('hidden');
+  pillFiltroAtual[tipo] = '';
+  const prefix = tipo === 'admin' ? 'admin' : 'forn';
+  document.querySelectorAll(`#pills-${prefix} .pill-status`).forEach(p => p.classList.remove('active'));
+  document.querySelector(`#pills-${prefix} .p-all`)?.classList.add('active');
+  atualizarTotalizador(boletos, tipo);
   renderTabela(boletos, isAdmin, targetId);
   setTimeout(()=>{
     document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
@@ -751,7 +926,9 @@ function renderTabela(boletos, isAdmin, targetId){
       ${checkTd}
       <td><strong>${b.nf}</strong></td>
       <td style="color:var(--text-2);">${b.parcela}</td>
-      <td style="font-size:12px;color:var(--text-2);">${b.cnpj||'—'}</td>
+      <td style="font-size:12px;color:var(--text-2);">
+        <span class="cnpj-copiavel" onclick="copiarCNPJ(this,'${b.cnpj||''}')" title="Clique para copiar">${b.cnpj||'—'}</span><span class="cnpj-toast"></span>
+      </td>
       <td style="font-size:12px;font-weight:500;">${b.cliente||'—'}</td>
       <td style="font-weight:500;">${formatMoney(b.valor)}</td>
       <td>${venc}</td>
@@ -766,7 +943,12 @@ function renderTabela(boletos, isAdmin, targetId){
       </td>
     </tr>`;
   });
-  html+='</tbody></table></div>';
+  const totalGeral = paginados.reduce((s,b) => s+Number(b.valor||0), 0);
+  const colsCount = (canDelete ? 1 : 0) + cols.length + 1;
+  html+='</tbody><tfoot class="tbl-total"><tr>';
+  html+=`<td colspan="${colsCount - 2}" style="text-align:right;color:var(--text-2);font-size:12px;">Total da página</td>`;
+  html+=`<td style="font-weight:600;">${formatMoney(totalGeral)}</td>`;
+  html+=`<td colspan="2"></td></tr></tfoot></table></div>`;
 
   if (totalPaginas > 1) {
     html += '<div class="pagination">';
