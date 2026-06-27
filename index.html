@@ -696,8 +696,9 @@ function mostrarGreeting(nome, targetId){
 
 /* ── DASHBOARD (admin) ── */
 async function carregarDashboard(){
+  // Função auxiliar segura - não lança erro se elemento não existir
+  function setEl(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
   try{
-    // Busca ambas as abas para montar os cards
     const [resV, resA] = await Promise.all([
       api({action:'boletos', fonte:'vencidos'}),
       api({action:'boletos', fonte:'avencer'})
@@ -707,16 +708,14 @@ async function carregarDashboard(){
     const cobrados  = vencidos.filter(b => normalizar(b.status) === 'cobrado');
     const protest   = vencidos.filter(b => normalizar(b.status) === 'protestado');
     const somarValor = arr => arr.reduce((s,b) => s + Number(b.valor||0), 0);
-    document.getElementById('dash-val-vencido').textContent  = formatMoney(somarValor(vencidos));
-    document.getElementById('dash-sub-vencido').textContent  = `${vencidos.length} boletos`;
-    document.getElementById('dash-val-avencer').textContent  = formatMoney(somarValor(aVencer));
-    document.getElementById('dash-sub-avencer').textContent  = `${aVencer.length} boletos`;
-    document.getElementById('dash-val-cobrado').textContent  = formatMoney(somarValor(cobrados));
-    document.getElementById('dash-sub-cobrado').textContent  = `${cobrados.length} boletos`;
-    document.getElementById('dash-val-protestado').textContent = formatMoney(somarValor(protest));
-    document.getElementById('dash-sub-protestado').textContent = `${protest.length} boletos`;
-    // Atualiza contador no toggle
-    atualizarContadorToggle('admin', vencidos.length, aVencer.length);
+    setEl('dash-val-vencido',   formatMoney(somarValor(vencidos)));
+    setEl('dash-sub-vencido',   `${vencidos.length} boletos`);
+    setEl('dash-val-avencer',   formatMoney(somarValor(aVencer)));
+    setEl('dash-sub-avencer',   `${aVencer.length} boletos`);
+    setEl('dash-val-cobrado',   formatMoney(somarValor(cobrados)));
+    setEl('dash-sub-cobrado',   `${cobrados.length} boletos`);
+    setEl('dash-val-protestado',formatMoney(somarValor(protest)));
+    setEl('dash-sub-protestado',`${protest.length} boletos`);
   } catch(e){ console.warn('Dashboard:', e); }
 }
 
