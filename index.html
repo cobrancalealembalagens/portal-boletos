@@ -273,9 +273,6 @@ tbody tr:hover td{background:var(--row-hover);}
         <div><label>Nº Nota Fiscal</label><input id="fa-nf" type="text" enterkeyhint="search"/></div>
         <div><label>Parcela</label><input id="fa-parcela" type="text" enterkeyhint="search"/></div>
         <div><label>CNPJ</label><input id="fa-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="search"/></div>
-        <div><label>Situação</label>
-          <select id="fa-situacao"><option value="">Todas</option><option value="vencido">Vencido</option><option value="a_vencer">A vencer</option></select>
-        </div>
         <div><label>Representante</label>
           <select id="fa-representante"><option value="">Todos</option></select>
         </div>
@@ -390,10 +387,6 @@ tbody tr:hover td{background:var(--row-hover);}
       <div><label>Parcela</label><input id="ff-parcela" type="text" enterkeyhint="search"/></div>
       
       <div id="box-ff-cnpj"><label>CNPJ</label><input id="ff-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="search"/></div>
-      <div><label>Situação</label>
-        <select id="ff-situacao"><option value="">Todas</option><option value="vencido">Vencido</option><option value="a_vencer">A vencer</option></select>
-      </div>
-      
       <div id="box-ff-representante"><label>Representante</label>
         <select id="ff-representante"><option value="">Todos</option></select>
       </div>
@@ -436,7 +429,7 @@ tbody tr:hover td{background:var(--row-hover);}
 
 <script>
 // URL DEFINITIVA CORRIGIDA:
-const API_URL = 'https://script.google.com/macros/s/AKfycbxatDq5VL84ttB0NB3zvQBwvFMCHvLOGb8G6L_CWYTb87Zp6xlnIIJ02hvyBQNEeD_U/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw40HQvoyW8RsNxnHs-piTA9o-VD-Jrk3m2UbhxSg2B-4ISNBptHvpWvThDcrfjGD8h/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
@@ -629,7 +622,6 @@ function limparFiltros(tipo){
   if(tipo==='admin'){
     ['fa-nf','fa-parcela','fa-cnpj'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fa-representante').selectedIndex=0;
-    document.getElementById('fa-situacao').selectedIndex=0;
     document.getElementById('export-bar-admin').classList.add('hidden');
     mostrarTabelaVazia('result-boletos-admin');
   } else {
@@ -640,7 +632,6 @@ function limparFiltros(tipo){
     
     const ffRep = document.getElementById('ff-representante');
     if (ffRep) ffRep.selectedIndex=0;
-    document.getElementById('ff-situacao').selectedIndex=0;
     
     document.getElementById('export-bar-forn').classList.add('hidden');
     mostrarTabelaVazia('result-boletos-forn');
@@ -701,14 +692,10 @@ async function buscarBoletos(tipo){
   }
   const targetId=tipo==='admin'?'result-boletos-admin':'result-boletos-forn';
   const barId=tipo==='admin'?'export-bar-admin':'export-bar-forn';
-  const situacaoSel = tipo==='admin' ? document.getElementById('fa-situacao').value : document.getElementById('ff-situacao').value;
   const spinnerHtml='<div class="spinner-wrap"><div class="spinner"></div><p>Buscando boletos...</p></div>';
   document.getElementById(targetId).innerHTML=spinnerHtml;
   document.getElementById(barId).classList.add('hidden');
   const res=await api(params); let boletos=res.boletos||[]; const isAdmin=tipo==='admin';
-  if(situacaoSel){
-    boletos = boletos.filter(b => calcularSituacao(b.vencimento) === situacaoSel);
-  }
   boletosCarregados=boletos;
   if(!boletos.length){
     document.getElementById(targetId).innerHTML='<p style="text-align:center;padding:2rem;color:var(--text-2);font-size:14px;">Nenhum boleto encontrado</p>';
@@ -913,12 +900,10 @@ function editarBoleto(b){
 
 async function excluirBoleto(id){
   if(!confirm('Excluir este boleto?')) return;
-  const res=await apiPost({action:'excluir_boleto',id});
+  const res=await apiPost({action:'excluir_boleto', id, fonte: fonteAtual});
   if(res.ok){
-    // Remove a linha da tabela sem recarregar tudo
     const row = document.getElementById('row-'+id);
     if(row) row.remove();
-    // Remove do array em memória
     boletosCarregados = boletosCarregados.filter(b => b.id !== id);
     atualizarContador(tipoAtual === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn');
   }
@@ -968,7 +953,7 @@ async function excluirSelecionados(targetId){
   // Deleta em sequência sem recarregar a página a cada item
   let erros = 0;
   for(const id of ids){
-    const res = await apiPost({action:'excluir_boleto', id});
+    const res = await apiPost({action:'excluir_boleto', id, fonte: fonteAtual});
     if(res.ok){
       const row = document.getElementById('row-'+id);
       if(row) row.remove();
