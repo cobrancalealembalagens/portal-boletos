@@ -144,9 +144,31 @@ tr.row-selected td{background:rgba(0,87,184,.07)!important;}
 /* ENTRY ANIMATION */
 @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 .card{animation:slideUp .35s ease both;}
-/* ROW HOVER */
-td{transition:background .18s;}
-tbody tr:hover td{background:var(--row-hover);}
+/* ROW HOVER (sem zebra — só ao passar o mouse) */
+td{transition:background .15s;}
+tbody tr:hover td{background:rgba(0,87,184,.06);}
+[data-theme="dark"] tbody tr:hover td{background:rgba(100,160,255,.07);}
+/* MOBILE CARDS */
+.mobile-cards{display:none;}
+.m-boleto-card{background:var(--card-bg);border:.5px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:background .4s,border-color .4s;}
+.m-boleto-row{display:flex;justify-content:space-between;align-items:flex-start;padding:13px 14px;gap:10px;}
+.m-left{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.m-nf{font-size:14px;font-weight:600;color:var(--text-1);}
+.m-client{font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.m-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.m-val{font-size:14px;font-weight:600;color:var(--text-1);}
+.m-venc{font-size:12px;color:var(--text-2);}
+.m-venc.warn{color:#d97706;font-weight:500;}
+.m-venc.danger{color:#dc2626;font-weight:500;}
+.m-actions{display:flex;gap:6px;}
+.m-btn{padding:8px 14px;border-radius:8px;border:.5px solid var(--border);background:var(--card-bg);font-size:13px;font-weight:500;cursor:pointer;color:var(--text-1);display:flex;align-items:center;gap:4px;transition:background .15s;}
+.m-btn:hover{background:var(--card-bg2);}
+.m-btn.danger{color:#c0392b;border-color:#f5c6cb;}
+.m-chk-row{display:flex;align-items:center;gap:8px;padding:6px 14px 10px;border-top:.5px solid var(--border);}
+@media(max-width:640px){
+  .tbl-wrap{display:none!important;}
+  .mobile-cards{display:block!important;}
+}
 /* ── SORT ── */
 .th-sort{cursor:pointer;user-select:none;white-space:nowrap;}
 .th-sort:hover{color:var(--btn-bg);}
@@ -506,7 +528,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
 
 <script>
 // URL DEFINITIVA CORRIGIDA:
-const API_URL = 'https://script.google.com/macros/s/AKfycbwoQ1tGq0ahNfTJRwPtGY_kCxr5DC_fflIRqNzxMRE966M3uPrOkFxkmn6YMwi1lhsb/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw40HQvoyW8RsNxnHs-piTA9o-VD-Jrk3m2UbhxSg2B-4ISNBptHvpWvThDcrfjGD8h/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
@@ -944,6 +966,44 @@ function renderTabela(boletos, isAdmin, targetId){
   html+=`<td style="font-weight:600;">${formatMoney(totalGeral)}</td>`;
   html+=`<td colspan="2"></td></tr></tfoot></table></div>`;
 
+  /* ── MOBILE CARDS ── */
+  html += '<div class="mobile-cards">';
+  paginados.forEach(b => {
+    const venc = formatarData(b.vencimento);
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    const dv = new Date(b.vencimento); dv.setHours(0,0,0,0);
+    const diff = Math.floor((hoje - dv) / 86400000);
+    const vencClass = diff > 30 ? 'danger' : diff > 0 ? 'warn' : '';
+    const cliente = b.cliente || b.descricao || b.representante || '—';
+    const chkHtml = canDelete
+      ? `<div class="m-chk-row"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/> <span style="font-size:12px;color:var(--text-2);">Selecionar</span></div>`
+      : '';
+    const pdfBtn = b.downloadUrl
+      ? `<button class="m-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>`
+      : `<button class="m-btn" disabled style="opacity:.45;">Sem PDF</button>`;
+    const delBtn = (isAdmin || usuarioAtual.role === 'representante')
+      ? `<button class="m-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>`
+      : '';
+    html += `
+    <div class="m-boleto-card" id="row-${b.id}">
+      <div class="m-boleto-row">
+        <div class="m-left">
+          <span class="m-nf">NF ${b.nf} · P${b.parcela}</span>
+          <span class="m-client">${cliente}</span>
+          <span style="font-size:11px;color:var(--text-2);">${b.cnpj||'—'}</span>
+          <span style="margin-top:4px;">${badge(b.status)}</span>
+        </div>
+        <div class="m-right">
+          <span class="m-val">${formatMoney(b.valor)}</span>
+          <span class="m-venc ${vencClass}">${venc}</span>
+          <div class="m-actions">${pdfBtn}${delBtn}</div>
+        </div>
+      </div>${chkHtml}
+    </div>`;
+  });
+  html += `<div style="padding:10px 0;text-align:right;font-size:12px;color:var(--text-2);">Total: <strong>${formatMoney(totalGeral)}</strong></div>`;
+  html += '</div>';
+
   if (totalPaginas > 1) {
     html += '<div class="pagination">';
     for (let i = 1; i <= totalPaginas; i++) {
@@ -1078,8 +1138,7 @@ async function excluirBoleto(id){
   if(!confirm('Excluir este boleto?')) return;
   const res=await apiPost({action:'excluir_boleto', id, fonte: fonteAtual});
   if(res.ok){
-    const row = document.getElementById('row-'+id);
-    if(row) row.remove();
+    document.querySelectorAll(`#row-${id}`).forEach(el => el.remove());
     boletosCarregados = boletosCarregados.filter(b => b.id !== id);
     atualizarContador(tipoAtual === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn');
   }
@@ -1131,8 +1190,7 @@ async function excluirSelecionados(targetId){
   for(const id of ids){
     const res = await apiPost({action:'excluir_boleto', id, fonte: fonteAtual});
     if(res.ok){
-      const row = document.getElementById('row-'+id);
-      if(row) row.remove();
+      document.querySelectorAll(`#row-${id}`).forEach(el => el.remove());
       boletosCarregados = boletosCarregados.filter(b => b.id !== id);
     } else { erros++; }
   }
