@@ -1084,7 +1084,6 @@ function renderTabela(boletos, isAdmin, targetId){
       </td>
     </tr>`;
   });
-  const totalGeral = paginados.reduce((s,b) => s+Number(b.valor||0), 0);
   const colsCount = (canDelete ? 1 : 0) + cols.length + 1;
   html+='</tbody><tfoot class="tbl-total"><tr>';
   html+=`<td colspan="${colsCount - 2}" style="text-align:right;color:var(--text-2);font-size:12px;">Total da página</td>`;
