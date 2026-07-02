@@ -214,10 +214,32 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
   .card{padding:1rem;}
   table{font-size:12px;}
   th,td{padding:7px 6px;}
+  .tbl-wrap{display:none!important;}
+  .mobile-cards{display:block!important;}
 }
 @media(max-width:380px){
   .grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr;}
 }
+/* MOBILE CARDS */
+.mobile-cards{display:none;}
+.m-boleto-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:background .4s,border-color .4s;}
+.m-boleto-row{display:flex;justify-content:space-between;align-items:flex-start;padding:13px 14px;gap:10px;}
+.m-left{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.m-nf{font-size:14px;font-weight:600;color:var(--text-1);}
+.m-client{font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.m-cnpj{font-size:11px;color:var(--text-2);}
+.m-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.m-val{font-size:14px;font-weight:600;color:var(--text-1);}
+.m-venc{font-size:12px;color:var(--text-2);}
+.m-venc.warn{color:#d97706;font-weight:500;}
+.m-venc.danger{color:#dc2626;font-weight:500;}
+.m-actions{display:flex;gap:6px;margin-top:2px;}
+.m-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);font-size:13px;font-weight:500;cursor:pointer;color:var(--text-1);display:flex;align-items:center;gap:4px;transition:background .15s;}
+.m-btn:hover{background:var(--card-bg2);}
+.m-btn.danger{color:#c0392b;border-color:#f5c6cb;}
+.m-btn:disabled{opacity:.4;cursor:default;}
+.m-chk-row{display:flex;align-items:center;gap:8px;padding:6px 14px 10px;border-top:1px solid var(--border);}
+.m-total{text-align:right;font-size:12px;color:var(--text-2);padding:6px 2px;}
 </style>
 </head>
 <body>
@@ -953,6 +975,47 @@ function renderTabela(boletos, isAdmin, targetId){
     html += '</div>';
   }
 
+  /* ── MOBILE CARDS ── */
+  html += '<div class="mobile-cards">';
+  paginados.forEach(b => {
+    const venc = formatarData(b.vencimento);
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    const dv   = new Date(b.vencimento.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1')||b.vencimento);
+    dv.setHours(0,0,0,0);
+    const diff = Math.floor((hoje - dv) / 86400000);
+    const vencClass = diff > 30 ? 'danger' : diff > 0 ? 'warn' : '';
+    const cliente = b.cliente || '—';
+    const rep     = b.descricao || b.representante || '—';
+    const pdfBtn  = b.downloadUrl
+      ? `<button class="m-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>`
+      : `<button class="m-btn" disabled>Sem PDF</button>`;
+    const delBtn = (isAdmin || (usuarioAtual && usuarioAtual.role === 'representante'))
+      ? `<button class="m-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>`
+      : '';
+    const chkHtml = canDelete
+      ? `<div class="m-chk-row"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/> <span style="font-size:12px;color:var(--text-2);">Selecionar</span></div>`
+      : '';
+    html += `
+    <div class="m-boleto-card" id="mcard-${b.id}">
+      <div class="m-boleto-row">
+        <div class="m-left">
+          <span class="m-nf">NF ${b.nf} · P${b.parcela}</span>
+          <span class="m-client">${cliente}</span>
+          <span class="m-cnpj">${b.cnpj||'—'}</span>
+          <span style="margin-top:4px;">${badge(b.status)}</span>
+        </div>
+        <div class="m-right">
+          <span class="m-val">${formatMoney(b.valor)}</span>
+          <span class="m-venc ${vencClass}">${venc}</span>
+          <div class="m-actions">${pdfBtn}${delBtn}</div>
+        </div>
+      </div>${chkHtml}
+    </div>`;
+  });
+  const totalGeral2 = paginados.reduce((s,b) => s+Number(b.valor||0), 0);
+  html += `<div class="m-total">Total: <strong>${formatMoney(totalGeral2)}</strong></div>`;
+  html += '</div>';
+
   document.getElementById(targetId).innerHTML=html;
 }
 
@@ -1080,6 +1143,8 @@ async function excluirBoleto(id){
   if(res.ok){
     const row = document.getElementById('row-'+id);
     if(row) row.remove();
+    const mcard = document.getElementById('mcard-'+id);
+    if(mcard) mcard.remove();
     boletosCarregados = boletosCarregados.filter(b => b.id !== id);
     atualizarContador(tipoAtual === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn');
   }
@@ -1133,6 +1198,8 @@ async function excluirSelecionados(targetId){
     if(res.ok){
       const row = document.getElementById('row-'+id);
       if(row) row.remove();
+      const mcard = document.getElementById('mcard-'+id);
+      if(mcard) mcard.remove();
       boletosCarregados = boletosCarregados.filter(b => b.id !== id);
     } else { erros++; }
   }
