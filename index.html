@@ -136,6 +136,37 @@ tr.row-selected td{background:rgba(0,87,184,.07)!important;}
 [data-theme="dark"] tr.row-selected td{background:rgba(100,160,255,.08)!important;}
 /* OVERFLOW TABLE */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+/* VIEW TOGGLE */
+.view-toggle{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border);width:fit-content;margin-bottom:10px;}
+.view-btn{padding:6px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:transparent;color:var(--text-2);font-family:inherit;transition:background .15s,color .15s;display:flex;align-items:center;gap:5px;}
+.view-btn.active{background:var(--btn-bg);color:#fff;}
+.view-btn:first-child{border-right:1px solid var(--border);}
+/* DESKTOP CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
+.boleto-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,background .4s;}
+.boleto-card:hover{border-color:var(--focus);}
+.boleto-card.card-selected{border-color:var(--btn-bg);background:rgba(0,87,184,.04);}
+[data-theme="dark"] .boleto-card.card-selected{background:rgba(100,160,255,.07);}
+.bc-header{display:flex;align-items:center;gap:8px;padding:12px 14px 0;}
+.bc-nf{font-size:14px;font-weight:600;color:var(--text-1);flex:1;}
+.bc-body{padding:6px 14px 10px 38px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.bc-left{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
+.bc-client{font-size:13px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bc-cnpj{font-size:11px;color:var(--text-2);cursor:pointer;border-bottom:1px dashed var(--border);}
+.bc-cnpj:hover{color:var(--btn-bg);}
+.bc-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.bc-val{font-size:15px;font-weight:600;color:var(--text-1);}
+.bc-venc{font-size:12px;color:var(--text-2);}
+.bc-venc.warn{color:#d97706;font-weight:500;}
+.bc-venc.danger{color:#dc2626;font-weight:500;}
+.bc-footer{border-top:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.bc-rep{font-size:12px;color:var(--text-2);}
+.bc-actions{display:flex;gap:6px;}
+.bc-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--card-bg);font-size:12px;font-weight:500;cursor:pointer;color:var(--text-1);display:flex;align-items:center;gap:4px;transition:background .15s;}
+.bc-btn:hover{background:var(--card-bg2);}
+.bc-btn.danger{color:#c0392b;border-color:#f5c6cb;}
+.bc-btn:disabled{opacity:.4;cursor:default;}
+.cards-total{text-align:right;font-size:12px;color:var(--text-2);padding:8px 2px;}
 /* SPINNER */
 .spinner-wrap{text-align:center;padding:2rem;}
 .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--btn-bg);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
@@ -364,7 +395,13 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
           <button class="pill-status p-negativado" onclick="filtrarPill('negativado','admin')">Negativado</button>
           <button class="pill-status p-protestado" onclick="filtrarPill('protestado','admin')">Protestado</button>
         </div>
-        <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <div class="view-toggle">
+            <button class="view-btn active" id="vbtn-table-admin" onclick="setViewMode('table','admin')">☰ Lista</button>
+            <button class="view-btn" id="vbtn-cards-admin" onclick="setViewMode('cards','admin')">⊞ Cards</button>
+          </div>
+          <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
+        </div>
       </div>
       <div class="totalizador" id="tot-admin">
         🔍 <span id="tot-admin-txt">—</span>
@@ -493,7 +530,13 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
         <button class="pill-status p-negativado" onclick="filtrarPill('negativado','fornecedor')">Negativado</button>
         <button class="pill-status p-protestado" onclick="filtrarPill('protestado','fornecedor')">Protestado</button>
       </div>
-      <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div class="view-toggle">
+          <button class="view-btn active" id="vbtn-table-forn" onclick="setViewMode('table','forn')">☰ Lista</button>
+          <button class="view-btn" id="vbtn-cards-forn" onclick="setViewMode('cards','forn')">⊞ Cards</button>
+        </div>
+        <button class="btn-export" onclick="exportarCSV()">⬇ Exportar CSV / Excel</button>
+      </div>
     </div>
     <div class="totalizador" id="tot-forn">
       🔍 <span id="tot-forn-txt">—</span>
@@ -853,6 +896,24 @@ function setFonte(fonte, tipo) {
   sortCol = null; sortDir = 1; paginaAtual = 1;
 }
 
+/* ── VIEW MODE (tabela / cards) ── */
+let viewMode = 'table'; // 'table' ou 'cards'
+
+function setViewMode(mode, prefix){
+  viewMode = mode;
+  ['table','cards'].forEach(m=>{
+    const btn = document.getElementById(`vbtn-${m}-${prefix}`);
+    if(btn) btn.classList.toggle('active', m === mode);
+  });
+  // Re-renderiza com o modo atual sem nova requisição
+  const tipo = prefix === 'admin' ? 'admin' : 'fornecedor';
+  const targetId = prefix === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
+  const isAdmin = prefix === 'admin';
+  const filtro = pillFiltroAtual[tipo] || '';
+  const lista = filtro ? boletosCarregados.filter(b => normalizar(b.status) === filtro) : boletosCarregados;
+  renderTabela(lista, isAdmin, targetId);
+}
+
 /* ── BUSCAR BOLETOS ── */
 async function buscarBoletos(tipo){
   tipoAtual=tipo;
@@ -903,24 +964,8 @@ async function buscarBoletos(tipo){
 let sortCol = null, sortDir = 1;
 
 function renderTabela(boletos, isAdmin, targetId){
-  const cols = [
-    {key:'nf',      label:'Nota Fiscal'},
-    {key:'parcela', label:'Parcela'},
-    {key:'cnpj',    label:'CNPJ'},
-    {key:'cliente', label:'Cliente'},
-    {key:'valor',   label:'Valor'},
-    {key:'vencimento', label:'Vencimento'},
-    {key:'representante', label:'Representante'},
-    {key:'status',  label:'Status'},
-  ];
 
   const canDelete = isAdmin || (usuarioAtual && usuarioAtual.role === 'representante');
-  const checkTh = canDelete ? `<th class="col-check"><input type="checkbox" id="chk-all-${targetId}" onclick="toggleTodos(this,'${targetId}')"/></th>` : '';
-
-  const thHtml = checkTh + cols.map(c => {
-    const active = sortCol === c.key ? (sortDir===1?'asc':'desc') : '';
-    return `<th class="th-sort ${active}" onclick="sortTabela('${c.key}','${isAdmin}','${targetId}')">${c.label}<span class="sort-icon"></span></th>`;
-  }).join('') + '<th>Ações</th>';
 
   const sorted = [...boletos].sort((a,b)=>{
     if(!sortCol) return 0;
@@ -933,8 +978,88 @@ function renderTabela(boletos, isAdmin, targetId){
   const totalPaginas = Math.ceil(sorted.length / ITENS_POR_PAGINA);
   const startIndex = (paginaAtual - 1) * ITENS_POR_PAGINA;
   const paginados = sorted.slice(startIndex, startIndex + ITENS_POR_PAGINA);
+  const totalGeral = paginados.reduce((s,b) => s+Number(b.valor||0), 0);
 
-  let html=`<div class="tbl-wrap"><table><thead><tr>${thHtml}</tr></thead><tbody>`;
+  /* ── MODO CARDS ── */
+  if(viewMode === 'cards'){
+    let html = `<div class="cards-grid">`;
+    paginados.forEach(b => {
+      const venc = formatarData(b.vencimento);
+      const hoje = new Date(); hoje.setHours(0,0,0,0);
+      const raw  = b.vencimento || '';
+      const dv   = raw.match(/^\d{2}\/\d{2}\/\d{4}$/)
+        ? new Date(raw.split('/').reverse().join('-'))
+        : new Date(raw);
+      dv.setHours(0,0,0,0);
+      const diff = Math.floor((hoje - dv) / 86400000);
+      const vencClass = diff > 30 ? 'danger' : diff > 0 ? 'warn' : '';
+      const cliente = b.cliente || '—';
+      const rep     = b.descricao || b.representante || '—';
+      const chkHtml = canDelete
+        ? `<input type="checkbox" class="chk-boleto bc-chk" style="width:15px;height:15px;cursor:pointer;accent-color:var(--btn-bg);flex-shrink:0;" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}');this.closest('.boleto-card').classList.toggle('card-selected',this.checked)"/>`
+        : '';
+      const pdfBtn = b.downloadUrl
+        ? `<button class="bc-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>`
+        : `<button class="bc-btn" disabled>Sem PDF</button>`;
+      const delBtn = canDelete
+        ? `<button class="bc-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>`
+        : '';
+      html += `
+      <div class="boleto-card" id="row-${b.id}">
+        <div class="bc-header">
+          ${chkHtml}
+          <span class="bc-nf">NF ${b.nf} · P${b.parcela}</span>
+          ${badge(b.status)}
+        </div>
+        <div class="bc-body">
+          <div class="bc-left">
+            <span class="bc-client">${cliente}</span>
+            <span class="bc-cnpj" onclick="copiarCNPJ(this,'${b.cnpj||''}')" title="Clique para copiar">${b.cnpj||'—'}</span><span class="cnpj-toast"></span>
+          </div>
+          <div class="bc-right">
+            <span class="bc-val">${formatMoney(b.valor)}</span>
+            <span class="bc-venc ${vencClass}">${venc}</span>
+          </div>
+        </div>
+        <div class="bc-footer">
+          <span class="bc-rep">👤 ${rep}</span>
+          <div class="bc-actions">${pdfBtn}${delBtn}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+    html += `<div class="cards-total">Total da página: <strong>${formatMoney(totalGeral)}</strong></div>`;
+    // Paginação
+    if(totalPaginas > 1){
+      html += '<div class="pagination">';
+      for(let i=1;i<=totalPaginas;i++){
+        const activeCls = i===paginaAtual?' active':'';
+        html += `<button class="btn-page${activeCls}" onclick="mudarPagina(${i},${isAdmin},'${targetId}')">${i}</button>`;
+      }
+      html += '</div>';
+    }
+    // Mobile cards (dentro do cards-grid já está adaptado)
+    html += '<div class="mobile-cards" style="display:none"></div>';
+    document.getElementById(targetId).innerHTML = html;
+    return;
+  }
+
+  /* ── MODO TABELA ── */
+  const cols = [
+    {key:'nf',      label:'Nota Fiscal'},
+    {key:'parcela', label:'Parcela'},
+    {key:'cnpj',    label:'CNPJ'},
+    {key:'cliente', label:'Cliente'},
+    {key:'valor',   label:'Valor'},
+    {key:'vencimento', label:'Vencimento'},
+    {key:'representante', label:'Representante'},
+    {key:'status',  label:'Status'},
+  ];
+  const checkTh = canDelete ? `<th class="col-check"><input type="checkbox" id="chk-all-${targetId}" onclick="toggleTodos(this,'${targetId}')"/></th>` : '';
+  const thHtml = checkTh + cols.map(c => {
+    const active = sortCol === c.key ? (sortDir===1?'asc':'desc') : '';
+    return `<th class="th-sort ${active}" onclick="sortTabela('${c.key}','${isAdmin}','${targetId}')">${c.label}<span class="sort-icon"></span></th>`;
+  }).join('') + '<th>Ações</th>';
   paginados.forEach(b=>{
     const venc=formatarData(b.vencimento); const rep=b.descricao||b.representante||'—';
     const checkTd = canDelete ? `<td class="col-check"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/></td>` : '';
