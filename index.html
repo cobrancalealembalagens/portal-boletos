@@ -1060,6 +1060,8 @@ function renderTabela(boletos, isAdmin, targetId){
     const active = sortCol === c.key ? (sortDir===1?'asc':'desc') : '';
     return `<th class="th-sort ${active}" onclick="sortTabela('${c.key}','${isAdmin}','${targetId}')">${c.label}<span class="sort-icon"></span></th>`;
   }).join('') + '<th>Ações</th>';
+
+  let html=`<div class="tbl-wrap"><table><thead><tr>${thHtml}</tr></thead><tbody>`;
   paginados.forEach(b=>{
     const venc=formatarData(b.vencimento); const rep=b.descricao||b.representante||'—';
     const checkTd = canDelete ? `<td class="col-check"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/></td>` : '';
