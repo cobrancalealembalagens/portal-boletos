@@ -309,32 +309,6 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
   </div>
 </div>
 
-<!-- ═══ MODAL ENVIAR COBRANÇA ═══ -->
-<div class="overlay hidden" id="modal-cobranca">
-  <div class="modal-box" style="max-width:520px;">
-    <h2>✉️ Enviar cobrança</h2>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;">
-      <div>
-        <label>Destinatário</label>
-        <input type="email" id="cob-email" placeholder="email@cliente.com.br"/>
-      </div>
-      <div>
-        <label>Assunto</label>
-        <input type="text" id="cob-assunto"/>
-      </div>
-      <div>
-        <label>Mensagem <span style="font-size:11px;color:var(--text-2);">(editável)</span></label>
-        <textarea id="cob-mensagem" rows="10" style="width:100%;padding:10px 12px;border:1px solid var(--input-bd);border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;outline:none;background:var(--card-bg);color:var(--text-1);line-height:1.6;transition:background .4s,border-color .4s,color .4s;"></textarea>
-      </div>
-      <div id="msg-cobranca"></div>
-      <div style="display:flex;gap:8px;margin-top:4px;">
-        <button class="btn-primary" onclick="enviarCobranca()">✉️ Enviar e-mail</button>
-        <button onclick="fecharModalCobranca()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container">
 
 <div id="tela-login">
@@ -1027,9 +1001,6 @@ function renderTabela(boletos, isAdmin, targetId){
       const pdfBtn = b.downloadUrl
         ? `<button class="bc-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>`
         : `<button class="bc-btn" disabled>Sem PDF</button>`;
-      const cobBtn = isAdmin
-        ? `<button class="bc-btn" onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar cobrança">✉️</button>`
-        : '';
       const delBtn = canDelete
         ? `<button class="bc-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>`
         : '';
@@ -1052,7 +1023,7 @@ function renderTabela(boletos, isAdmin, targetId){
         </div>
         <div class="bc-footer">
           <span class="bc-rep">👤 ${rep}</span>
-          <div class="bc-actions">${pdfBtn}${cobBtn}${delBtn}</div>
+          <div class="bc-actions">${pdfBtn}${delBtn}</div>
         </div>
       </div>`;
     });
@@ -1110,7 +1081,6 @@ function renderTabela(boletos, isAdmin, targetId){
         ${b.downloadUrl
           ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>`
           : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
-        ${isAdmin ? `<button onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;" title="Enviar cobrança">✉️</button>` : ''}
         ${isAdmin ? `<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>` : ''}
         ${(isAdmin || usuarioAtual.role === 'representante') ? `<button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>` : ''}
       </td>
@@ -1187,64 +1157,7 @@ function mudarPagina(novaPagina, isAdmin, targetId) {
   document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* ── MODAL COBRANÇA ── */
-function abrirModalCobranca(b){
-  const venc = formatarData(b.vencimento);
-  const cliente = b.cliente || 'Cliente';
-  const emailCliente = b.email_cliente || b.emailCliente || '';
-
-  document.getElementById('cob-email').value = emailCliente;
-  document.getElementById('cob-assunto').value =
-    `Cobrança — NF ${b.nf} Parcela ${b.parcela} — ${formatMoney(b.valor)}`;
-
-  const msg =
-`Prezado(a) ${cliente},
-
-Informamos que o boleto abaixo encontra-se em aberto em nosso sistema:
-
-  • Nota Fiscal: ${b.nf}
-  • Parcela: ${b.parcela}
-  • Valor: ${formatMoney(b.valor)}
-  • Vencimento: ${venc}
-
-Solicitamos a regularização o quanto antes. Em caso de dúvidas ou para negociação, entre em contato conosco.
-
-Atenciosamente,
-Leal Embalagens de Papel
-cobranca@lealembalagens.com.br`;
-
-  document.getElementById('cob-mensagem').value = msg;
-  document.getElementById('msg-cobranca').innerHTML = '';
-  document.getElementById('modal-cobranca').classList.remove('hidden');
-}
-
-function fecharModalCobranca(){
-  document.getElementById('modal-cobranca').classList.add('hidden');
-}
-
-async function enviarCobranca(){
-  const email    = document.getElementById('cob-email').value.trim();
-  const assunto  = document.getElementById('cob-assunto').value.trim();
-  const mensagem = document.getElementById('cob-mensagem').value.trim();
-  const msgEl    = document.getElementById('msg-cobranca');
-
-  if(!email){ msgEl.innerHTML='<div class="msg-erro">Informe o e-mail do destinatário.</div>'; return; }
-  if(!assunto){ msgEl.innerHTML='<div class="msg-erro">Informe o assunto.</div>'; return; }
-
-  msgEl.innerHTML='<p style="color:var(--text-2);font-size:13px;">Enviando...</p>';
-
-  const res = await apiPost({
-    action: 'enviar_cobranca',
-    email, assunto, mensagem
-  });
-
-  if(res.ok){
-    msgEl.innerHTML='<div class="msg-ok">✅ E-mail enviado com sucesso!</div>';
-    setTimeout(()=> fecharModalCobranca(), 2000);
-  } else {
-    msgEl.innerHTML=`<div class="msg-erro">Erro ao enviar: ${res.erro||'tente novamente.'}</div>`;
-  }
-}
+/* ── PRÉVIA PDF ── */
 function abrirPrevia(downloadUrl, nf, parcela){
   const match = downloadUrl.match(/id=([^&]+)/);
   if(!match){ window.open(downloadUrl,'_blank'); return; }
