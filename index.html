@@ -331,6 +331,12 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
         <button class="btn-primary" onclick="enviarCobranca()">✉️ Enviar e-mail</button>
         <button onclick="fecharModalCobranca()">Cancelar</button>
       </div>
+      <!-- campos ocultos com dados estruturados para o template HTML do e-mail -->
+      <input type="hidden" id="cob-nf"/>
+      <input type="hidden" id="cob-parcela"/>
+      <input type="hidden" id="cob-cliente"/>
+      <input type="hidden" id="cob-valor"/>
+      <input type="hidden" id="cob-vencimento"/>
     </div>
   </div>
 </div>
@@ -1214,6 +1220,14 @@ Leal Embalagens de Papel
 cobranca@lealembalagens.com.br`;
 
   document.getElementById('cob-mensagem').value = msg;
+
+  // Campos ocultos para o template HTML do e-mail
+  document.getElementById('cob-nf').value        = b.nf;
+  document.getElementById('cob-parcela').value   = b.parcela;
+  document.getElementById('cob-cliente').value   = cliente;
+  document.getElementById('cob-valor').value     = formatMoney(b.valor);
+  document.getElementById('cob-vencimento').value = venc;
+
   document.getElementById('msg-cobranca').innerHTML = '';
   document.getElementById('modal-cobranca').classList.remove('hidden');
 }
@@ -1235,7 +1249,12 @@ async function enviarCobranca(){
 
   const res = await apiPost({
     action: 'enviar_cobranca',
-    email, assunto, mensagem
+    email, assunto, mensagem,
+    nf:         document.getElementById('cob-nf').value,
+    parcela:    document.getElementById('cob-parcela').value,
+    cliente:    document.getElementById('cob-cliente').value,
+    valor:      document.getElementById('cob-valor').value,
+    vencimento: document.getElementById('cob-vencimento').value
   });
 
   if(res.ok){
