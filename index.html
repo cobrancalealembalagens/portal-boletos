@@ -572,7 +572,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbxoxJdvHje_ONhumWZNHHN4SEwTrOq3laCfeB8TsNCcplgll3LqwJIaWGnJqdSlTwmR/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwm8rZ9FaeNBhBZeD7Xi83dv0u7ACMKd-ZFZn-FTSMpSagT20KaBx47BfzvLgAldAz-/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
@@ -646,6 +646,9 @@ async function api(params){
   const r=await fetch(url); return r.json();
 }
 async function apiPost(data){
+  if(usuarioAtual && usuarioAtual.login && !data.usuario) {
+    data.usuario = usuarioAtual.login;
+  }
   const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(data)}); return r.json();
 }
 
