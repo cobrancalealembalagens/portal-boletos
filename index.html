@@ -62,21 +62,15 @@ tr:hover td{background:var(--row-hover);}
 .msg-erro{background:#f8d7da;color:#842029;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
 .msg-ok{background:#d1e7dd;color:#0a6640;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
 .tabs{display:flex;gap:4px;margin-bottom:1rem;flex-wrap:wrap;}
- 
-/* TAB STYLE UPDATE */
 .tab{font-size:13px;padding:6px 14px;border-radius:8px;border:none;background:var(--card-bg);cursor:pointer;color:var(--text-1);box-shadow:0 2px 6px rgba(0,0,0,.08);font-weight:500;transition:all .2s;}
 .tab.active{background:var(--card-bg);color:var(--focus);font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.08), inset 0 0 0 2px var(--focus);}
 [data-theme="dark"] .tab.active{background:var(--card-bg);color:#93c5fd;box-shadow:0 2px 6px rgba(0,0,0,.08), inset 0 0 0 2px #93c5fd;}
 .tab:hover:not(.active){background:var(--card-bg2);opacity:.9;}
- 
-/* PAGINATION */
 .pagination{display:flex;justify-content:center;gap:6px;margin-top:16px;flex-wrap:wrap;}
 .btn-page{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-1);font-size:13px;cursor:pointer;transition:all .2s;}
 .btn-page.active{background:var(--btn-bg);color:var(--btn-color);border-color:var(--btn-bg);font-weight:bold;}
 .btn-page:hover:not(.active){background:var(--row-hover);}
- 
 .hidden{display:none!important;}
-/* HEADER */
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:8px;flex-wrap:wrap;}
 .header-logo{height:56px;border-radius:8px;box-shadow:0 3px 12px rgba(0,0,0,.25);flex-shrink:0;}
 .header-title{text-align:center;flex:1;}
@@ -88,15 +82,12 @@ tr:hover td{background:var(--row-hover);}
 .btn-sair{background:var(--sair-bg);color:var(--sair-color);border:1px solid var(--sair-bg);font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.15);}
 .btn-sair:hover{opacity:.88;}
 .header-toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
-/* LOADING */
 .loading{text-align:center;padding:2rem;color:var(--text-2);font-size:14px;}
-/* LOGIN */
 .login-card-wrap{max-width:380px;margin:3rem auto;}
 .login-logo-wrap{text-align:center;margin-bottom:1.5rem;}
 .login-logo{height:68px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.3);}
 .login-title{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.3);margin-top:14px;}
 .login-sub{font-size:13px;color:rgba(255,255,255,.75);margin-top:4px;}
-/* OVERLAY / POPUP / MODAL */
 .overlay{position:fixed;inset:0;background:var(--modal-overlay);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:9999;}
 .popup-box,.modal-box{background:var(--modal-bg);border-radius:16px;box-shadow:0 16px 56px rgba(0,0,0,.3);padding:36px 38px 30px;max-width:460px;width:92%;animation:popIn .25s ease;transition:background .4s;}
 .modal-box{max-width:400px;padding:28px 32px;}
@@ -111,11 +102,9 @@ tr:hover td{background:var(--row-hover);}
 .popup-note{font-size:.75rem;color:#aaa;text-align:center;margin-top:4px;}
 .btn-popup{display:block;width:100%;background:linear-gradient(90deg,#002f6c,#0057b8);color:#fff;border:none;border-radius:10px;padding:13px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:inherit;transition:opacity .18s;}
 .btn-popup:hover{opacity:.88;}
-/* EXPORT */
 .export-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap;}
 .btn-export{background:var(--export-bg);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
 .btn-export:hover{opacity:.88;}
-/* FONTE TOGGLE */
 .fonte-toggle{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1.5px solid var(--btn-bg);margin-bottom:14px;width:fit-content;}
 .fonte-btn{padding:7px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:transparent;color:var(--btn-bg);font-family:inherit;transition:background .18s,color .18s;}
 .fonte-btn.active{background:var(--btn-bg);color:#fff;}
@@ -127,21 +116,17 @@ tr:hover td{background:var(--row-hover);}
 .btn-bulk-delete{background:#c0392b;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .18s;}
 .btn-bulk-delete:hover{opacity:.85;}
 .bulk-actions{display:flex;align-items:center;gap:10px;}
-/* CHECKBOX */
 input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--btn-bg);}
 th input[type=checkbox]{margin:0;}
 td.col-check{width:32px;text-align:center;}
 th.col-check{width:32px;text-align:center;}
 tr.row-selected td{background:rgba(0,87,184,.07)!important;}
 [data-theme="dark"] tr.row-selected td{background:rgba(100,160,255,.08)!important;}
-/* OVERFLOW TABLE */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-/* VIEW TOGGLE */
 .view-toggle{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border);width:fit-content;margin-bottom:10px;}
 .view-btn{padding:6px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:transparent;color:var(--text-2);font-family:inherit;transition:background .15s,color .15s;display:flex;align-items:center;gap:5px;}
 .view-btn.active{background:var(--btn-bg);color:#fff;}
 .view-btn:first-child{border-right:1px solid var(--border);}
-/* DESKTOP CARDS */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
 .boleto-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,background .4s;}
 .boleto-card:hover{border-color:var(--focus);}
@@ -167,34 +152,26 @@ tr.row-selected td{background:rgba(0,87,184,.07)!important;}
 .bc-btn.danger{color:#c0392b;border-color:#f5c6cb;}
 .bc-btn:disabled{opacity:.4;cursor:default;}
 .cards-total{text-align:right;font-size:12px;color:var(--text-2);padding:8px 2px;}
-/* SPINNER */
 .spinner-wrap{text-align:center;padding:2rem;}
 .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--btn-bg);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .spinner-wrap p{color:var(--text-2);font-size:14px;margin-top:4px;}
-/* ENTRY ANIMATION */
 @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 .card{animation:slideUp .35s ease both;}
-/* ROW HOVER */
 td{transition:background .18s;}
 tbody tr:hover td{background:var(--row-hover);}
-/* ── SORT ── */
 .th-sort{cursor:pointer;user-select:none;white-space:nowrap;}
 .th-sort:hover{color:var(--btn-bg);}
 .sort-icon{margin-left:4px;opacity:.5;font-size:10px;}
 .th-sort.asc .sort-icon::after{content:'▲';}
 .th-sort.desc .sort-icon::after{content:'▼';}
 .th-sort:not(.asc):not(.desc) .sort-icon::after{content:'⇅';}
-/* EXTERNAL BUTTONS */
 .btn-ext-looker{background:#4285f4;color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:opacity .18s;}
 .btn-ext-pipefy{background:#1c8a5e;color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:opacity .18s;}
 .btn-ext-looker:hover,.btn-ext-pipefy:hover{opacity:.85;}
-/* FOOTER */
 .footer{text-align:center;padding:2rem 1rem 1.5rem;font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;}
-/* GREETING */
 .greeting{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border-radius:10px;padding:10px 16px;margin-bottom:14px;color:rgba(255,255,255,.9);font-size:14px;backdrop-filter:blur(4px);}
 .greeting strong{color:#fff;}
-/* DASHBOARD */
 .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
 .dash-card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.07);transition:background .4s,border-color .4s;}
 .dash-label{font-size:11px;color:var(--text-2);margin-bottom:4px;font-weight:500;}
@@ -208,7 +185,6 @@ tbody tr:hover td{background:var(--row-hover);}
 [data-theme="dark"] .dash-avencer .dash-val{color:#fbbf24;}
 [data-theme="dark"] .dash-cobrado .dash-val{color:#60a8f0;}
 [data-theme="dark"] .dash-protestado .dash-val{color:#c084fc;}
-/* STATUS PILLS */
 .status-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
 .pill-status{padding:4px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card-bg);font-size:12px;font-weight:500;cursor:pointer;color:var(--text-2);transition:all .15s;font-family:inherit;}
 .pill-status:hover{border-color:var(--input-bd);}
@@ -219,21 +195,16 @@ tbody tr:hover td{background:var(--row-hover);}
 [data-theme="dark"] .pill-status.p-cobrado.active{background:#1e3a6e;color:#93c5fd;border-color:#1e3a6e;}
 [data-theme="dark"] .pill-status.p-negativado.active{background:#4a1030;color:#f9a8d4;border-color:#4a1030;}
 [data-theme="dark"] .pill-status.p-protestado.active{background:#3a2a00;color:#fcd34d;border-color:#3a2a00;}
-/* TOTALIZADOR */
 .totalizador{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--card-bg2);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--text-2);border:1px solid var(--border);transition:background .4s,border-color .4s;}
 .tot-num{font-weight:600;color:var(--btn-bg);}
-/* TOTAL ROW */
 tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-top:2px solid var(--border);background:var(--card-bg2)!important;transition:background .4s;}
-/* CNPJ COPY */
 .cnpj-copiavel{cursor:pointer;border-bottom:1px dashed var(--border);transition:color .15s;}
 .cnpj-copiavel:hover{color:var(--btn-bg);}
 .cnpj-toast{display:inline-block;background:#d1e7dd;color:#0a6640;font-size:10px;padding:1px 5px;border-radius:4px;margin-left:4px;opacity:0;transition:opacity .2s;pointer-events:none;}
 .cnpj-toast.show{opacity:1;}
-/* BACK TO TOP */
 #btn-topo{position:fixed;bottom:24px;right:24px;width:42px;height:42px;border-radius:50%;background:var(--btn-bg);color:#fff;border:none;cursor:pointer;font-size:18px;box-shadow:0 4px 16px rgba(0,0,0,.2);display:none;align-items:center;justify-content:center;z-index:7777;transition:opacity .2s,transform .2s;}
 #btn-topo.show{display:flex;}
 #btn-topo:hover{transform:translateY(-2px);opacity:.88;}
-/* MOBILE */
 @media(max-width:640px){
   .container{padding:1rem .75rem;}
   .header{gap:8px;}
@@ -251,7 +222,6 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
 @media(max-width:380px){
   .grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr;}
 }
-/* MOBILE CARDS */
 .mobile-cards{display:none;}
 .m-boleto-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:background .4s,border-color .4s;}
 .m-boleto-row{display:flex;justify-content:space-between;align-items:flex-start;padding:13px 14px;gap:10px;}
@@ -274,7 +244,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
 </style>
 </head>
 <body>
- 
+
 <div class="overlay hidden" id="popup-boas-vindas">
   <div class="popup-box">
     <img src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
@@ -292,7 +262,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
     <button class="btn-popup" onclick="fecharPopup()">Entendido — Acessar portal</button>
   </div>
 </div>
- 
+
 <div class="overlay hidden" id="modal-senha">
   <div class="modal-box">
     <h2>🔑 Trocar senha</h2>
@@ -308,7 +278,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
     </div>
   </div>
 </div>
- 
+
 <!-- ═══ MODAL ENVIAR COBRANÇA ═══ -->
 <div class="overlay hidden" id="modal-cobranca">
   <div class="modal-box" style="max-width:520px;">
@@ -331,7 +301,6 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
         <button class="btn-primary" onclick="enviarCobranca()">✉️ Enviar e-mail</button>
         <button onclick="fecharModalCobranca()">Cancelar</button>
       </div>
-      <!-- campos ocultos com dados estruturados para o template HTML do e-mail -->
       <input type="hidden" id="cob-nf"/>
       <input type="hidden" id="cob-parcela"/>
       <input type="hidden" id="cob-cliente"/>
@@ -341,9 +310,9 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
     </div>
   </div>
 </div>
- 
+
 <div class="container">
- 
+
 <div id="tela-login">
   <div class="login-card-wrap">
     <div class="login-logo-wrap">
@@ -361,7 +330,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
     </div>
   </div>
 </div>
- 
+
 <div id="tela-admin" class="hidden">
   <div class="header">
     <img class="header-logo" src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
@@ -370,14 +339,12 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       <p id="lbl-admin-nome"></p>
     </div>
   </div>
- 
+
   <div class="tabs" style="justify-content:space-between;align-items:center;">
     <div style="display:flex;gap:8px;">
       <button class="tab active" onclick="mostrarTab('tab-boletos',this)">📄 Boletos</button>
       <button class="tab hidden" onclick="mostrarTab('tab-usuarios',this)">👥 Usuários</button>
-      
       <button class="tab" style="display:none !important;" onclick="mostrarTab('tab-novo-boleto',this)">+ Novo boleto</button>
-      
       <button class="tab hidden" onclick="mostrarTab('tab-novo-usuario',this)">+ Novo usuário</button>
     </div>
     <div style="display:flex;gap:6px;align-items:center;">
@@ -390,12 +357,11 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
   </div>
   
   <div id="msg-admin"></div>
- 
-  <!-- GREETING (admin) -->
+
   <div id="admin-dashboard">
     <div class="greeting" id="admin-greeting"></div>
   </div>
- 
+
   <div id="tab-boletos">
     <div class="card">
       <div class="fonte-toggle">
@@ -442,11 +408,11 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
     </div>
     <div class="card" id="result-boletos-admin"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
   </div>
- 
+
   <div id="tab-usuarios" class="hidden">
     <div class="card" id="result-usuarios"><div class="loading">Carregando...</div></div>
   </div>
- 
+
   <div id="tab-novo-boleto" class="hidden">
     <div class="card" style="max-width:520px;">
       <p style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;" id="lbl-form-boleto">Cadastrar novo boleto</p>
@@ -465,6 +431,10 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
           <div><label>Representante</label>
             <select id="nb-representante"><option value="">Selecione</option></select>
           </div>
+        </div>
+        <div class="grid-2">
+          <div><label>Nome do Cliente</label><input id="nb-cliente" type="text"/></div>
+          <div><label>E-mail do Cliente</label><input id="nb-email" type="email" placeholder="email@cliente.com.br"/></div>
         </div>
         <div><label>Status</label>
           <select id="nb-status">
@@ -487,7 +457,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       </div>
     </div>
   </div>
- 
+
   <div id="tab-novo-usuario" class="hidden">
     <div class="card" style="max-width:420px;">
       <p style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;" id="lbl-form-usuario">Cadastrar usuário</p>
@@ -495,7 +465,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       <div style="display:flex;flex-direction:column;gap:12px;">
         <div><label>Nome *</label><input id="nu-nome" type="text"/></div>
         <div><label>CNPJ (Preencher apenas se for Fornecedor)</label><input id="nu-cnpj" type="text" oninput="this.value=formatCNPJ(this.value)"/></div>
-        <div><label>Representante Vinculado (Preencher apenas se for usuário Representante)</label>
+        <div><label>Representante Vinculado</label>
           <select id="nu-representante"><option value="">Nenhum (Admin ou Fornecedor)</option></select>
         </div>
         <div><label>Login *</label><input id="nu-login" type="text"/></div>
@@ -508,7 +478,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
     </div>
   </div>
 </div>
- 
+
 <div id="tela-fornecedor" class="hidden">
   <div class="header">
     <img class="header-logo" src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
@@ -517,7 +487,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       <p id="lbl-forn-nome" style="color:rgba(255,255,255,.8);"></p>
     </div>
   </div>
- 
+
   <div class="tabs" style="justify-content:space-between;align-items:center;margin-bottom:1rem;">
     <div></div>
     <div style="display:flex;gap:6px;align-items:center;">
@@ -528,10 +498,9 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
     </div>
   </div>
- 
-  <!-- GREETING fornecedor -->
+
   <div class="greeting" id="forn-greeting" style="margin-bottom:14px;"></div>
- 
+
   <div class="card">
     <div class="fonte-toggle">
       <button class="fonte-btn active" id="fonte-btn-vencidos-forn" onclick="setFonte('vencidos','fornecedor')">📋 Vencidos</button>
@@ -577,7 +546,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
   </div>
   <div class="card" id="result-boletos-forn"><div class="loading">Use os filtros acima para buscar boletos.</div></div>
 </div>
- 
+
 <div id="preview-backdrop" onclick="fecharPrevia()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8888;transition:opacity .3s;"></div>
 <div id="preview-panel" style="display:none;position:fixed;top:0;right:0;width:min(520px,95vw);height:100vh;background:var(--card-bg);box-shadow:-4px 0 32px rgba(0,0,0,.25);z-index:8889;flex-direction:column;transition:transform .32s cubic-bezier(.4,0,.2,1);">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:10px;flex-shrink:0;">
@@ -594,29 +563,27 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
   </div>
   <iframe id="preview-iframe" src="" style="flex:1;border:none;width:100%;background:#f5f5f5;" allowfullscreen></iframe>
 </div>
- 
+
 </div><button id="btn-topo" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Voltar ao topo">▲</button>
- 
+
 <div class="footer">
   Leal Embalagens de Papel &copy; 2026<br>
   Criado e desenvolvido por Dennis Wandembruck
 </div>
- 
+
 <script>
-// URL DEFINITIVA CORRIGIDA:
-const API_URL = 'https://script.google.com/macros/s/AKfycbyz88cYkCkwUJlbJY5MOmExAwMFUe_DzHyF43y0_PFrwheRyq3dVjhHOhtHaFTAJVsg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbye_M-Xj_uZCfVGZa-D21GaGa1MB5LiLtd9doQ39RnT281gjmX1LSLV3vFPvW3gwXb3/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
 let paginaAtual = 1;
 const ITENS_POR_PAGINA = 15;
- 
+
 /* ── DARK MODE ── */
 (function(){
   const saved = localStorage.getItem('leal_theme') || 'light';
   document.body.setAttribute('data-theme', saved);
 })();
- 
 function toggleDark(){
   const isDark = document.body.getAttribute('data-theme') === 'dark';
   const next = isDark ? 'light' : 'dark';
@@ -625,25 +592,23 @@ function toggleDark(){
   const icon = isDark ? '🌙' : '☀️';
   document.querySelectorAll('#btn-dark,#btn-dark-forn').forEach(b => b.textContent = icon);
 }
- 
 function syncDarkBtn(){
   const isDark = document.body.getAttribute('data-theme') === 'dark';
   document.querySelectorAll('#btn-dark,#btn-dark-forn').forEach(b => b.textContent = isDark ? '☀️' : '🌙');
 }
- 
+
 /* ── POPUP ── */
 const popupEl = document.getElementById('popup-boas-vindas');
 function fecharPopup(){
   popupEl.style.opacity='0'; popupEl.style.transition='opacity .28s';
   setTimeout(()=>{
     popupEl.classList.add('hidden');
-    // Verifica se precisa carregar os boletos logo após fechar o popup (para representantes)
     if (usuarioAtual && usuarioAtual.role === 'representante') {
       buscarBoletos('fornecedor');
     }
   },280);
 }
- 
+
 /* ── MODAL SENHA ── */
 function abrirModalSenha(){
   document.getElementById('ps-atual').value='';
@@ -655,7 +620,6 @@ function abrirModalSenha(){
 function fecharModalSenha(){
   document.getElementById('modal-senha').classList.add('hidden');
 }
- 
 async function trocarSenha(){
   const atual    = document.getElementById('ps-atual').value;
   const nova     = document.getElementById('ps-nova').value;
@@ -675,7 +639,7 @@ async function trocarSenha(){
     msgEl.innerHTML='<div class="msg-erro">Erro ao alterar senha. Tente novamente.</div>';
   }
 }
- 
+
 /* ── API ── */
 async function api(params){
   const url=API_URL+'?'+new URLSearchParams(params);
@@ -684,7 +648,7 @@ async function api(params){
 async function apiPost(data){
   const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(data)}); return r.json();
 }
- 
+
 /* ── FORMAT ── */
 function formatCNPJ(v){
   v=v.replace(/\D/g,'').slice(0,14);
@@ -714,7 +678,7 @@ function badge(s){
   const label = labels[key] || s;
   return `<span class="badge badge-${key}">${label}</span>`;
 }
- 
+
 /* ── REPRESENTANTES ── */
 async function carregarRepresentantes(){
   try{
@@ -726,7 +690,7 @@ async function carregarRepresentantes(){
     });
   }catch(e){console.warn('Representantes:',e);}
 }
- 
+
 /* ── LOGIN / LOGOUT ── */
 async function fazerLogin(){
   const login=document.getElementById('inp-login').value.trim();
@@ -773,7 +737,6 @@ async function fazerLogin(){
     document.getElementById('msg-login').innerHTML='<div class="msg-erro">Erro ao conectar com o servidor.</div>';
   }
 }
- 
 function sair(){
   usuarioAtual=null; boletosCarregados=[]; paginaAtual=1; fonteAtual='vencidos';
   ['tela-admin','tela-fornecedor'].forEach(id=>document.getElementById(id).classList.add('hidden'));
@@ -782,7 +745,7 @@ function sair(){
   document.getElementById('inp-senha').value='';
   document.getElementById('msg-login').innerHTML='';
 }
- 
+
 /* ── GREETING ── */
 function mostrarGreeting(nome, targetId){
   const h = new Date().getHours();
@@ -791,10 +754,9 @@ function mostrarGreeting(nome, targetId){
   const el = document.getElementById(targetId);
   if(el) el.innerHTML = `${icon} ${saud}, <strong>${nome}!</strong>`;
 }
- 
+
 /* ── DASHBOARD (admin) ── */
 async function carregarDashboard(){
-  // Função auxiliar segura - não lança erro se elemento não existir
   function setEl(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
   try{
     const [resV, resA] = await Promise.all([
@@ -816,32 +778,25 @@ async function carregarDashboard(){
     setEl('dash-sub-protestado',`${protest.length} boletos`);
   } catch(e){ console.warn('Dashboard:', e); }
 }
- 
-function atualizarContadorToggle(prefix, nVenc, nAVenc){
-  // Contador removido a pedido — labels permanecem fixos
-}
- 
+
 function normalizar(v){
   return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
 }
- 
+
 /* ── STATUS PILLS ── */
 let pillFiltroAtual = {admin:'', fornecedor:''};
- 
 function filtrarPill(status, tipo){
   pillFiltroAtual[tipo] = status;
   const prefix = tipo === 'admin' ? 'admin' : 'forn';
   document.querySelectorAll(`#pills-${prefix} .pill-status`).forEach(p => p.classList.remove('active'));
   const alvo = status === '' ? 'p-all' : `p-${status}`;
   document.querySelector(`#pills-${prefix} .${alvo}`)?.classList.add('active');
-  // Aplica filtro nos dados já carregados
   const targetId = tipo === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
   const isAdmin = tipo === 'admin';
-  const filtrados = status === '' ? boletosCarregados
-    : boletosCarregados.filter(b => normalizar(b.status) === status);
+  const filtrados = status === '' ? boletosCarregados : boletosCarregados.filter(b => normalizar(b.status) === status);
   renderTabela(filtrados, isAdmin, targetId);
 }
- 
+
 /* ── TOTALIZADOR ── */
 function atualizarTotalizador(boletos, tipo){
   const prefix = tipo === 'admin' ? 'admin' : 'forn';
@@ -851,7 +806,7 @@ function atualizarTotalizador(boletos, tipo){
   if(el) el.innerHTML = txt;
   document.getElementById(`pills-${prefix}`)?.classList.remove('hidden');
 }
- 
+
 /* ── CNPJ COPY ── */
 let toastTimer = null;
 function copiarCNPJ(el, cnpj){
@@ -863,22 +818,21 @@ function copiarCNPJ(el, cnpj){
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=> toast.classList.remove('show'), 2000);
 }
- 
+
 /* ── BACK TO TOP ── */
 window.addEventListener('scroll', ()=>{
   const btn = document.getElementById('btn-topo');
   if(btn) btn.classList.toggle('show', window.scrollY > 300);
 });
- 
+
 /* ── TABELA VAZIA ── */
 function mostrarTabelaVazia(id){
   document.getElementById(id).innerHTML='<p style="text-align:center;padding:2rem;color:var(--text-2);font-size:14px;">🔍 Use os filtros acima para buscar boletos.</p>';
 }
- 
+
 /* ── LIMPAR FILTROS ── */
 function limparFiltros(tipo){
-  sortCol=null; sortDir=1;
-  paginaAtual = 1;
+  sortCol=null; sortDir=1; paginaAtual = 1;
   if(tipo==='admin'){
     ['fa-nf','fa-parcela','fa-cnpj'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fa-representante').selectedIndex=0;
@@ -890,37 +844,22 @@ function limparFiltros(tipo){
        const el = document.getElementById(id);
        if (el) el.value='';
     });
-    
     const ffRep = document.getElementById('ff-representante');
     if (ffRep) ffRep.selectedIndex=0;
-    
     document.getElementById('export-bar-forn').classList.add('hidden');
     document.getElementById('pills-forn')?.classList.add('hidden');
     mostrarTabelaVazia('result-boletos-forn');
   }
   boletosCarregados=[];
 }
- 
-/* ── SITUAÇÃO (calculada pela data de vencimento) ── */
-function calcularSituacao(vencimentoStr){
-  if(!vencimentoStr) return null;
-  const venc = new Date(vencimentoStr);
-  if(isNaN(venc.getTime())) return null;
-  const hoje = new Date();
-  hoje.setHours(0,0,0,0);
-  venc.setHours(0,0,0,0);
-  return venc < hoje ? 'vencido' : 'a_vencer';
-}
- 
-/* ── FONTE (qual aba da planilha) ── */
-let fonteAtual = 'vencidos'; // 'vencidos' = aba boletos | 'avencer' = aba aVencer
- 
+
+/* ── FONTE ── */
+let fonteAtual = 'vencidos';
 function setFonte(fonte, tipo) {
   fonteAtual = fonte;
   const prefix = tipo === 'admin' ? 'admin' : 'forn';
   document.getElementById(`fonte-btn-vencidos-${prefix}`).classList.toggle('active', fonte === 'vencidos');
   document.getElementById(`fonte-btn-avencer-${prefix}`).classList.toggle('active', fonte === 'avencer');
-  // Limpa a tabela e reseta ao trocar de fonte
   const targetId = tipo === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
   const barId    = tipo === 'admin' ? 'export-bar-admin' : 'export-bar-forn';
   mostrarTabelaVazia(targetId);
@@ -928,17 +867,15 @@ function setFonte(fonte, tipo) {
   boletosCarregados = [];
   sortCol = null; sortDir = 1; paginaAtual = 1;
 }
- 
-/* ── VIEW MODE (tabela / cards) ── */
-let viewMode = 'table'; // 'table' ou 'cards'
- 
+
+/* ── VIEW MODE ── */
+let viewMode = 'table';
 function setViewMode(mode, prefix){
   viewMode = mode;
   ['table','cards'].forEach(m=>{
     const btn = document.getElementById(`vbtn-${m}-${prefix}`);
     if(btn) btn.classList.toggle('active', m === mode);
   });
-  // Re-renderiza com o modo atual sem nova requisição
   const tipo = prefix === 'admin' ? 'admin' : 'fornecedor';
   const targetId = prefix === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn';
   const isAdmin = prefix === 'admin';
@@ -946,7 +883,7 @@ function setViewMode(mode, prefix){
   const lista = filtro ? boletosCarregados.filter(b => normalizar(b.status) === filtro) : boletosCarregados;
   renderTabela(lista, isAdmin, targetId);
 }
- 
+
 /* ── BUSCAR BOLETOS ── */
 async function buscarBoletos(tipo){
   tipoAtual=tipo;
@@ -960,11 +897,9 @@ async function buscarBoletos(tipo){
   } else {
     params.nf=document.getElementById('ff-nf').value;
     params.parcela=document.getElementById('ff-parcela').value;
-    
-    // Regra de filtros baseada no tipo de acesso
     if (usuarioAtual.role === 'representante') {
       params.representante = usuarioAtual.representante; 
-      params.cnpj = document.getElementById('ff-cnpj').value; // Pega o CNPJ que o Rep digitou
+      params.cnpj = document.getElementById('ff-cnpj').value;
     } else {
       params.cnpj = usuarioAtual.cnpj; 
       params.representante = document.getElementById('ff-representante').value;
@@ -992,27 +927,25 @@ async function buscarBoletos(tipo){
     document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
   }, 100);
 }
- 
-/* ── SORT STATE ── */
+
+/* ── SORT E RENDER TABELA ── */
 let sortCol = null, sortDir = 1;
- 
 function renderTabela(boletos, isAdmin, targetId){
- 
   const canDelete = isAdmin || (usuarioAtual && usuarioAtual.role === 'representante');
- 
+
   const sorted = [...boletos].sort((a,b)=>{
     if(!sortCol) return 0;
-    let va = sortCol==='representante' ? (a.descricao||a.representante||'') : (a[sortCol]||'');
-    let vb = sortCol==='representante' ? (b.descricao||b.representante||'') : (b[sortCol]||'');
+    let va = sortCol==='representante' ? (a.representante||'') : (a[sortCol]||'');
+    let vb = sortCol==='representante' ? (b.representante||'') : (b[sortCol]||'');
     if(sortCol==='valor'){ va=Number(va); vb=Number(vb); return (va-vb)*sortDir; }
     return String(va).localeCompare(String(vb),'pt-BR',{numeric:true})*sortDir;
   });
- 
+
   const totalPaginas = Math.ceil(sorted.length / ITENS_POR_PAGINA);
   const startIndex = (paginaAtual - 1) * ITENS_POR_PAGINA;
   const paginados = sorted.slice(startIndex, startIndex + ITENS_POR_PAGINA);
   const totalGeral = paginados.reduce((s,b) => s+Number(b.valor||0), 0);
- 
+
   /* ── MODO CARDS ── */
   if(viewMode === 'cards'){
     let html = `<div class="cards-grid">`;
@@ -1020,124 +953,81 @@ function renderTabela(boletos, isAdmin, targetId){
       const venc = formatarData(b.vencimento);
       const hoje = new Date(); hoje.setHours(0,0,0,0);
       const raw  = b.vencimento || '';
-      const dv   = raw.match(/^\d{2}\/\d{2}\/\d{4}$/)
-        ? new Date(raw.split('/').reverse().join('-'))
-        : new Date(raw);
+      const dv   = raw.match(/^\d{2}\/\d{2}\/\d{4}$/) ? new Date(raw.split('/').reverse().join('-')) : new Date(raw);
       dv.setHours(0,0,0,0);
       const diff = Math.floor((hoje - dv) / 86400000);
       const vencClass = diff > 30 ? 'danger' : diff > 0 ? 'warn' : '';
       const cliente = b.cliente || '—';
-      const rep     = b.descricao || b.representante || '—';
-      const chkHtml = canDelete
-        ? `<input type="checkbox" class="chk-boleto bc-chk" style="width:15px;height:15px;cursor:pointer;accent-color:var(--btn-bg);flex-shrink:0;" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}');this.closest('.boleto-card').classList.toggle('card-selected',this.checked)"/>`
-        : '';
-      const pdfBtn = b.downloadUrl
-        ? `<button class="bc-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>`
-        : `<button class="bc-btn" disabled>Sem PDF</button>`;
-      const cobBtn = isAdmin
-        ? `<button class="bc-btn" onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar cobrança">✉️</button>`
-        : '';
-      const delBtn = canDelete
-        ? `<button class="bc-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>`
-        : '';
+      const rep     = b.representante || '—';
+      const chkHtml = canDelete ? `<input type="checkbox" class="chk-boleto bc-chk" style="width:15px;height:15px;cursor:pointer;accent-color:var(--btn-bg);flex-shrink:0;" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}');this.closest('.boleto-card').classList.toggle('card-selected',this.checked)"/>` : '';
+      const pdfBtn = b.downloadUrl ? `<button class="bc-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>` : `<button class="bc-btn" disabled>Sem PDF</button>`;
+      const cobBtn = isAdmin ? `<button class="bc-btn" onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar cobrança">✉️</button>` : '';
+      const delBtn = canDelete ? `<button class="bc-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : '';
       html += `
       <div class="boleto-card" id="row-${b.id}">
-        <div class="bc-header">
-          ${chkHtml}
-          <span class="bc-nf">NF ${b.nf} · P${b.parcela}</span>
-          ${badge(b.status)}
-        </div>
+        <div class="bc-header">${chkHtml}<span class="bc-nf">NF ${b.nf} · P${b.parcela}</span>${badge(b.status)}</div>
         <div class="bc-body">
           <div class="bc-left">
             <span class="bc-client">${cliente}</span>
             <span class="bc-cnpj" onclick="copiarCNPJ(this,'${b.cnpj||''}')" title="Clique para copiar">${b.cnpj||'—'}</span><span class="cnpj-toast"></span>
           </div>
-          <div class="bc-right">
-            <span class="bc-val">${formatMoney(b.valor)}</span>
-            <span class="bc-venc ${vencClass}">${venc}</span>
-          </div>
+          <div class="bc-right"><span class="bc-val">${formatMoney(b.valor)}</span><span class="bc-venc ${vencClass}">${venc}</span></div>
         </div>
-        <div class="bc-footer">
-          <span class="bc-rep">👤 ${rep}</span>
-          <div class="bc-actions">${pdfBtn}${cobBtn}${delBtn}</div>
-        </div>
+        <div class="bc-footer"><span class="bc-rep">👤 ${rep}</span><div class="bc-actions">${pdfBtn}${cobBtn}${delBtn}</div></div>
       </div>`;
     });
-    html += `</div>`;
-    html += `<div class="cards-total">Total da página: <strong>${formatMoney(totalGeral)}</strong></div>`;
-    // Paginação
+    html += `</div><div class="cards-total">Total da página: <strong>${formatMoney(totalGeral)}</strong></div>`;
     if(totalPaginas > 1){
       html += '<div class="pagination">';
       for(let i=1;i<=totalPaginas;i++){
-        const activeCls = i===paginaAtual?' active':'';
-        html += `<button class="btn-page${activeCls}" onclick="mudarPagina(${i},${isAdmin},'${targetId}')">${i}</button>`;
+        html += `<button class="btn-page${i===paginaAtual?' active':''}" onclick="mudarPagina(${i},${isAdmin},'${targetId}')">${i}</button>`;
       }
       html += '</div>';
     }
-    // Mobile cards (dentro do cards-grid já está adaptado)
     html += '<div class="mobile-cards" style="display:none"></div>';
     document.getElementById(targetId).innerHTML = html;
     return;
   }
- 
+
   /* ── MODO TABELA ── */
   const cols = [
-    {key:'nf',      label:'Nota Fiscal'},
-    {key:'parcela', label:'Parcela'},
-    {key:'cnpj',    label:'CNPJ'},
-    {key:'cliente', label:'Cliente'},
-    {key:'valor',   label:'Valor'},
-    {key:'vencimento', label:'Vencimento'},
-    {key:'representante', label:'Representante'},
-    {key:'status',  label:'Status'},
+    {key:'nf', label:'Nota Fiscal'}, {key:'parcela', label:'Parcela'}, {key:'cnpj', label:'CNPJ'},
+    {key:'cliente', label:'Cliente'}, {key:'valor', label:'Valor'}, {key:'vencimento', label:'Vencimento'},
+    {key:'representante', label:'Representante'}, {key:'status', label:'Status'}
   ];
   const checkTh = canDelete ? `<th class="col-check"><input type="checkbox" id="chk-all-${targetId}" onclick="toggleTodos(this,'${targetId}')"/></th>` : '';
   const thHtml = checkTh + cols.map(c => {
     const active = sortCol === c.key ? (sortDir===1?'asc':'desc') : '';
     return `<th class="th-sort ${active}" onclick="sortTabela('${c.key}','${isAdmin}','${targetId}')">${c.label}<span class="sort-icon"></span></th>`;
   }).join('') + '<th>Ações</th>';
- 
+
   let html=`<div class="tbl-wrap"><table><thead><tr>${thHtml}</tr></thead><tbody>`;
   paginados.forEach(b=>{
-    const venc=formatarData(b.vencimento); const rep=b.descricao||b.representante||'—';
+    const venc=formatarData(b.vencimento); const rep=b.representante||'—';
     const checkTd = canDelete ? `<td class="col-check"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/></td>` : '';
-    html+=`<tr id="row-${b.id}">
-      ${checkTd}
-      <td><strong>${b.nf}</strong></td>
-      <td style="color:var(--text-2);">${b.parcela}</td>
-      <td style="font-size:12px;color:var(--text-2);">
-        <span class="cnpj-copiavel" onclick="copiarCNPJ(this,'${b.cnpj||''}')" title="Clique para copiar">${b.cnpj||'—'}</span><span class="cnpj-toast"></span>
-      </td>
-      <td style="font-size:12px;font-weight:500;">${b.cliente||'—'}</td>
-      <td style="font-weight:500;">${formatMoney(b.valor)}</td>
-      <td>${venc}</td>
-      <td style="font-size:12px;">${rep}</td>
-      <td>${badge(b.status)}</td>
+    html+=`<tr id="row-${b.id}">${checkTd}
+      <td><strong>${b.nf}</strong></td><td style="color:var(--text-2);">${b.parcela}</td>
+      <td style="font-size:12px;color:var(--text-2);"><span class="cnpj-copiavel" onclick="copiarCNPJ(this,'${b.cnpj||''}')" title="Clique para copiar">${b.cnpj||'—'}</span><span class="cnpj-toast"></span></td>
+      <td style="font-size:12px;font-weight:500;">${b.cliente||'—'}</td><td style="font-weight:500;">${formatMoney(b.valor)}</td>
+      <td>${venc}</td><td style="font-size:12px;">${rep}</td><td>${badge(b.status)}</td>
       <td style="white-space:nowrap;">
-        ${b.downloadUrl
-          ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>`
-          : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
+        ${b.downloadUrl ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>` : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
         ${isAdmin ? `<button onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;" title="Enviar cobrança">✉️</button>` : ''}
         ${isAdmin ? `<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>` : ''}
         ${(isAdmin || usuarioAtual.role === 'representante') ? `<button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>` : ''}
-      </td>
-    </tr>`;
+      </td></tr>`;
   });
   const colsCount = (canDelete ? 1 : 0) + cols.length + 1;
-  html+='</tbody><tfoot class="tbl-total"><tr>';
-  html+=`<td colspan="${colsCount - 2}" style="text-align:right;color:var(--text-2);font-size:12px;">Total da página</td>`;
-  html+=`<td style="font-weight:600;">${formatMoney(totalGeral)}</td>`;
-  html+=`<td colspan="2"></td></tr></tfoot></table></div>`;
- 
+  html+=`</tbody><tfoot class="tbl-total"><tr><td colspan="${colsCount - 2}" style="text-align:right;color:var(--text-2);font-size:12px;">Total da página</td><td style="font-weight:600;">${formatMoney(totalGeral)}</td><td colspan="2"></td></tr></tfoot></table></div>`;
+
   if (totalPaginas > 1) {
     html += '<div class="pagination">';
     for (let i = 1; i <= totalPaginas; i++) {
-      const activeCls = i === paginaAtual ? ' active' : '';
-      html += `<button class="btn-page${activeCls}" onclick="mudarPagina(${i}, ${isAdmin}, '${targetId}')">${i}</button>`;
+      html += `<button class="btn-page${i===paginaAtual?' active':''}" onclick="mudarPagina(${i}, ${isAdmin}, '${targetId}')">${i}</button>`;
     }
     html += '</div>';
   }
- 
+
   /* ── MOBILE CARDS ── */
   html += '<div class="mobile-cards">';
   paginados.forEach(b => {
@@ -1148,110 +1038,82 @@ function renderTabela(boletos, isAdmin, targetId){
     const diff = Math.floor((hoje - dv) / 86400000);
     const vencClass = diff > 30 ? 'danger' : diff > 0 ? 'warn' : '';
     const cliente = b.cliente || '—';
-    const rep     = b.descricao || b.representante || '—';
-    const pdfBtn  = b.downloadUrl
-      ? `<button class="m-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>`
-      : `<button class="m-btn" disabled>Sem PDF</button>`;
-    const delBtn = (isAdmin || (usuarioAtual && usuarioAtual.role === 'representante'))
-      ? `<button class="m-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>`
-      : '';
-    const chkHtml = canDelete
-      ? `<div class="m-chk-row"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/> <span style="font-size:12px;color:var(--text-2);">Selecionar</span></div>`
-      : '';
+    const rep     = b.representante || '—';
+    const pdfBtn  = b.downloadUrl ? `<button class="m-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>` : `<button class="m-btn" disabled>Sem PDF</button>`;
+    const delBtn = (isAdmin || (usuarioAtual && usuarioAtual.role === 'representante')) ? `<button class="m-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : '';
+    const chkHtml = canDelete ? `<div class="m-chk-row"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/> <span style="font-size:12px;color:var(--text-2);">Selecionar</span></div>` : '';
     html += `
     <div class="m-boleto-card" id="mcard-${b.id}">
       <div class="m-boleto-row">
-        <div class="m-left">
-          <span class="m-nf">NF ${b.nf} · P${b.parcela}</span>
-          <span class="m-client">${cliente}</span>
-          <span class="m-cnpj">${b.cnpj||'—'}</span>
-          <span style="margin-top:4px;">${badge(b.status)}</span>
-        </div>
-        <div class="m-right">
-          <span class="m-val">${formatMoney(b.valor)}</span>
-          <span class="m-venc ${vencClass}">${venc}</span>
-          <div class="m-actions">${pdfBtn}${delBtn}</div>
-        </div>
+        <div class="m-left"><span class="m-nf">NF ${b.nf} · P${b.parcela}</span><span class="m-client">${cliente}</span><span class="m-cnpj">${b.cnpj||'—'}</span><span style="margin-top:4px;">${badge(b.status)}</span></div>
+        <div class="m-right"><span class="m-val">${formatMoney(b.valor)}</span><span class="m-venc ${vencClass}">${venc}</span><div class="m-actions">${pdfBtn}${delBtn}</div></div>
       </div>${chkHtml}
     </div>`;
   });
   const totalGeral2 = paginados.reduce((s,b) => s+Number(b.valor||0), 0);
-  html += `<div class="m-total">Total: <strong>${formatMoney(totalGeral2)}</strong></div>`;
-  html += '</div>';
- 
+  html += `<div class="m-total">Total: <strong>${formatMoney(totalGeral2)}</strong></div></div>`;
   document.getElementById(targetId).innerHTML=html;
 }
- 
+
 function sortTabela(col, isAdmin, targetId){
   paginaAtual = 1;
   if(sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=1; }
   renderTabela(boletosCarregados, isAdmin==='true' || isAdmin===true, targetId);
 }
- 
 function mudarPagina(novaPagina, isAdmin, targetId) {
   paginaAtual = novaPagina;
   renderTabela(boletosCarregados, isAdmin, targetId);
   document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
 }
- 
+
 /* ── MODAL COBRANÇA ── */
 function abrirModalCobranca(b){
   const venc = formatarData(b.vencimento);
   const cliente = b.cliente || 'Cliente';
   const emailCliente = b.email_cliente || b.emailCliente || '';
- 
+
   document.getElementById('cob-email').value = emailCliente;
-  document.getElementById('cob-assunto').value =
-    `Cobrança — NF ${b.nf} Parcela ${b.parcela} — ${formatMoney(b.valor)}`;
- 
+  document.getElementById('cob-assunto').value = `Cobrança — NF ${b.nf} Parcela ${b.parcela} — ${formatMoney(b.valor)}`;
+
   const msg =
 `Prezado(a) ${cliente},
- 
+
 Informamos que o boleto abaixo encontra-se em aberto em nosso sistema:
- 
+
   • Nota Fiscal: ${b.nf}
   • Parcela: ${b.parcela}
   • Valor: ${formatMoney(b.valor)}
   • Vencimento: ${venc}
- 
+
 Solicitamos a regularização o quanto antes. Em caso de dúvidas ou para negociação, entre em contato conosco.
- 
+
 Atenciosamente,
 Leal Embalagens de Papel
 cobranca@lealembalagens.com.br`;
- 
+
   document.getElementById('cob-mensagem').value = msg;
- 
-  // Campos ocultos para o template HTML do e-mail
-  document.getElementById('cob-nf').value         = b.nf;
-  document.getElementById('cob-parcela').value    = b.parcela;
-  document.getElementById('cob-cliente').value    = cliente;
-  document.getElementById('cob-valor').value      = formatMoney(b.valor);
+  document.getElementById('cob-nf').value = b.nf;
+  document.getElementById('cob-parcela').value = b.parcela;
+  document.getElementById('cob-cliente').value = cliente;
+  document.getElementById('cob-valor').value = formatMoney(b.valor);
   document.getElementById('cob-vencimento').value = venc;
   document.getElementById('cob-download-url').value = b.downloadUrl || '';
- 
   document.getElementById('msg-cobranca').innerHTML = '';
   document.getElementById('modal-cobranca').classList.remove('hidden');
 }
- 
 function fecharModalCobranca(){
   document.getElementById('modal-cobranca').classList.add('hidden');
 }
- 
 async function enviarCobranca(){
   const email    = document.getElementById('cob-email').value.trim();
   const assunto  = document.getElementById('cob-assunto').value.trim();
   const mensagem = document.getElementById('cob-mensagem').value.trim();
   const msgEl    = document.getElementById('msg-cobranca');
- 
   if(!email){ msgEl.innerHTML='<div class="msg-erro">Informe o e-mail do destinatário.</div>'; return; }
   if(!assunto){ msgEl.innerHTML='<div class="msg-erro">Informe o assunto.</div>'; return; }
- 
   msgEl.innerHTML='<p style="color:var(--text-2);font-size:13px;">Enviando...</p>';
- 
   const res = await apiPost({
-    action: 'enviar_cobranca',
-    email, assunto, mensagem,
+    action: 'enviar_cobranca', email, assunto, mensagem,
     nf:          document.getElementById('cob-nf').value,
     parcela:     document.getElementById('cob-parcela').value,
     cliente:     document.getElementById('cob-cliente').value,
@@ -1259,7 +1121,6 @@ async function enviarCobranca(){
     vencimento:  document.getElementById('cob-vencimento').value,
     downloadUrl: document.getElementById('cob-download-url').value
   });
- 
   if(res.ok){
     msgEl.innerHTML='<div class="msg-ok">✅ E-mail enviado com sucesso!</div>';
     setTimeout(()=> fecharModalCobranca(), 2000);
@@ -1272,43 +1133,34 @@ function abrirPrevia(downloadUrl, nf, parcela){
   if(!match){ window.open(downloadUrl,'_blank'); return; }
   const fileId = match[1];
   const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
- 
   document.getElementById('preview-title').textContent = `NF ${nf} — Parcela ${parcela}`;
   document.getElementById('preview-sub').textContent = 'Clique em Baixar PDF para salvar o arquivo';
   document.getElementById('preview-iframe').src = previewUrl;
   document.getElementById('preview-download-link').href = downloadUrl;
- 
   const panel = document.getElementById('preview-panel');
   const backdrop = document.getElementById('preview-backdrop');
-  panel.style.display = 'flex';
-  backdrop.style.display = 'block';
+  panel.style.display = 'flex'; backdrop.style.display = 'block';
   panel.getBoundingClientRect();
-  panel.style.transform = 'translateX(0)';
-  backdrop.style.opacity = '1';
+  panel.style.transform = 'translateX(0)'; backdrop.style.opacity = '1';
 }
- 
 function fecharPrevia(){
   const panel = document.getElementById('preview-panel');
   const backdrop = document.getElementById('preview-backdrop');
-  panel.style.transform = 'translateX(100%)';
-  backdrop.style.opacity = '0';
+  panel.style.transform = 'translateX(100%)'; backdrop.style.opacity = '0';
   setTimeout(()=>{
-    panel.style.display = 'none';
-    backdrop.style.display = 'none';
+    panel.style.display = 'none'; backdrop.style.display = 'none';
     document.getElementById('preview-iframe').src = '';
   }, 320);
 }
- 
+
 /* ── EXPORTAR CSV ── */
 function exportarCSV(){
   if(!boletosCarregados.length) return;
   const headers=['Nota Fiscal','Parcela','CNPJ','Cliente','Valor (R$)','Vencimento','Representante'];
   const rows=boletosCarregados.map(b=>[
-    b.nf, b.parcela, b.cnpj||'',
-    b.cliente||'',
+    b.nf, b.parcela, b.cnpj||'', b.cliente||'',
     Number(b.valor).toFixed(2).replace('.',','),
-    formatarData(b.vencimento),
-    b.descricao||b.representante||''
+    formatarData(b.vencimento), b.representante||''
   ]);
   const csv=[headers,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n');
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
@@ -1317,7 +1169,7 @@ function exportarCSV(){
   a.href=url; a.download='boletos_leal.csv'; a.click();
   URL.revokeObjectURL(url);
 }
- 
+
 /* ── USUÁRIOS ── */
 async function carregarUsuarios(){
   document.getElementById('result-usuarios').innerHTML='<div class="loading">Carregando...</div>';
@@ -1333,7 +1185,7 @@ async function carregarUsuarios(){
   html+='</tbody></table>';
   document.getElementById('result-usuarios').innerHTML=html;
 }
- 
+
 /* ── TABS ── */
 function mostrarTab(tabId,btn){
   ['tab-boletos','tab-usuarios','tab-novo-boleto','tab-novo-usuario'].forEach(t=>document.getElementById(t).classList.add('hidden'));
@@ -1342,49 +1194,53 @@ function mostrarTab(tabId,btn){
   document.getElementById('msg-admin').innerHTML='';
   if(tabId==='tab-usuarios') carregarUsuarios();
 }
- 
+
 /* ── BOLETOS CRUD ── */
 async function salvarBoleto(){
   const id=document.getElementById('nb-id').value;
-  const data={action:'salvar_boleto',id:id||null,
+  const data={
+    action:'salvar_boleto',id:id||null,
     nf:document.getElementById('nb-nf').value.trim(),
     parcela:document.getElementById('nb-parcela').value.trim(),
     cnpj:document.getElementById('nb-cnpj').value.trim(),
     valor:document.getElementById('nb-valor').value,
     vencimento:document.getElementById('nb-venc').value,
-    descricao:document.getElementById('nb-representante').value,
-    status:document.getElementById('nb-status').value};
+    representante:document.getElementById('nb-representante').value,
+    cliente:document.getElementById('nb-cliente').value.trim(),
+    email_cliente:document.getElementById('nb-email').value.trim(),
+    status:document.getElementById('nb-status').value
+  };
   if(!data.nf||!data.parcela||!data.cnpj||!data.valor||!data.vencimento){alert('Preencha os campos obrigatórios.');return;}
   const res=await apiPost(data);
   if(res.ok){
-    alert(id?'Boleto updated!':'Boleto cadastrado!');
+    alert(id?'Boleto atualizado!':'Boleto cadastrado!');
     cancelarFormBoleto(); mostrarTab('tab-boletos',document.querySelectorAll('.tab')[0]); buscarBoletos('admin');
   } else {alert('Erro: '+res.erro);}
 }
- 
+
 function editarBoleto(b){
   document.getElementById('nb-id').value=b.id; document.getElementById('nb-nf').value=b.nf;
   document.getElementById('nb-parcela').value=b.parcela; document.getElementById('nb-cnpj').value=b.cnpj;
   document.getElementById('nb-valor').value=b.valor; document.getElementById('nb-venc').value=b.vencimento;
-  document.getElementById('nb-representante').value=b.descricao||b.representante||'';
+  document.getElementById('nb-representante').value=b.representante||'';
+  document.getElementById('nb-cliente').value=b.cliente||'';
+  document.getElementById('nb-email').value=b.email_cliente||'';
   document.getElementById('nb-status').value=b.status;
   document.getElementById('lbl-form-boleto').textContent='Editar boleto';
   mostrarTab('tab-novo-boleto',document.querySelectorAll('.tab')[2]);
 }
- 
+
 async function excluirBoleto(id){
   if(!confirm('Excluir este boleto?')) return;
   const res=await apiPost({action:'excluir_boleto', id, fonte: fonteAtual});
   if(res.ok){
-    const row = document.getElementById('row-'+id);
-    if(row) row.remove();
-    const mcard = document.getElementById('mcard-'+id);
-    if(mcard) mcard.remove();
+    const row = document.getElementById('row-'+id); if(row) row.remove();
+    const mcard = document.getElementById('mcard-'+id); if(mcard) mcard.remove();
     boletosCarregados = boletosCarregados.filter(b => b.id !== id);
     atualizarContador(tipoAtual === 'admin' ? 'result-boletos-admin' : 'result-boletos-forn');
   }
 }
- 
+
 /* ── CHECKBOX / BULK DELETE ── */
 function toggleTodos(chkAll, targetId){
   document.querySelectorAll(`#${targetId} .chk-boleto`).forEach(c => {
@@ -1393,7 +1249,7 @@ function toggleTodos(chkAll, targetId){
   });
   atualizarContador(targetId);
 }
- 
+
 function atualizarContador(targetId){
   const checked = document.querySelectorAll(`#${targetId} .chk-boleto:checked`).length;
   const isAdmin = targetId === 'result-boletos-admin';
@@ -1404,53 +1260,45 @@ function atualizarContador(targetId){
     document.getElementById(countId).textContent = checked;
     btn.classList.toggle('hidden', checked === 0);
   }
-  // Marca/desmarca o "selecionar todos" conforme situação
   const total = document.querySelectorAll(`#${targetId} .chk-boleto`).length;
   const chkAll = document.getElementById('chk-all-'+targetId);
   if(chkAll) chkAll.indeterminate = checked > 0 && checked < total;
   if(chkAll) chkAll.checked = total > 0 && checked === total;
-  // Highlight nas linhas
   document.querySelectorAll(`#${targetId} .chk-boleto`).forEach(c => {
     c.closest('tr').classList.toggle('row-selected', c.checked);
   });
 }
- 
+
 async function excluirSelecionados(targetId){
   const checkboxes = [...document.querySelectorAll(`#${targetId} .chk-boleto:checked`)];
   if(!checkboxes.length) return;
   if(!confirm(`Excluir ${checkboxes.length} boleto(s) selecionado(s)?`)) return;
- 
   const ids = checkboxes.map(c => c.dataset.id);
   const btnId = targetId === 'result-boletos-admin' ? 'btn-bulk-admin' : 'btn-bulk-forn';
   const btn = document.getElementById(btnId);
   const btnHtmlOriginal = btn ? btn.innerHTML : '';
   if(btn){ btn.textContent = '⏳ Excluindo...'; btn.disabled = true; }
- 
-  // Deleta em sequência sem recarregar a página a cada item
   let erros = 0;
   for(const id of ids){
     const res = await apiPost({action:'excluir_boleto', id, fonte: fonteAtual});
     if(res.ok){
-      const row = document.getElementById('row-'+id);
-      if(row) row.remove();
-      const mcard = document.getElementById('mcard-'+id);
-      if(mcard) mcard.remove();
+      const row = document.getElementById('row-'+id); if(row) row.remove();
+      const mcard = document.getElementById('mcard-'+id); if(mcard) mcard.remove();
       boletosCarregados = boletosCarregados.filter(b => b.id !== id);
     } else { erros++; }
   }
- 
   if(btn){ btn.innerHTML = btnHtmlOriginal; btn.disabled = false; }
   atualizarContador(targetId);
   if(erros > 0) alert(`${erros} boleto(s) não puderam ser excluídos.`);
 }
- 
+
 function cancelarFormBoleto(){
-  ['nb-id','nb-nf','nb-parcela','nb-cnpj','nb-valor','nb-venc'].forEach(id=>document.getElementById(id).value='');
+  ['nb-id','nb-nf','nb-parcela','nb-cnpj','nb-valor','nb-venc','nb-cliente','nb-email'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('nb-representante').selectedIndex=0;
   document.getElementById('nb-status').value='pendente';
   document.getElementById('lbl-form-boleto').textContent='Cadastrar novo boleto';
 }
- 
+
 /* ── USUÁRIOS CRUD ── */
 async function salvarUsuario(){
   const id=document.getElementById('nu-id').value;
@@ -1468,7 +1316,6 @@ async function salvarUsuario(){
     cancelarFormUsuario(); mostrarTab('tab-usuarios',document.querySelectorAll('.tab')[1]);
   } else {alert('Erro: '+res.erro);}
 }
- 
 function editarUsuario(u){
   document.getElementById('nu-id').value=u.id; document.getElementById('nu-nome').value=u.nome;
   document.getElementById('nu-cnpj').value=u.cnpj; document.getElementById('nu-login').value=u.login;
@@ -1477,28 +1324,24 @@ function editarUsuario(u){
   document.getElementById('lbl-form-usuario').textContent='Editar usuário';
   mostrarTab('tab-novo-usuario',document.querySelectorAll('.tab')[3]);
 }
- 
 async function excluirUsuario(id){
   if(!confirm('Excluir este usuário?')) return;
   const res=await apiPost({action:'excluir_usuario',id}); if(res.ok) carregarUsuarios();
 }
- 
 function cancelarFormUsuario(){
   ['nu-id','nu-nome','nu-cnpj','nu-login','nu-senha'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('nu-representante').selectedIndex=0;
   document.getElementById('lbl-form-usuario').textContent='Cadastrar usuário';
 }
- 
+
 document.getElementById('inp-senha').addEventListener('keypress',e=>{if(e.key==='Enter') fazerLogin();});
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharPrevia(); });
- 
-// Atalho Enter nos filtros admin
+
 ['fa-nf','fa-parcela','fa-cnpj','fa-representante'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('keypress',e=>{if(e.key==='Enter') buscarBoletos('admin');});
 });
- 
-// Atalho Enter nos filtros fornecedor
+
 ['ff-nf','ff-parcela','ff-representante','ff-cnpj'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('keypress',e=>{if(e.key==='Enter') buscarBoletos('fornecedor');});
@@ -1506,4 +1349,3 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharPrevia(); })
 </script>
 </body>
 </html>
- 
