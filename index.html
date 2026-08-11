@@ -40,6 +40,8 @@ button{padding:8px 20px;border-radius:8px;border:1px solid var(--border);backgro
 .btn-primary{background:var(--btn-bg)!important;color:var(--btn-color)!important;border-color:var(--btn-bg)!important;}
 .btn-primary:hover{opacity:.88;}
 .btn-danger{color:#c0392b!important;border-color:#f5c6cb!important;}
+.btn-wsp{background:#25D366!important;color:#fff!important;border-color:#25D366!important;font-weight:600;}
+.btn-wsp:hover{opacity:.88;}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 .grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
@@ -279,10 +281,10 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
   </div>
 </div>
 
-<!-- ═══ MODAL ENVIAR COBRANÇA ═══ -->
+<!-- ═══ MODAL ENVIAR COBRANÇA (E-MAIL) ═══ -->
 <div class="overlay hidden" id="modal-cobranca">
   <div class="modal-box" style="max-width:520px;">
-    <h2>✉️ Enviar cobrança</h2>
+    <h2>✉️ Enviar cobrança por E-mail</h2>
     <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;">
       <div>
         <label>Destinatário</label>
@@ -307,6 +309,27 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
       <input type="hidden" id="cob-valor"/>
       <input type="hidden" id="cob-vencimento"/>
       <input type="hidden" id="cob-download-url"/>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL ENVIAR COBRANÇA (WHATSAPP) ═══ -->
+<div class="overlay hidden" id="modal-whatsapp">
+  <div class="modal-box" style="max-width:480px;">
+    <h2>💬 Cobrança via WhatsApp</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;">
+      <div>
+        <label>Número do WhatsApp do Cliente (com DDD)</label>
+        <input type="text" id="wsp-telefone" placeholder="Ex: 11999998888" oninput="this.value=this.value.replace(/\D/g,'')"/>
+      </div>
+      <div>
+        <label>Mensagem <span style="font-size:11px;color:var(--text-2);">(editável)</span></label>
+        <textarea id="wsp-mensagem" rows="8" style="width:100%;padding:10px 12px;border:1px solid var(--input-bd);border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;outline:none;background:var(--card-bg);color:var(--text-1);line-height:1.6;transition:background .4s,border-color .4s,color .4s;"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button class="btn-wsp" onclick="dispararWhatsApp()">📲 Abrir WhatsApp</button>
+        <button onclick="fecharModalWhatsApp()">Cancelar</button>
+      </div>
     </div>
   </div>
 </div>
@@ -572,7 +595,7 @@ tfoot.tbl-total td{padding:9px 10px;font-weight:600;color:var(--text-1);border-t
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwm8rZ9FaeNBhBZeD7Xi83dv0u7ACMKd-ZFZn-FTSMpSagT20KaBx47BfzvLgAldAz-/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyz88cYkCkwUJlbJY5MOmExAwMFUe_DzHyF43y0_PFrwheRyq3dVjhHOhtHaFTAJVsg/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
@@ -964,7 +987,8 @@ function renderTabela(boletos, isAdmin, targetId){
       const rep     = b.representante || '—';
       const chkHtml = canDelete ? `<input type="checkbox" class="chk-boleto bc-chk" style="width:15px;height:15px;cursor:pointer;accent-color:var(--btn-bg);flex-shrink:0;" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}');this.closest('.boleto-card').classList.toggle('card-selected',this.checked)"/>` : '';
       const pdfBtn = b.downloadUrl ? `<button class="bc-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>` : `<button class="bc-btn" disabled>Sem PDF</button>`;
-      const cobBtn = isAdmin ? `<button class="bc-btn" onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar cobrança">✉️</button>` : '';
+      const cobBtn = isAdmin ? `<button class="bc-btn" onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar e-mail">✉️</button>` : '';
+      const wspBtn = `<button class="bc-btn btn-wsp" onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar WhatsApp">💬</button>`;
       const delBtn = canDelete ? `<button class="bc-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : '';
       html += `
       <div class="boleto-card" id="row-${b.id}">
@@ -976,7 +1000,7 @@ function renderTabela(boletos, isAdmin, targetId){
           </div>
           <div class="bc-right"><span class="bc-val">${formatMoney(b.valor)}</span><span class="bc-venc ${vencClass}">${venc}</span></div>
         </div>
-        <div class="bc-footer"><span class="bc-rep">👤 ${rep}</span><div class="bc-actions">${pdfBtn}${cobBtn}${delBtn}</div></div>
+        <div class="bc-footer"><span class="bc-rep">👤 ${rep}</span><div class="bc-actions">${pdfBtn}${cobBtn}${wspBtn}${delBtn}</div></div>
       </div>`;
     });
     html += `</div><div class="cards-total">Total da página: <strong>${formatMoney(totalGeral)}</strong></div>`;
@@ -1015,7 +1039,8 @@ function renderTabela(boletos, isAdmin, targetId){
       <td>${venc}</td><td style="font-size:12px;">${rep}</td><td>${badge(b.status)}</td>
       <td style="white-space:nowrap;">
         ${b.downloadUrl ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" style="font-size:12px;padding:3px 8px;margin-right:4px;">⬇ PDF</button>` : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
-        ${isAdmin ? `<button onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;" title="Enviar cobrança">✉️</button>` : ''}
+        ${isAdmin ? `<button onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;" title="Enviar e-mail">✉️</button>` : ''}
+        <button onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})" class="btn-wsp" style="font-size:12px;padding:3px 8px;margin-right:4px;" title="Enviar WhatsApp">💬 WA</button>
         ${isAdmin ? `<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" style="font-size:12px;padding:3px 8px;margin-right:4px;">✏️</button>` : ''}
         ${(isAdmin || usuarioAtual.role === 'representante') ? `<button class="btn-danger" onclick="excluirBoleto('${b.id}')" style="font-size:12px;padding:3px 8px;">🗑️</button>` : ''}
       </td></tr>`;
@@ -1043,13 +1068,14 @@ function renderTabela(boletos, isAdmin, targetId){
     const cliente = b.cliente || '—';
     const rep     = b.representante || '—';
     const pdfBtn  = b.downloadUrl ? `<button class="m-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>` : `<button class="m-btn" disabled>Sem PDF</button>`;
+    const wspBtn  = `<button class="m-btn btn-wsp" onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})">💬 WA</button>`;
     const delBtn = (isAdmin || (usuarioAtual && usuarioAtual.role === 'representante')) ? `<button class="m-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : '';
     const chkHtml = canDelete ? `<div class="m-chk-row"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/> <span style="font-size:12px;color:var(--text-2);">Selecionar</span></div>` : '';
     html += `
     <div class="m-boleto-card" id="mcard-${b.id}">
       <div class="m-boleto-row">
         <div class="m-left"><span class="m-nf">NF ${b.nf} · P${b.parcela}</span><span class="m-client">${cliente}</span><span class="m-cnpj">${b.cnpj||'—'}</span><span style="margin-top:4px;">${badge(b.status)}</span></div>
-        <div class="m-right"><span class="m-val">${formatMoney(b.valor)}</span><span class="m-venc ${vencClass}">${venc}</span><div class="m-actions">${pdfBtn}${delBtn}</div></div>
+        <div class="m-right"><span class="m-val">${formatMoney(b.valor)}</span><span class="m-venc ${vencClass}">${venc}</span><div class="m-actions">${pdfBtn}${wspBtn}${delBtn}</div></div>
       </div>${chkHtml}
     </div>`;
   });
@@ -1069,7 +1095,7 @@ function mudarPagina(novaPagina, isAdmin, targetId) {
   document.getElementById(targetId).scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* ── MODAL COBRANÇA ── */
+/* ── MODAL COBRANÇA (E-MAIL) ── */
 function abrirModalCobranca(b){
   const venc = formatarData(b.vencimento);
   const cliente = b.cliente || 'Cliente';
@@ -1131,6 +1157,40 @@ async function enviarCobranca(){
     msgEl.innerHTML=`<div class="msg-erro">Erro ao enviar: ${res.erro||'tente novamente.'}</div>`;
   }
 }
+
+/* ── MODAL COBRANÇA (WHATSAPP) ── */
+function abrirModalWhatsApp(b){
+  const venc = formatarData(b.vencimento);
+  const cliente = b.cliente || 'Cliente';
+  const repNome = (usuarioAtual && usuarioAtual.nome) ? usuarioAtual.nome : 'Leal Embalagens';
+
+  document.getElementById('wsp-telefone').value = '';
+  
+  const msg = `Olá, *${cliente}*!\n\nTudo bem? Passando para lembrar sobre o título em aberto:\n\n📄 *Nota Fiscal:* ${b.nf}\n🔢 *Parcela:* ${b.parcela}\n💰 *Valor:* ${formatMoney(b.valor)}\n📅 *Vencimento:* ${venc}\n\nSe precisar do arquivo do boleto ou de qualquer auxílio, é só me avisar por aqui!\n\nAtenciosamente,\n*${repNome}* — Leal Embalagens`;
+
+  document.getElementById('wsp-mensagem').value = msg;
+  document.getElementById('modal-whatsapp').classList.remove('hidden');
+}
+
+function fecharModalWhatsApp(){
+  document.getElementById('modal-whatsapp').classList.add('hidden');
+}
+
+function dispararWhatsApp(){
+  let tel = document.getElementById('wsp-telefone').value.replace(/\D/g, '');
+  const msg = document.getElementById('wsp-mensagem').value;
+  if(!tel || tel.length < 10){
+    alert('Informe um número de telefone/WhatsApp válido com DDD (Ex: 11999998888).');
+    return;
+  }
+  if(!tel.startsWith('55') && tel.length <= 11){
+    tel = '55' + tel;
+  }
+  const url = `https://wa.me/${tel}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  fecharModalWhatsApp();
+}
+
 function abrirPrevia(downloadUrl, nf, parcela){
   const match = downloadUrl.match(/id=([^&]+)/);
   if(!match){ window.open(downloadUrl,'_blank'); return; }
