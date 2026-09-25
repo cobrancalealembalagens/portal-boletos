@@ -85,7 +85,7 @@ tr:hover td{background:var(--row-hover);}
 .btn-sair:hover{opacity:.88;}
 .header-toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
 .loading{text-align:center;padding:2rem;color:var(--text-2);font-size:14px;}
-.login-card-wrap{max-width:380px;margin:3rem auto;}
+.login-card-wrap{max-width:400px;margin:3rem auto;}
 .login-logo-wrap{text-align:center;margin-bottom:1.5rem;}
 .login-logo{height:68px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.3);}
 .login-title{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.3);margin-top:14px;}
@@ -263,14 +263,12 @@ tfoot.tbl-total td{padding:8px 6px;font-weight:600;color:var(--text-1);border-to
     <h2>Bem-vindo ao Portal de Boletos</h2>
     <p>Antes de acessar, leia com atenção:</p>
     <ul class="popup-list">
-      <li>Este portal é exclusivo para Representantes;</li>
+      <li>Este portal é exclusivo para Representantes e Clientes;</li>
       <li>Os boletos são atualizados diariamente até as 15h;</li>
-      <li>Se verificar que um boleto já foi pago, basta apagá-lo (ícone de lixeira);</li>
-      <li>Caso hajam muitos boletos, pode demorar um pouco para carregar;</li>
       <li>Ainda não estão disponíveis os boletos de clichê, fique atento nas atualizações !;</li>
       <li>Em caso de dúvidas, entre em contato pelo e-mail cobranca@lealembalagens.com.br</li>
     </ul>
-    <p class="popup-note">⚠️ Não compartilhe este portal com os clientes !. ⚠️</p>
+    <p class="popup-note">⚠️ Não compartilhe dados do portal com terceiros !. ⚠️</p>
     <button class="btn-popup" onclick="fecharPopup()">Entendido — Acessar portal</button>
   </div>
 </div>
@@ -303,8 +301,8 @@ tfoot.tbl-total td{padding:8px 6px;font-weight:600;color:var(--text-1);border-to
       </div>
       <div id="msg-nota"></div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
-        <button class="btn-primary" onclick="salvarNota()">💾 Salvar Nota</button>
-        <button onclick="fecharModalNotas()">Cancelar</button>
+        <button class="btn-primary" id="btn-salvar-nota" onclick="salvarNota()">💾 Salvar Nota</button>
+        <button onclick="fecharModalNotas()">Fechar</button>
       </div>
       <input type="hidden" id="nota-id"/>
       <input type="hidden" id="nota-nf"/>
@@ -375,14 +373,27 @@ tfoot.tbl-total td{padding:8px 6px;font-weight:600;color:var(--text-1);border-to
     <div class="login-logo-wrap">
       <img class="login-logo" src="data:image/png;base64,..." alt="Leal" onerror="this.style.display='none'"/>
       <h1 class="login-title">Portal de Boletos</h1>
-      <p class="login-sub">Acesse com seu login e senha</p>
+      <p class="login-sub">Acesse seus boletos com segurança</p>
     </div>
     <div class="card">
+      <div class="fonte-toggle" style="margin: 0 auto 16px auto; width:100%;">
+        <button class="fonte-btn active" id="btn-login-equipe" style="flex:1;" onclick="toggleTipoLogin('equipe')">🔑 Equipe / Admin</button>
+        <button class="fonte-btn" id="btn-login-cliente" style="flex:1;" onclick="toggleTipoLogin('cliente')">👤 2ª Via Cliente</button>
+      </div>
       <div id="msg-login"></div>
-      <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <!-- FORM EQUIPE -->
+      <div id="box-login-equipe" style="display:flex;flex-direction:column;gap:12px;">
         <div><label>Login</label><input id="inp-login" type="text" enterkeyhint="go"/></div>
         <div><label>Senha</label><input id="inp-senha" type="password" enterkeyhint="go"/></div>
         <button class="btn-primary" onclick="fazerLogin()" style="width:100%;margin-top:4px;">Entrar</button>
+      </div>
+
+      <!-- FORM CLIENTE -->
+      <div id="box-login-cliente" style="display:none;flex-direction:column;gap:12px;">
+        <div><label>CNPJ da Empresa *</label><input id="inp-cnpj-cliente" type="text" placeholder="00.000.000/0000-00" oninput="this.value=formatCNPJ(this.value)" enterkeyhint="go"/></div>
+        <div><label>Nº de qualquer Nota Fiscal recente *</label><input id="inp-nf-cliente" type="text" placeholder="Ex: 181249" enterkeyhint="go"/></div>
+        <button class="btn-primary" onclick="fazerLoginCliente()" style="width:100%;margin-top:4px;">Acessar meus boletos</button>
       </div>
     </div>
   </div>
@@ -550,9 +561,9 @@ tfoot.tbl-total td{padding:8px 6px;font-weight:600;color:var(--text-1);border-to
   <div class="tabs" style="justify-content:space-between;align-items:center;margin-bottom:1rem;">
     <div></div>
     <div style="display:flex;gap:6px;align-items:center;">
-      <a href="https://datastudio.google.com/s/sjlTLWEGhoI" target="_blank"><button class="btn-ext-looker">📊 Inadimplência</button></a>
+      <a href="https://datastudio.google.com/s/sjlTLWEGhoI" target="_blank" class="client-hide"><button class="btn-ext-looker">📊 Inadimplência</button></a>
       <a href="https://app.pipefy.com/public/form/yg0oOER6" target="_blank"><button class="btn-ext-pipefy">🎫 Abrir chamado</button></a>
-      <button class="btn-hdr" onclick="abrirModalSenha()">🔑 Trocar senha</button>
+      <button class="btn-hdr client-hide" onclick="abrirModalSenha()">🔑 Trocar senha</button>
       <button class="btn-hdr" onclick="toggleDark()" id="btn-dark-forn">🌙</button>
       <button class="btn-sair btn-hdr" onclick="sair()">Sair</button>
     </div>
@@ -633,7 +644,7 @@ tfoot.tbl-total td{padding:8px 6px;font-weight:600;color:var(--text-1);border-to
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbxIhzxi2I7kzvqQHhNDTj6_bI1lO9SBRNOIfincnC7xAehFHd4QyI1mmyVwHlaqece6/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyKKL6s8sVsRd7TdVDqboRlZ-jWL2zZ0cfn0oOyOJtor-YEFvV2Ir9KDl3x-rPIr7em/exec';
 let usuarioAtual = null;
 let boletosCarregados = [];
 let tipoAtual = '';
@@ -658,13 +669,34 @@ function syncDarkBtn(){
   document.querySelectorAll('#btn-dark,#btn-dark-forn').forEach(b => b.textContent = isDark ? '☀️' : '🌙');
 }
 
+/* ── LOGIN TIPO SWITCHER ── */
+function toggleTipoLogin(tipo){
+  const btnEquipe = document.getElementById('btn-login-equipe');
+  const btnCliente = document.getElementById('btn-login-cliente');
+  const boxEquipe = document.getElementById('box-login-equipe');
+  const boxCliente = document.getElementById('box-login-cliente');
+  document.getElementById('msg-login').innerHTML = '';
+
+  if(tipo === 'cliente'){
+    btnCliente.classList.add('active');
+    btnEquipe.classList.remove('active');
+    boxCliente.style.display = 'flex';
+    boxEquipe.style.display = 'none';
+  } else {
+    btnEquipe.classList.add('active');
+    btnCliente.classList.remove('active');
+    boxEquipe.style.display = 'flex';
+    boxCliente.style.display = 'none';
+  }
+}
+
 /* ── POPUP ── */
 const popupEl = document.getElementById('popup-boas-vindas');
 function fecharPopup(){
   popupEl.style.opacity='0'; popupEl.style.transition='opacity .28s';
   setTimeout(()=>{
     popupEl.classList.add('hidden');
-    if (usuarioAtual && usuarioAtual.role === 'representante') {
+    if (usuarioAtual && (usuarioAtual.role === 'representante' || usuarioAtual.role === 'client')) {
       buscarBoletos('fornecedor');
     }
   },280);
@@ -764,49 +796,78 @@ async function fazerLogin(){
     const res=await api({action:'login',login,senha});
     if(!res.ok){document.getElementById('msg-login').innerHTML=`<div class="msg-erro">${res.erro}</div>`;return;}
     usuarioAtual=res.usuario;
-    document.getElementById('tela-login').classList.add('hidden');
-    await carregarRepresentantes();
-    syncDarkBtn();
-    popupEl.classList.remove('hidden'); popupEl.style.opacity='1';
-    
-    if(usuarioAtual.role==='admin'){
-      document.getElementById('tela-admin').classList.remove('hidden');
-      document.getElementById('lbl-admin-nome').textContent='Painel administrativo — '+usuarioAtual.nome;
-      document.querySelectorAll('#tela-admin .tab.hidden').forEach(el => el.classList.remove('hidden'));
-      mostrarGreeting(usuarioAtual.nome, 'admin-greeting');
-      carregarDashboard();
-      mostrarTabelaVazia('result-boletos-admin');
-    } else {
-      document.getElementById('tela-fornecedor').classList.remove('hidden');
-      mostrarGreeting(usuarioAtual.nome, 'forn-greeting');
-      let subtitulo = usuarioAtual.nome;
-      if (usuarioAtual.cnpj) {
-        subtitulo += ' — ' + usuarioAtual.cnpj;
-      } else if (usuarioAtual.role === 'representante') {
-        subtitulo += ' (Representante: ' + usuarioAtual.representante + ')';
-      }
-      document.getElementById('lbl-forn-nome').textContent = subtitulo;
-      const boxRep = document.getElementById('box-ff-representante');
-      const boxCnpj = document.getElementById('box-ff-cnpj');
-      if (usuarioAtual.role === 'representante') {
-        if (boxRep) boxRep.style.display = 'none';
-        if (boxCnpj) boxCnpj.style.display = 'block';
-      } else {
-        if (boxRep) boxRep.style.display = 'block';
-        if (boxCnpj) boxCnpj.style.display = 'none';
-        mostrarTabelaVazia('result-boletos-forn');
-      }
-    }
+    configurarAcessoPosLogin();
   }catch(e){
     document.getElementById('msg-login').innerHTML='<div class="msg-erro">Erro ao conectar com o servidor.</div>';
   }
 }
+
+async function fazerLoginCliente(){
+  const cnpj=document.getElementById('inp-cnpj-cliente').value.trim();
+  const nf=document.getElementById('inp-nf-cliente').value.trim();
+  document.getElementById('msg-login').innerHTML='<p style="color:var(--text-2);font-size:13px;">Buscando boletos...</p>';
+  try{
+    const res=await api({action:'login_cliente', cnpj: cnpj, nf: nf});
+    if(!res.ok){document.getElementById('msg-login').innerHTML=`<div class="msg-erro">${res.erro}</div>`;return;}
+    usuarioAtual=res.usuario;
+    configurarAcessoPosLogin();
+  }catch(e){
+    document.getElementById('msg-login').innerHTML='<div class="msg-erro">Erro ao conectar com o servidor.</div>';
+  }
+}
+
+async function configurarAcessoPosLogin(){
+  document.getElementById('tela-login').classList.add('hidden');
+  await carregarRepresentantes();
+  syncDarkBtn();
+  popupEl.classList.remove('hidden'); popupEl.style.opacity='1';
+
+  document.querySelectorAll('.client-hide').forEach(el => el.style.display = (usuarioAtual.role === 'client') ? 'none' : '');
+
+  if(usuarioAtual.role==='admin'){
+    document.getElementById('tela-admin').classList.remove('hidden');
+    document.getElementById('lbl-admin-nome').textContent='Painel administrativo — '+usuarioAtual.nome;
+    document.querySelectorAll('#tela-admin .tab.hidden').forEach(el => el.classList.remove('hidden'));
+    mostrarGreeting(usuarioAtual.nome, 'admin-greeting');
+    carregarDashboard();
+    mostrarTabelaVazia('result-boletos-admin');
+  } else {
+    document.getElementById('tela-fornecedor').classList.remove('hidden');
+    mostrarGreeting(usuarioAtual.nome, 'forn-greeting');
+    let subtitulo = usuarioAtual.nome;
+    if (usuarioAtual.cnpj) {
+      subtitulo += ' — CNPJ: ' + usuarioAtual.cnpj;
+    } else if (usuarioAtual.role === 'representante') {
+      subtitulo += ' (Representante: ' + usuarioAtual.representante + ')';
+    }
+    document.getElementById('lbl-forn-nome').textContent = subtitulo;
+    const boxRep = document.getElementById('box-ff-representante');
+    const boxCnpj = document.getElementById('box-ff-cnpj');
+
+    if (usuarioAtual.role === 'client' || usuarioAtual.role === 'representante') {
+      if (boxRep) boxRep.style.display = 'none';
+      if (boxCnpj) boxCnpj.style.display = (usuarioAtual.role === 'client') ? 'none' : 'block';
+    } else {
+      if (boxRep) boxRep.style.display = 'block';
+      if (boxCnpj) boxCnpj.style.display = 'none';
+    }
+
+    if (usuarioAtual.role === 'client') {
+      buscarBoletos('fornecedor');
+    } else {
+      mostrarTabelaVazia('result-boletos-forn');
+    }
+  }
+}
+
 function sair(){
   usuarioAtual=null; boletosCarregados=[]; paginaAtual=1; fonteAtual='vencidos';
   ['tela-admin','tela-fornecedor'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('tela-login').classList.remove('hidden');
   document.getElementById('inp-login').value='';
   document.getElementById('inp-senha').value='';
+  document.getElementById('inp-cnpj-cliente').value='';
+  document.getElementById('inp-nf-cliente').value='';
   document.getElementById('msg-login').innerHTML='';
 }
 
@@ -979,7 +1040,9 @@ async function buscarBoletos(tipo){
   } else {
     params.nf=document.getElementById('ff-nf').value;
     params.parcela=document.getElementById('ff-parcela').value;
-    if (usuarioAtual.role === 'representante') {
+    if (usuarioAtual.role === 'client') {
+      params.cnpj = usuarioAtual.cnpj;
+    } else if (usuarioAtual.role === 'representante') {
       params.representante = usuarioAtual.representante; 
       params.cnpj = document.getElementById('ff-cnpj').value;
     } else {
@@ -1013,7 +1076,8 @@ async function buscarBoletos(tipo){
 /* ── SORT E RENDER TABELA ── */
 let sortCol = null, sortDir = 1;
 function renderTabela(boletos, isAdmin, targetId){
-  const canDelete = isAdmin || (usuarioAtual && usuarioAtual.role === 'representante');
+  const isClient = usuarioAtual && usuarioAtual.role === 'client';
+  const canDelete = (isAdmin || (usuarioAtual && usuarioAtual.role === 'representante')) && !isClient;
 
   const sorted = [...boletos].sort((a,b)=>{
     if(!sortCol) return 0;
@@ -1043,8 +1107,8 @@ function renderTabela(boletos, isAdmin, targetId){
       const rep     = b.representante || '—';
       const chkHtml = canDelete ? `<input type="checkbox" class="chk-boleto bc-chk" style="width:15px;height:15px;cursor:pointer;accent-color:var(--btn-bg);flex-shrink:0;" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}');this.closest('.boleto-card').classList.toggle('card-selected',this.checked)"/>` : '';
       const pdfBtn = b.downloadUrl ? `<button class="bc-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>` : `<button class="bc-btn" disabled>Sem PDF</button>`;
-      const cobBtn = isAdmin ? `<button class="bc-btn" onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar e-mail">✉️</button>` : '';
-      const wspBtn = `<button class="bc-btn btn-wsp" onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar WhatsApp">💬</button>`;
+      const cobBtn = (isAdmin && !isClient) ? `<button class="bc-btn" onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar e-mail">✉️</button>` : '';
+      const wspBtn = (!isClient) ? `<button class="bc-btn btn-wsp" onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Enviar WhatsApp">💬</button>` : '';
       const notaBtn = `<button class="bc-btn ${b.nota ? 'has-nota' : ''}" onclick="abrirModalNotas(${JSON.stringify(b).replace(/"/g,'&quot;')})" title="Observações">📝${b.nota ? ' Nota' : ''}</button>`;
       const delBtn = canDelete ? `<button class="bc-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : '';
       html += `
@@ -1097,11 +1161,11 @@ function renderTabela(boletos, isAdmin, targetId){
       <td style="white-space:nowrap;">${venc}</td><td style="font-size:12px;">${rep}</td><td>${badge(b.status)}</td>
       <td style="white-space:nowrap;">
         ${b.downloadUrl ? `<button onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')" class="btn-act">⬇ PDF</button>` : '<span style="font-size:11px;color:#aaa;">Sem PDF</span>'}
-        ${isAdmin ? `<button onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" class="btn-act" title="Enviar e-mail">✉️</button>` : ''}
-        <button onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})" class="btn-act btn-wsp" title="Enviar WhatsApp">💬 WA</button>
+        ${(isAdmin && !isClient) ? `<button onclick="abrirModalCobranca(${JSON.stringify(b).replace(/"/g,'&quot;')})" class="btn-act" title="Enviar e-mail">✉️</button>` : ''}
+        ${(!isClient) ? `<button onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})" class="btn-act btn-wsp" title="Enviar WhatsApp">💬 WA</button>` : ''}
         ${notaBtn}
-        ${isAdmin ? `<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" class="btn-act">✏️</button>` : ''}
-        ${(isAdmin || usuarioAtual.role === 'representante') ? `<button class="btn-act btn-danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : ''}
+        ${(isAdmin && !isClient) ? `<button onclick="editarBoleto(${JSON.stringify(b).replace(/"/g,'&quot;')})" class="btn-act">✏️</button>` : ''}
+        ${canDelete ? `<button class="btn-act btn-danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : ''}
       </td></tr>`;
   });
   const colsCount = (canDelete ? 1 : 0) + cols.length + 1;
@@ -1127,9 +1191,9 @@ function renderTabela(boletos, isAdmin, targetId){
     const cliente = b.cliente || '—';
     const rep     = b.representante || '—';
     const pdfBtn  = b.downloadUrl ? `<button class="m-btn" onclick="abrirPrevia('${b.downloadUrl}','${b.nf}','${b.parcela}')">⬇ PDF</button>` : `<button class="m-btn" disabled>Sem PDF</button>`;
-    const wspBtn  = `<button class="m-btn btn-wsp" onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})">💬 WA</button>`;
+    const wspBtn  = (!isClient) ? `<button class="m-btn btn-wsp" onclick="abrirModalWhatsApp(${JSON.stringify(b).replace(/"/g,'&quot;')})">💬 WA</button>` : '';
     const notaBtn = `<button class="m-btn ${b.nota ? 'has-nota' : ''}" onclick="abrirModalNotas(${JSON.stringify(b).replace(/"/g,'&quot;')})">📝</button>`;
-    const delBtn = (isAdmin || (usuarioAtual && usuarioAtual.role === 'representante')) ? `<button class="m-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : '';
+    const delBtn = canDelete ? `<button class="m-btn danger" onclick="excluirBoleto('${b.id}')">🗑️</button>` : '';
     const chkHtml = canDelete ? `<div class="m-chk-row"><input type="checkbox" class="chk-boleto" data-id="${b.id}" data-target="${targetId}" onchange="atualizarContador('${targetId}')"/> <span style="font-size:12px;color:var(--text-2);">Selecionar</span></div>` : '';
     html += `
     <div class="m-boleto-card" id="mcard-${b.id}">
@@ -1168,6 +1232,11 @@ function abrirModalNotas(b){
   document.getElementById('nota-texto').value = b.nota || '';
   document.getElementById('nota-sub').textContent = `NF ${b.nf} · Parcela ${b.parcela} — ${b.cliente || 'Cliente'}`;
   document.getElementById('msg-nota').innerHTML = '';
+  
+  const isClient = usuarioAtual && usuarioAtual.role === 'client';
+  document.getElementById('nota-texto').readOnly = isClient;
+  document.getElementById('btn-salvar-nota').style.display = isClient ? 'none' : 'inline-block';
+  
   document.getElementById('modal-notas').classList.remove('hidden');
 }
 function fecharModalNotas(){
@@ -1541,6 +1610,8 @@ function cancelarFormUsuario(){
 }
 
 document.getElementById('inp-senha').addEventListener('keypress',e=>{if(e.key==='Enter') fazerLogin();});
+document.getElementById('inp-nf-cliente').addEventListener('keypress',e=>{if(e.key==='Enter') fazerLoginCliente();});
+
 document.addEventListener('keydown',e=>{ 
   if(e.key==='Escape') {
     fecharPrevia();
